@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "sexurity-api",
+    "sexurity-poller"
+]
