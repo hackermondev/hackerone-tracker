@@ -1,0 +1,43 @@
+query TeamYearThankQuery(
+  $selectedHandle: String!
+  $year: Int
+) {
+  selectedTeam: team(handle: $selectedHandle) {
+    ...TeamThanksSelectedTeam
+  }
+}
+
+fragment TeamThanksSelectedTeam on Team {
+  name
+  state
+  handle
+  participants(first: 100, year: $year) {
+    year_range
+    edges {
+      node {
+        id
+        databaseId: _id
+        username
+        profile_picture(size: medium)
+      }
+      rank
+      ...TopParticipantParticipant
+      __typename
+    }
+    __typename
+  }
+}
+
+fragment TopParticipantParticipant on ParticipantWithReputationEdge {
+  rank
+  reputation
+  node {
+    id
+    username
+    profile_picture(size: medium)
+    cleared
+    verified
+    __typename
+  }
+  __typename
+}
