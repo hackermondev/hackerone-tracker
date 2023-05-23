@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use sexurity_api::hackerone::{self as hackerone, HackerOneClient};
 use sexurity_api::redis::{load_set_to_vec, redis, redis::cmd, save_vec_to_set};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 struct RepData {
     reputation: i64,
     rank: i64,
@@ -21,20 +21,48 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         .arg("reputation_poll_last_run_time")
         .query(&mut redis_conn)?;
     let last_rep_data = get_old_reputation_data(&mut redis_conn);
+    let rep_data = get_reputation_data(&config.team_handle, &config.hackerone).unwrap();
 
-    let data = get_reputation_data(&config.team_handle, &config.hackerone).unwrap();
     if last_run_time.is_none() || last_rep_data.is_none() {
         // first run
         save_vec_to_set(
             "reputation_poll_last_data".to_string(),
-            data,
+            rep_data,
             &mut redis_conn,
         )?;
         set_last_run_time_now(&mut redis_conn);
         return Ok(());
     }
 
-    println!("{:#?}", last_rep_data);
+    let mut changed: Vec<Vec<RepData>> = Vec::new();
+    for rep in rep_data {
+        let old_data = last_rep_data
+            .as_ref()
+            .unwrap()
+            .into_iter()
+            .find(|p| p.user_id == rep.user_id);
+
+        if old_data.is_none() {
+            // user was added
+            let empty = RepData {
+                reputation: -1,
+                rank: -1,
+                user_name: "".into(),
+                user_profile_image_url: "".into(),
+                user_id: "".into(),
+            };
+
+            let diff: Vec<RepData> = vec![empty, rep];
+            changed.push(diff);
+        } else {
+            if old_data.unwrap().reputation != rep.reputation {
+                let diff: Vec<RepData> = vec![old_data.unwrap().clone(), rep];
+                changed.push(diff);
+            }
+        }
+    }
+
+    println!("{:#?}", changed);
     Ok(())
 }
 
