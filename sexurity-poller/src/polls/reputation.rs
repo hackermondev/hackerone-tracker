@@ -67,6 +67,7 @@ fn get_reputation_data(
         .send()?;
 
     let mut result: Vec<RepData> = vec![];
+    // (TODO): find a better way to do this?
     let data = response.json::<graphql_client::Response<<hackerone::TeamYearThankQuery as GraphQLQuery>::ResponseData>>().unwrap();
     let researchers = data
         .data
