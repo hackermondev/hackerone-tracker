@@ -3,9 +3,9 @@ use chrono;
 use chrono::Datelike;
 use graphql_client::GraphQLQuery;
 use sexurity_api::hackerone::{self as hackerone, HackerOneClient};
+use sexurity_api::models::{self as models};
 use sexurity_api::redis::redis::Commands;
 use sexurity_api::redis::{load_set_to_vec, redis, redis::cmd, save_vec_to_set};
-use sexurity_api::models as models;
 
 pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Error>> {
     let mut redis_conn = config.redis_client.get_connection()?;
@@ -63,10 +63,14 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
             diff: changed,
             created_at: chrono::Utc::now(),
         };
-        
+
         queue_item.create_id();
         let queue_item_encoded = serde_json::to_string(&queue_item).unwrap();
-        redis_conn.publish::<&str, std::string::String, i32>("reputation_poll_queue", queue_item_encoded)?;
+        redis_conn.publish::<&str, std::string::String, i32>(
+            "reputation_poll_queue",
+            queue_item_encoded,
+        )?;
+        add_queue_item_to_backlog(&queue_item, &mut redis_conn);
     }
 
     save_vec_to_set(
@@ -157,4 +161,15 @@ fn get_old_reputation_data(conn: &mut redis::Connection) -> Option<Vec<models::R
     }
 
     Some(data)
+}
+
+fn add_queue_item_to_backlog(item: &models::RepDataQueueItem, conn: &mut redis::Connection) {
+    let serialized = serde_json::to_string(item).unwrap();
+    let now = chrono::Utc::now().timestamp_millis();
+    cmd("ZADD")
+        .arg("reputation_queue")
+        .arg(now)
+        .arg(serialized)
+        .query::<i64>(conn)
+        .unwrap();
 }
