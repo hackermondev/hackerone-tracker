@@ -1,5 +1,5 @@
+use sexurity_api::hackerone::HackerOneClient;
 use sexurity_api::redis::redis::Client;
-use sexurity_api::hackerone::{HackerOneClient};
 pub mod reputation;
 
 pub struct PollConfiguration {

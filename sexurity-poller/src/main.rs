@@ -1,17 +1,16 @@
 #![allow(deprecated)]
 
 mod polls;
-use clap::{Parser};
-use chrono::Datelike;
 use chrono;
+use chrono::Datelike;
+use clap::Parser;
 
 // use std::{env, ffi::OsString, str::FromStr};
 use graphql_client::GraphQLQuery;
-use sexurity_api::redis as redis;
 use sexurity_api::hackerone::{self as hackerone, HackerOneClient};
+use sexurity_api::redis;
 
 use crate::polls::PollConfiguration;
-
 
 #[derive(Default, Debug, Parser)]
 #[clap(author = "hackermon", version, about)]
@@ -30,7 +29,7 @@ struct Arguments {
 
     #[arg(default_value = "false", long)]
     disable_hackactivity_polling: bool,
-    
+
     #[arg(default_value = "false", long)]
     disable_user_report_count_polling: bool,
 }
@@ -40,7 +39,7 @@ fn main() {
     let session_token = args.hackerone_session_token.clone().unwrap_or("".into());
     let csrf_token = hackerone::get_hackerone_csrf_token(&session_token).unwrap();
     let client = hackerone::HackerOneClient::new(csrf_token, session_token.to_string());
-    
+
     let good_args = ensure_args(&client, &args);
     if !good_args {
         panic!("cannot fetch team. ensure your session token is valid and the team name is valid and your session token is in the team (if its private)")
@@ -52,11 +51,10 @@ fn main() {
         team_handle: args.hackerone_handle.clone(),
         redis_client: redis,
     };
-    
+
     // println!("a");
     polls::reputation::run_poll(&config).unwrap();
 }
-
 
 fn ensure_args(client: &HackerOneClient, args: &Arguments) -> bool {
     let now = chrono::Utc::now().date_naive();
@@ -68,10 +66,19 @@ fn ensure_args(client: &HackerOneClient, args: &Arguments) -> bool {
     };
 
     let query = hackerone::TeamYearThankQuery::build_query(variables);
-    let response = client.http.post("https://hackerone.com/graphql").json(&query).send().unwrap();
+    let response = client
+        .http
+        .post("https://hackerone.com/graphql")
+        .json(&query)
+        .send()
+        .unwrap();
 
     let data = response.json::<graphql_client::Response<<hackerone::TeamYearThankQuery as GraphQLQuery>::ResponseData>>().unwrap();
-    let can_fetch_team = data.data.expect("Response data not found").selected_team.is_some();
+    let can_fetch_team = data
+        .data
+        .expect("Response data not found")
+        .selected_team
+        .is_some();
 
     return can_fetch_team;
 }
