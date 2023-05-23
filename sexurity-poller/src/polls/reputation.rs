@@ -3,6 +3,7 @@ use chrono;
 use chrono::Datelike;
 use graphql_client::GraphQLQuery;
 use sexurity_api::hackerone::{self as hackerone, HackerOneClient};
+use sexurity_api::redis::redis::Commands;
 use sexurity_api::redis::{load_set_to_vec, redis, redis::cmd, save_vec_to_set};
 use sexurity_api::models as models;
 
@@ -26,6 +27,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     }
 
     let mut changed: Vec<Vec<models::RepData>> = Vec::new();
+    let rep_data_cloned = rep_data.clone();
     for rep in rep_data {
         let old_data = last_rep_data
             .as_ref()
@@ -53,7 +55,26 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         }
     }
 
-    println!("{:#?}", changed);
+    // println!("{:#?}", changed);
+    if changed.len() > 0 {
+        let mut queue_item = models::RepDataQueueItem {
+            id: None,
+            team_handle: config.team_handle.clone(),
+            diff: changed,
+            created_at: chrono::Utc::now(),
+        };
+        
+        queue_item.create_id();
+        let queue_item_encoded = serde_json::to_string(&queue_item).unwrap();
+        redis_conn.publish::<&str, std::string::String, i32>("reputation_poll_queue", queue_item_encoded)?;
+    }
+
+    save_vec_to_set(
+        "reputation_poll_last_data".to_string(),
+        rep_data_cloned,
+        &mut redis_conn,
+    )?;
+    set_last_run_time_now(&mut redis_conn);
     Ok(())
 }
 
