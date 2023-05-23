@@ -2,18 +2,9 @@ use super::PollConfiguration;
 use chrono;
 use chrono::Datelike;
 use graphql_client::GraphQLQuery;
-use serde::{Deserialize, Serialize};
 use sexurity_api::hackerone::{self as hackerone, HackerOneClient};
 use sexurity_api::redis::{load_set_to_vec, redis, redis::cmd, save_vec_to_set};
-
-#[derive(Debug, Deserialize, Serialize, Clone)]
-struct RepData {
-    reputation: i64,
-    rank: i64,
-    user_name: String,
-    user_profile_image_url: String,
-    user_id: String,
-}
+use sexurity_api::models as models;
 
 pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Error>> {
     let mut redis_conn = config.redis_client.get_connection()?;
@@ -34,7 +25,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         return Ok(());
     }
 
-    let mut changed: Vec<Vec<RepData>> = Vec::new();
+    let mut changed: Vec<Vec<models::RepData>> = Vec::new();
     for rep in rep_data {
         let old_data = last_rep_data
             .as_ref()
@@ -44,7 +35,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
 
         if old_data.is_none() {
             // user was added
-            let empty = RepData {
+            let empty = models::RepData {
                 reputation: -1,
                 rank: -1,
                 user_name: "".into(),
@@ -52,11 +43,11 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
                 user_id: "".into(),
             };
 
-            let diff: Vec<RepData> = vec![empty, rep];
+            let diff: Vec<models::RepData> = vec![empty, rep];
             changed.push(diff);
         } else {
             if old_data.unwrap().reputation != rep.reputation {
-                let diff: Vec<RepData> = vec![old_data.unwrap().clone(), rep];
+                let diff: Vec<models::RepData> = vec![old_data.unwrap().clone(), rep];
                 changed.push(diff);
             }
         }
@@ -80,7 +71,7 @@ fn set_last_run_time_now(conn: &mut redis::Connection) {
 fn get_reputation_data(
     handle: &str,
     client: &HackerOneClient,
-) -> Result<Vec<RepData>, Box<dyn std::error::Error>> {
+) -> Result<Vec<models::RepData>, Box<dyn std::error::Error>> {
     let now = chrono::Utc::now().date_naive();
     let variables = hackerone::team_year_thank_query::Variables {
         selected_handle: handle.to_string(),
@@ -94,7 +85,7 @@ fn get_reputation_data(
         .json(&query)
         .send()?;
 
-    let mut result: Vec<RepData> = vec![];
+    let mut result: Vec<models::RepData> = vec![];
     // (TODO): find a better way to do this?
     let data = response.json::<graphql_client::Response<<hackerone::TeamYearThankQuery as GraphQLQuery>::ResponseData>>().unwrap();
     let researchers = data
@@ -116,7 +107,7 @@ fn get_reputation_data(
             .unwrap_or(0);
         let rank = researcher.as_ref().unwrap().rank.unwrap_or(-1);
 
-        let data = RepData {
+        let data = models::RepData {
             reputation,
             rank,
             user_name: user.username.clone(),
@@ -130,17 +121,17 @@ fn get_reputation_data(
     Ok(result)
 }
 
-fn get_old_reputation_data(conn: &mut redis::Connection) -> Option<Vec<RepData>> {
+fn get_old_reputation_data(conn: &mut redis::Connection) -> Option<Vec<models::RepData>> {
     let last_rep_data =
         load_set_to_vec(String::from("reputation_poll_last_data"), conn).unwrap_or(vec![]);
-    let mut data: Vec<RepData> = vec![];
+    let mut data: Vec<models::RepData> = vec![];
 
     if last_rep_data.len() == 0 {
         return None;
     }
 
     for d in last_rep_data {
-        let deserialized: RepData = serde_json::from_str::<RepData>(&d).unwrap();
+        let deserialized: models::RepData = serde_json::from_str::<models::RepData>(&d).unwrap();
         data.push(deserialized);
     }
 
