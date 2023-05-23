@@ -54,7 +54,7 @@ fn main() {
     };
     
     // println!("a");
-    // polls::reputation::run_poll(&config);
+    polls::reputation::run_poll(&config).unwrap();
 }
 
 

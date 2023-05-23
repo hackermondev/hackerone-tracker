@@ -1,4 +1,4 @@
-use sexurity_api::redis::Client;
+use sexurity_api::redis::redis::Client;
 use sexurity_api::hackerone::{HackerOneClient};
 pub mod reputation;
 

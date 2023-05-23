@@ -990,6 +990,7 @@ dependencies = [
  "regex",
  "reqwest",
  "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -999,6 +1000,7 @@ dependencies = [
  "chrono",
  "clap",
  "graphql_client",
+ "serde",
  "serde_json",
  "sexurity-api",
 ]
