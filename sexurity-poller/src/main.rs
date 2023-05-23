@@ -1,12 +1,16 @@
 #![allow(deprecated)]
 
+mod polls;
 use clap::{Parser};
 use chrono::Datelike;
 use chrono;
 
 // use std::{env, ffi::OsString, str::FromStr};
 use graphql_client::GraphQLQuery;
+use sexurity_api::redis as redis;
 use sexurity_api::hackerone::{self as hackerone, HackerOneClient};
+
+use crate::polls::PollConfiguration;
 
 
 #[derive(Default, Debug, Parser)]
@@ -36,13 +40,21 @@ fn main() {
     let session_token = args.hackerone_session_token.clone().unwrap_or("".into());
     let csrf_token = hackerone::get_hackerone_csrf_token(&session_token).unwrap();
     let client = hackerone::HackerOneClient::new(csrf_token, session_token.to_string());
-
+    
     let good_args = ensure_args(&client, &args);
     if !good_args {
         panic!("cannot fetch team. ensure your session token is valid and the team name is valid and your session token is in the team (if its private)")
     }
 
-    println!("a");
+    let redis = redis::open(args.redis.unwrap().as_ref()).unwrap();
+    let config = PollConfiguration {
+        hackerone: client,
+        team_handle: args.hackerone_handle.clone(),
+        redis_client: redis,
+    };
+    
+    // println!("a");
+    // polls::reputation::run_poll(&config);
 }
 
 
