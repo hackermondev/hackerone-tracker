@@ -69,8 +69,8 @@ pub fn get_hackerone_csrf_token(session_token: &str) -> Result<String, Box<dyn E
 
 #[derive(GraphQLQuery, Debug)]
 #[graphql(
-    schema_path = "../graphql/schema.graphql",
-    query_path = "../graphql/TeamYearThankQuery.graphql",
+    schema_path = "../../graphql/schema.graphql",
+    query_path = "../../graphql/TeamYearThankQuery.graphql",
     response_derives = "Debug"
 )]
 pub struct TeamYearThankQuery;

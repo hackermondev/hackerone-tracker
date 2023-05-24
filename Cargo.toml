@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "sexurity-api",
-    "sexurity-poller",
-    "sexurity-discord"
+    "src/sexurity-api",
+    "src/sexurity-poller",
+    "src/sexurity-discord"
 ]
