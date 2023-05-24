@@ -62,7 +62,7 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
         // user removed from leaderboard
         let text = format!(
             "[**``{}``**]({}) was removed from top 100",
-            new.user_name,
+            old.user_name,
             format!("https://hackerone.com/{}", new.user_name),
         );
 
