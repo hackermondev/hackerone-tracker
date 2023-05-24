@@ -35,9 +35,10 @@ fn main() {
     };
 
     let redis = redis::open(&args.redis).unwrap();
-    subscriptions::reputation::start_reputation_subscription(redis.get_connection().unwrap(), on_message_data.clone());
-    // TODO: rewrite this so we aren't cloning funcs and moving variables 
+    subscriptions::reputation::consume_backlog(redis.get_connection().unwrap(), on_message_data.clone());
 
+    // Subscriptions
+    subscriptions::reputation::start_reputation_subscription(redis.get_connection().unwrap(), on_message_data.clone());
     keep_alive();
 }
 

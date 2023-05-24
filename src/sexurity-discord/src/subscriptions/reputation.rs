@@ -1,8 +1,47 @@
 use sexurity_api::models;
+use sexurity_api::redis::redis::cmd;
 use sexurity_api::redis::redis::Connection;
 use std::thread;
 use twilight_model::channel::message::embed::Embed;
+use twilight_model::util::Timestamp;
 use twilight_util::builder::embed::{EmbedBuilder, EmbedFooterBuilder};
+
+static MAX_BACKLOG: usize = 100;
+pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data: E) {
+    let backlog_raw = cmd("ZRANGE")
+        .arg("reputation_queue")
+        .arg(0)
+        .arg(MAX_BACKLOG)
+        .query::<Vec<String>>(&mut conn)
+        .unwrap();
+
+    let mut backlog: Vec<models::RepDataQueueItem> = vec![];
+    for backlog_raw_item in backlog_raw {
+        let decoded: models::RepDataQueueItem = serde_json::from_str(&backlog_raw_item).unwrap();
+        backlog.push(decoded);
+    }
+
+    for mut item in backlog {
+        // try to sort by rep
+        item.diff.sort_by_key(|k| k[1].rank);
+        for diff in item.diff {
+            let embed = build_embed_data(diff, &item.team_handle);
+            if embed.is_some() {
+                let mut embed_unwrapped = embed.unwrap();
+                embed_unwrapped.timestamp = Some(
+                    Timestamp::from_micros(item.created_at.timestamp_micros()).unwrap(),
+                );
+
+                on_message_data(vec![embed_unwrapped]);
+            }
+        }
+    }
+
+    cmd("DEL")
+        .arg("reputation_queue")
+        .query::<i32>(&mut conn)
+        .unwrap();
+}
 
 pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Send + 'static>(
     mut conn: Connection,
@@ -21,7 +60,7 @@ pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Sen
             let mut decoded: models::RepDataQueueItem = serde_json::from_str(&payload).unwrap();
             println!("{:#?}", decoded);
 
-            // try to sort diff by rep
+            // try to sort by rep
             decoded.diff.sort_by_key(|k| k[1].rank);
             for diff in decoded.diff {
                 let embed = build_embed_data(diff, &decoded.team_handle);
