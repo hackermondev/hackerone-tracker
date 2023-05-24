@@ -58,6 +58,19 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
             .color(models::embed_colors::POSTIVE)
             .build();
         return Some(embed);
+    } else if new.rank == -1 {
+        // user removed from leaderboard
+        let text = format!(
+            "[**``{}``**]({}) was removed from top 100",
+            new.user_name,
+            format!("https://hackerone.com/{}", new.user_name),
+        );
+
+        let embed = EmbedBuilder::new()
+            .description(text)
+            .color(models::embed_colors::NEGATIVE)
+            .build();
+        return Some(embed);
     } else if new.reputation > old.reputation {
         // reputation gain
         let text = format!(

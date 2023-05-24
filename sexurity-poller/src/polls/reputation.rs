@@ -12,7 +12,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     let last_run_time: Option<String> = cmd("GET")
         .arg("reputation_poll_last_run_time")
         .query(&mut redis_conn)?;
-    let last_rep_data = get_old_reputation_data(&mut redis_conn);
+    let mut last_rep_data = get_old_reputation_data(&mut redis_conn);
     let rep_data = get_reputation_data(&config.team_handle, &config.hackerone).unwrap();
 
     if last_run_time.is_none() || last_rep_data.is_none() {
@@ -29,11 +29,12 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     let mut changed: Vec<Vec<models::RepData>> = Vec::new();
     let rep_data_cloned = rep_data.clone();
     for rep in rep_data {
+        let user_id = rep.user_id.clone();
         let old_data = last_rep_data
             .as_ref()
             .unwrap()
             .into_iter()
-            .find(|p| p.user_id == rep.user_id);
+            .find(|p| p.user_id == user_id);
 
         if old_data.is_none() {
             // user was added
@@ -49,9 +50,35 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
             changed.push(diff);
         } else {
             if old_data.unwrap().reputation != rep.reputation {
-                let diff: Vec<models::RepData> = vec![old_data.unwrap().clone(), rep];
+                let diff: Vec<models::RepData> = vec![old_data.unwrap().clone(), rep.clone()];
                 changed.push(diff);
             }
+
+            let index = last_rep_data
+                .as_ref()
+                .unwrap()
+                .into_iter()
+                .position(|d| d.user_id == rep.user_id)
+                .unwrap();
+
+            last_rep_data.as_mut().unwrap().remove(index);
+        }
+    }
+
+    let last_rep_data_unwrapped = last_rep_data.unwrap();
+    if last_rep_data_unwrapped.len() > 0 {
+        // User was removed
+        for rep in last_rep_data_unwrapped {
+            let empty = models::RepData {
+                reputation: -1,
+                rank: -1,
+                user_name: "".into(),
+                user_profile_image_url: "".into(),
+                user_id: "".into(),
+            };
+
+            let diff: Vec<models::RepData> = vec![rep, empty];
+            changed.push(diff);
         }
     }
 
