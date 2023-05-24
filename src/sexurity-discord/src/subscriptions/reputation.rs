@@ -9,7 +9,7 @@ use twilight_util::builder::embed::{EmbedBuilder, EmbedFooterBuilder};
 static MAX_BACKLOG: usize = 100;
 pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data: E) {
     let backlog_raw = cmd("ZRANGE")
-        .arg("reputation_queue")
+        .arg(models::redis_keys::REPUTATION_QUEUE_BACKLOG)
         .arg(0)
         .arg(MAX_BACKLOG)
         .query::<Vec<String>>(&mut conn)
@@ -28,9 +28,8 @@ pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data:
             let embed = build_embed_data(diff, &item.team_handle);
             if embed.is_some() {
                 let mut embed_unwrapped = embed.unwrap();
-                embed_unwrapped.timestamp = Some(
-                    Timestamp::from_micros(item.created_at.timestamp_micros()).unwrap(),
-                );
+                embed_unwrapped.timestamp =
+                    Some(Timestamp::from_micros(item.created_at.timestamp_micros()).unwrap());
 
                 on_message_data(vec![embed_unwrapped]);
             }
@@ -38,7 +37,7 @@ pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data:
     }
 
     cmd("DEL")
-        .arg("reputation_queue")
+        .arg(models::redis_keys::REPUTATION_QUEUE_BACKLOG)
         .query::<i32>(&mut conn)
         .unwrap();
 }
@@ -49,7 +48,9 @@ pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Sen
 ) {
     thread::spawn(move || {
         let mut pubsub = conn.as_pubsub();
-        pubsub.subscribe("reputation_poll_queue").unwrap();
+        pubsub
+            .subscribe(models::redis_keys::REPUTATION_QUEUE_PUBSUB)
+            .unwrap();
 
         // let test_embed = EmbedBuilder::new().description("hey").build();
         // on_message_data(vec![test_embed]);

@@ -1,8 +1,8 @@
 mod subscriptions;
+use clap::Parser;
+use reqwest::blocking as reqwest;
 use serde::Serialize;
 use sexurity_api::redis;
-use reqwest::blocking as reqwest;
-use clap::Parser;
 use twilight_model::channel::message::embed::Embed;
 
 #[derive(Default, Debug, Parser)]
@@ -15,7 +15,6 @@ struct Arguments {
     discord_webhook_url: String,
 }
 
-
 #[derive(Serialize)]
 struct DiscordMessage {
     embeds: Vec<Embed>,
@@ -25,23 +24,30 @@ fn main() {
     let args = Arguments::parse();
     ensure_args_and_return_webhook(&args);
 
-    let on_message_data = move | embeds: Vec<Embed> | {
-        let message = DiscordMessage {
-            embeds,
-        };
+    let on_message_data = move |embeds: Vec<Embed>| {
+        let message = DiscordMessage { embeds };
 
         let client = reqwest::Client::new();
-        client.post(args.discord_webhook_url.clone()).json(&message).send().unwrap();
+        client
+            .post(args.discord_webhook_url.clone())
+            .json(&message)
+            .send()
+            .unwrap();
     };
 
     let redis = redis::open(&args.redis).unwrap();
-    subscriptions::reputation::consume_backlog(redis.get_connection().unwrap(), on_message_data.clone());
+    subscriptions::reputation::consume_backlog(
+        redis.get_connection().unwrap(),
+        on_message_data.clone(),
+    );
 
     // Subscriptions
-    subscriptions::reputation::start_reputation_subscription(redis.get_connection().unwrap(), on_message_data.clone());
+    subscriptions::reputation::start_reputation_subscription(
+        redis.get_connection().unwrap(),
+        on_message_data.clone(),
+    );
     keep_alive();
 }
-
 
 fn ensure_args_and_return_webhook(args: &Arguments) {
     let webhook = extract_webhook_info(&args.discord_webhook_url);
@@ -49,8 +55,12 @@ fn ensure_args_and_return_webhook(args: &Arguments) {
         panic!("unable to parse webhook. ensure webhook url is format: https://discord.com/api/webhooks/:id/:token")
     }
 
-    let ( webhook_id, webhook_token ) = webhook.unwrap();
-    let webhook_req = reqwest::get(format!("https://discord.com/api/webhooks/{}/{}", webhook_id, webhook_token)).unwrap();
+    let (webhook_id, webhook_token) = webhook.unwrap();
+    let webhook_req = reqwest::get(format!(
+        "https://discord.com/api/webhooks/{}/{}",
+        webhook_id, webhook_token
+    ))
+    .unwrap();
     if !webhook_req.status().is_success() {
         panic!("invalid webhook");
     }
@@ -68,7 +78,6 @@ fn extract_webhook_info(url: &str) -> Option<(u64, &str)> {
         None
     }
 }
-
 
 /// Keep main thread from dying
 fn keep_alive() {

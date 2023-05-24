@@ -1,6 +1,6 @@
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
 use nanoid::nanoid;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct RepData {
@@ -10,7 +10,6 @@ pub struct RepData {
     pub user_profile_image_url: String,
     pub user_id: String,
 }
-
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct RepDataQueueItem {
@@ -30,16 +29,21 @@ impl RepDataQueueItem {
     }
 }
 
-
-
 pub mod embed_colors {
     pub const NEGATIVE: u32 = 16711680;
     pub const POSTIVE: u32 = 5222492;
 }
 
+pub mod redis_keys {
+    pub const REPUTATION_QUEUE_BACKLOG: &str = "reputation_queue";
+    pub const REPUTATION_QUEUE_PUBSUB: &str = "reputation_poll_queue";
+    pub const REPUTATION_QUEUE_LAST_RUN_TIME: &str = "reputation_poll_last_run_time";
+    pub const REPUTATION_QUEUE_LAST_DATA: &str = "reputation_poll_last_data";
+}
+
 mod my_date_format {
-    use chrono::{DateTime, Utc, TimeZone};
-    use serde::{self, Deserialize, Serializer, Deserializer};
+    use chrono::{DateTime, TimeZone, Utc};
+    use serde::{self, Deserialize, Deserializer, Serializer};
 
     const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
 
@@ -50,10 +54,7 @@ mod my_date_format {
     //        S: Serializer
     //
     // although it may also be generic over the input types T.
-    pub fn serialize<S>(
-        date: &DateTime<Utc>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(date: &DateTime<Utc>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -68,13 +69,12 @@ mod my_date_format {
     //        D: Deserializer<'de>
     //
     // although it may also be generic over the output types T.
-    pub fn deserialize<'de, D>(
-        deserializer: D,
-    ) -> Result<DateTime<Utc>, D::Error>
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<DateTime<Utc>, D::Error>
     where
         D: Deserializer<'de>,
     {
         let s = String::deserialize(deserializer)?;
-        Utc.datetime_from_str(&s, FORMAT).map_err(serde::de::Error::custom)
+        Utc.datetime_from_str(&s, FORMAT)
+            .map_err(serde::de::Error::custom)
     }
 }

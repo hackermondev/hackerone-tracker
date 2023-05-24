@@ -1,8 +1,8 @@
 use super::PollConfiguration;
 extern crate cronjob;
-use cronjob::CronJob;
 use chrono;
 use chrono::Datelike;
+use cronjob::CronJob;
 use graphql_client::GraphQLQuery;
 use sexurity_api::hackerone::{self as hackerone, HackerOneClient};
 use sexurity_api::models::{self as models};
@@ -24,7 +24,7 @@ pub fn start_poll_event_loop(config: &PollConfiguration) {
 pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Error>> {
     let mut redis_conn = config.redis_client.get_connection()?;
     let last_run_time: Option<String> = cmd("GET")
-        .arg("reputation_poll_last_run_time")
+        .arg(models::redis_keys::REPUTATION_QUEUE_LAST_RUN_TIME)
         .query(&mut redis_conn)?;
     let mut last_rep_data = get_old_reputation_data(&mut redis_conn);
     let rep_data = get_reputation_data(&config.team_handle, &config.hackerone).unwrap();
@@ -32,7 +32,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     if last_run_time.is_none() || last_rep_data.is_none() {
         // first run
         save_vec_to_set(
-            "reputation_poll_last_data".to_string(),
+            models::redis_keys::REPUTATION_QUEUE_LAST_DATA.to_string(),
             rep_data,
             &mut redis_conn,
         )?;
@@ -107,14 +107,14 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         queue_item.create_id();
         let queue_item_encoded = serde_json::to_string(&queue_item).unwrap();
         redis_conn.publish::<&str, std::string::String, i32>(
-            "reputation_poll_queue",
+            models::redis_keys::REPUTATION_QUEUE_PUBSUB,
             queue_item_encoded,
         )?;
         add_queue_item_to_backlog(&queue_item, &mut redis_conn);
     }
 
     save_vec_to_set(
-        "reputation_poll_last_data".to_string(),
+        models::redis_keys::REPUTATION_QUEUE_LAST_DATA.to_string(),
         rep_data_cloned,
         &mut redis_conn,
     )?;
@@ -127,7 +127,7 @@ fn set_last_run_time_now(conn: &mut redis::Connection) {
     let ms = now.timestamp_millis();
 
     cmd("SET")
-        .arg("reputation_poll_last_run_time")
+        .arg(models::redis_keys::REPUTATION_QUEUE_LAST_RUN_TIME)
         .arg(ms)
         .query::<String>(conn)
         .unwrap();
@@ -187,8 +187,11 @@ fn get_reputation_data(
 }
 
 fn get_old_reputation_data(conn: &mut redis::Connection) -> Option<Vec<models::RepData>> {
-    let last_rep_data =
-        load_set_to_vec(String::from("reputation_poll_last_data"), conn).unwrap_or(vec![]);
+    let last_rep_data = load_set_to_vec(
+        String::from(models::redis_keys::REPUTATION_QUEUE_LAST_DATA),
+        conn,
+    )
+    .unwrap_or(vec![]);
     let mut data: Vec<models::RepData> = vec![];
 
     if last_rep_data.len() == 0 {
@@ -207,7 +210,7 @@ fn add_queue_item_to_backlog(item: &models::RepDataQueueItem, conn: &mut redis::
     let serialized = serde_json::to_string(item).unwrap();
     let now = chrono::Utc::now().timestamp_millis();
     cmd("ZADD")
-        .arg("reputation_queue")
+        .arg(models::redis_keys::REPUTATION_QUEUE_BACKLOG)
         .arg(now)
         .arg(serialized)
         .query::<i64>(conn)

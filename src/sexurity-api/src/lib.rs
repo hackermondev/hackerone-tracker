@@ -1,6 +1,6 @@
 pub mod hackerone;
-pub mod redis;
 pub mod models;
+pub mod redis;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right

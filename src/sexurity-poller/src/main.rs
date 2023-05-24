@@ -84,7 +84,6 @@ fn ensure_args(client: &HackerOneClient, args: &Arguments) -> bool {
     return can_fetch_team;
 }
 
-
 /// Keep main thread from dying
 fn keep_alive() {
     loop {
