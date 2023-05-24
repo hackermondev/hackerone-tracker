@@ -63,7 +63,7 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
         let text = format!(
             "[**``{}``**]({}) was removed from top 100",
             old.user_name,
-            format!("https://hackerone.com/{}", new.user_name),
+            format!("https://hackerone.com/{}", old.user_name),
         );
 
         let embed = EmbedBuilder::new()
