@@ -2,5 +2,6 @@
 
 members = [
     "sexurity-api",
-    "sexurity-poller"
+    "sexurity-poller",
+    "sexurity-discord"
 ]

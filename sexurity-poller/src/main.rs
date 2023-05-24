@@ -19,7 +19,7 @@ struct Arguments {
     hackerone_session_token: Option<String>,
 
     #[arg(short = 'R', long = "redis", env = "REDIS_URL")]
-    redis: Option<String>,
+    redis: String,
 
     #[arg(short = 'H', long = "handle")]
     hackerone_handle: String,
@@ -45,7 +45,7 @@ fn main() {
         panic!("cannot fetch team. ensure your session token is valid and the team name is valid and your session token is in the team (if its private)")
     }
 
-    let redis = redis::open(args.redis.unwrap().as_ref()).unwrap();
+    let redis = redis::open(args.redis.as_ref()).unwrap();
     let config = PollConfiguration {
         hackerone: client,
         team_handle: args.hackerone_handle.clone(),

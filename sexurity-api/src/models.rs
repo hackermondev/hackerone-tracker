@@ -32,6 +32,10 @@ impl RepDataQueueItem {
 
 
 
+pub mod embed_colors {
+    pub const NEGATIVE: u32 = 16711680;
+    pub const POSTIVE: u32 = 5222492;
+}
 
 mod my_date_format {
     use chrono::{DateTime, Utc, TimeZone};
