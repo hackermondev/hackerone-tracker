@@ -52,8 +52,9 @@ fn main() {
         redis_client: redis,
     };
 
-    // println!("a");
-    polls::reputation::run_poll(&config).unwrap();
+    // polls::reputation::run_poll(&config).unwrap();
+    polls::reputation::start_poll_event_loop(&config);
+    keep_alive();
 }
 
 fn ensure_args(client: &HackerOneClient, args: &Arguments) -> bool {
@@ -81,4 +82,12 @@ fn ensure_args(client: &HackerOneClient, args: &Arguments) -> bool {
         .is_some();
 
     return can_fetch_team;
+}
+
+
+/// Keep main thread from dying
+fn keep_alive() {
+    loop {
+        let _ = 1 + 1;
+    }
 }

@@ -1,4 +1,6 @@
 use super::PollConfiguration;
+extern crate cronjob;
+use cronjob::CronJob;
 use chrono;
 use chrono::Datelike;
 use graphql_client::GraphQLQuery;
@@ -6,6 +8,18 @@ use sexurity_api::hackerone::{self as hackerone, HackerOneClient};
 use sexurity_api::models::{self as models};
 use sexurity_api::redis::redis::Commands;
 use sexurity_api::redis::{load_set_to_vec, redis, redis::cmd, save_vec_to_set};
+
+pub fn start_poll_event_loop(config: &PollConfiguration) {
+    let poll_config = config.clone();
+    let mut cron = CronJob::new("reputation_poll", move |_name: &str| {
+        run_poll(&poll_config).unwrap();
+    });
+
+    // Every 5 minutes
+    cron.minutes("*/5");
+    cron.seconds("0");
+    CronJob::start_job_threaded(cron);
+}
 
 pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Error>> {
     let mut redis_conn = config.redis_client.get_connection()?;
@@ -82,7 +96,6 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         }
     }
 
-    // println!("{:#?}", changed);
     if changed.len() > 0 {
         let mut queue_item = models::RepDataQueueItem {
             id: None,

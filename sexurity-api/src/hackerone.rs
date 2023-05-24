@@ -5,6 +5,7 @@ use reqwest::header;
 use std::error::Error;
 use std::time::Duration;
 
+#[derive(Clone)]
 pub struct HackerOneClient {
     pub csrf_token: Option<String>,
     pub session_token: Option<String>,
