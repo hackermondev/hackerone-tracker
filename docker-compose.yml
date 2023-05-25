@@ -1,0 +1,54 @@
+services:
+  db:
+    image: redis:alpine
+    hostname: redis
+    volumes:
+      - db_data:/data
+    expose:
+      - "6379"
+
+  sexurity-poller:
+    depends_on:
+      - db
+    image: sexurity
+    links:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - type: bind
+        source: config.yaml
+        target: /etc/sexurity/config.yaml
+        volume:
+          nocopy: true
+    environment:
+      - APP_NAME=sexurity-poller
+      - CONFIG_NAME=poller
+    command: [ "bash", "/usr/local/bin/yaml_to_cli.sh", "/etc/sexurity/config.yaml" ]
+
+  sexurity-discord:
+    depends_on:
+      - db
+    image: sexurity
+    links:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - type: bind
+        source: config.yaml
+        target: /etc/sexurity/config.yaml
+        volume:
+          nocopy: true
+
+    environment:
+      - APP_NAME=sexurity-discord
+      - CONFIG_NAME=discord
+
+    command: [ "bash", "/usr/local/bin/yaml_to_cli.sh", "/etc/sexurity/config.yaml" ]
+
+volumes:
+  db_data:
+

@@ -1,0 +1,7 @@
+discord:
+  redis: redis://redis:6379 # Don't change this if you're using the default Docker compose configuration
+  webhook_url: "" # Discord webhook URL
+
+poller:
+  redis: redis://redis:6379 # Don't change this if you're using the default Docker compose configuration
+  handle: "" # HackerOne team handle
