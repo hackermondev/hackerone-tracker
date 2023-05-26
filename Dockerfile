@@ -12,4 +12,4 @@ RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/d
 COPY --from=builder /usr/local/cargo/bin/sexurity-discord /usr/local/bin/sexurity-discord
 COPY --from=builder /usr/local/cargo/bin/sexurity-poller /usr/local/bin/sexurity-poller
 COPY ./yaml_to_cli.sh /usr/local/bin/yaml_to_cli.sh
-ENV RUST_TRACE info
+ENV RUST_LOG info

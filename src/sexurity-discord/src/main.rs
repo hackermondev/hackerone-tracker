@@ -1,3 +1,6 @@
+extern crate pretty_env_logger;
+#[macro_use] extern crate log;
+
 mod subscriptions;
 use clap::Parser;
 use reqwest::blocking as reqwest;
@@ -21,12 +24,17 @@ struct DiscordMessage {
 }
 
 fn main() {
+    pretty_env_logger::init();
+    info!("hello world");
     let args = Arguments::parse();
     ensure_args_and_return_webhook(&args);
+    trace!("{:#?}", args);
 
     let on_message_data = move |embeds: Vec<Embed>| {
         let message = DiscordMessage { embeds };
 
+        debug!("sending message with embed length {}", message.embeds.len());
+        trace!("sending embed: {:#?}", message.embeds);
         let client = reqwest::Client::new();
         client
             .post(args.discord_webhook_url.clone())

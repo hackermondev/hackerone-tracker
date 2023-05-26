@@ -19,15 +19,20 @@ pub fn start_poll_event_loop(config: &PollConfiguration) {
     cron.minutes("*/5");
     cron.seconds("0");
     CronJob::start_job_threaded(cron);
+    info!("reputation: started poll event loop");
 }
 
 pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Error>> {
+    debug!("reputation poll event: running poll");
     let mut redis_conn = config.redis_client.get_connection()?;
     let last_run_time: Option<String> = cmd("GET")
         .arg(models::redis_keys::REPUTATION_QUEUE_LAST_RUN_TIME)
         .query(&mut redis_conn)?;
     let mut last_rep_data = get_old_reputation_data(&mut redis_conn);
     let rep_data = get_reputation_data(&config.team_handle, &config.hackerone).unwrap();
+
+    debug!("reputation poll event: last_run_time {}", last_run_time.clone().unwrap_or("-1".into()));
+    debug!("reputation poll event: last_rep_data len: {}, current rep_data len: {}", last_rep_data.clone().unwrap_or(vec![]).len(), rep_data.len());
 
     if last_run_time.is_none() || last_rep_data.is_none() {
         // first run
@@ -96,11 +101,12 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         }
     }
 
+    debug!("reputation poll event: changed len: {}", changed.len());
     if changed.len() > 0 {
         let mut queue_item = models::RepDataQueueItem {
             id: None,
             team_handle: config.team_handle.clone(),
-            diff: changed,
+            diff: changed.clone(),
             created_at: chrono::Utc::now(),
         };
 
@@ -119,6 +125,8 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         &mut redis_conn,
     )?;
     set_last_run_time_now(&mut redis_conn);
+    info!("reputation: ran poll, {} changes", changed.len());
+
     Ok(())
 }
 

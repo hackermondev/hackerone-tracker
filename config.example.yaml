@@ -5,3 +5,4 @@ discord:
 poller:
   redis: redis://redis:6379 # Don't change this if you're using the default Docker compose configuration
   handle: "" # HackerOne team handle
+  session_token: "" # HackerOne session token (the "__Host-session" cookie), this is optional if you're using a public team

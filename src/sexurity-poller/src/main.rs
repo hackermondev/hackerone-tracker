@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+extern crate pretty_env_logger;
+#[macro_use] extern crate log;
 
 mod polls;
 use chrono;
@@ -34,12 +36,17 @@ struct Arguments {
     disable_user_report_count_polling: bool,
 }
 fn main() {
+    pretty_env_logger::init();
     let args = Arguments::parse();
+    info!("hello world");
+    debug!("hackerone team handle: {}", args.hackerone_handle);
+    trace!("{:#?}", args);
 
     let session_token = args.hackerone_session_token.clone().unwrap_or("".into());
     let csrf_token = hackerone::get_hackerone_csrf_token(&session_token).unwrap();
-    let client = hackerone::HackerOneClient::new(csrf_token, session_token.to_string());
+    debug!("csrf_token: {}", csrf_token);
 
+    let client = hackerone::HackerOneClient::new(csrf_token, session_token.to_string());
     let good_args = ensure_args(&client, &args);
     if !good_args {
         panic!("cannot fetch team. ensure your session token is valid and the team name is valid and your session token is in the team (if its private)")
