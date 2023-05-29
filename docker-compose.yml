@@ -46,6 +46,7 @@ services:
     environment:
       - APP_NAME=sexurity-discord
       - CONFIG_NAME=discord
+      - RUST_LOG=trace
 
     command: [ "bash", "/usr/local/bin/yaml_to_cli.sh", "/etc/sexurity/config.yaml" ]
 

@@ -1,6 +1,6 @@
 discord:
   redis: redis://redis:6379 # Don't change this if you're using the default Docker compose configuration
-  webhook_url: "" # Discord webhook URL
+  webhook_url: "" # Discord webhook URL (the format has to be: https://discord.com/api/webhooks/{webhook_id}/{webhook_token})
 
 poller:
   redis: redis://redis:6379 # Don't change this if you're using the default Docker compose configuration

@@ -15,7 +15,7 @@ pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data:
         .query::<Vec<String>>(&mut conn)
         .unwrap();
 
-    trace!("reputation: backlog {:#?}", backlog_raw);
+    debug!("reputation: backlog {:#?}", backlog_raw);
     if backlog_raw.len() > 0 {
         info!("reputation: consuming backlog with {} items", backlog_raw.len());
     }
@@ -65,8 +65,8 @@ pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Sen
             let payload: String = msg.get_payload().unwrap();
 
             let mut decoded: models::RepDataQueueItem = serde_json::from_str(&payload).unwrap();
-            trace!("reputation: recieved message {:#?}", decoded);
-            info!("reputation: new queue item (id = {})", decoded.id.clone().unwrap());
+            debug!("reputation: recieved message {:#?}", decoded);
+            info!("reputation: new queue items (id = {}, items = {})", decoded.id.clone().unwrap(), decoded.diff.len());
 
             // try to sort by rep
             decoded.diff.sort_by_key(|k| k[1].rank);

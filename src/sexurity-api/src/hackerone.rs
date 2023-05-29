@@ -14,7 +14,7 @@ pub struct HackerOneClient {
 
 impl HackerOneClient {
     pub fn new(csrf_token: String, session_token: String) -> Self {
-        let cookie_header = format!("cookie: __Host-session={session_token};");
+        let cookie_header = format!("__Host-session={}", session_token);
         let mut headers = header::HeaderMap::new();
         headers.insert(
             "x-csrf-token",
@@ -53,7 +53,7 @@ pub fn get_hackerone_csrf_token(session_token: &str) -> Result<String, Box<dyn E
     let client = Client::new();
     let http_response = client
         .get("https://hackerone.com/bugs")
-        .header("Cookie", format!("cookie: __Host-session={session_token};"))
+        .header("cookie", format!("__Host-session={};", session_token))
         .send()?
         .text()?;
 

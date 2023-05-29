@@ -28,7 +28,7 @@ fn main() {
     info!("hello world");
     let args = Arguments::parse();
     ensure_args_and_return_webhook(&args);
-    trace!("{:#?}", args);
+    debug!("{:#?}", args);
 
     let on_message_data = move |embeds: Vec<Embed>| {
         let message = DiscordMessage { embeds };

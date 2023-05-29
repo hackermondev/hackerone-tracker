@@ -40,7 +40,7 @@ fn main() {
     let args = Arguments::parse();
     info!("hello world");
     debug!("hackerone team handle: {}", args.hackerone_handle);
-    trace!("{:#?}", args);
+    debug!("{:#?}", args);
 
     let session_token = args.hackerone_session_token.clone().unwrap_or("".into());
     let csrf_token = hackerone::get_hackerone_csrf_token(&session_token).unwrap();

@@ -1,7 +1,6 @@
 use super::PollConfiguration;
 extern crate cronjob;
 use chrono;
-use chrono::Datelike;
 use cronjob::CronJob;
 use graphql_client::GraphQLQuery;
 use sexurity_api::hackerone::{self as hackerone, HackerOneClient};
@@ -145,10 +144,9 @@ fn get_reputation_data(
     handle: &str,
     client: &HackerOneClient,
 ) -> Result<Vec<models::RepData>, Box<dyn std::error::Error>> {
-    let now = chrono::Utc::now().date_naive();
     let variables = hackerone::team_year_thank_query::Variables {
         selected_handle: handle.to_string(),
-        year: Some(now.year().into()),
+        year: None,
     };
 
     let query = hackerone::TeamYearThankQuery::build_query(variables);
