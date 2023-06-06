@@ -142,13 +142,13 @@ A Activities::AddedToPentest activity for a pentest
 type ActivitiesAddedToPentest implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -160,7 +160,7 @@ type ActivitiesAgreedOnGoingPublic implements ActivityInterface & Node & ReportA
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   first_to_agree: Boolean
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
@@ -170,7 +170,7 @@ type ActivitiesAgreedOnGoingPublic implements ActivityInterface & Node & ReportA
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -179,13 +179,13 @@ An Activities::AssetCreated activity for a program
 type ActivitiesAssetCreated implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -194,13 +194,13 @@ An Activities::AssetSubmissionRejected activity for an organization
 type ActivitiesAssetSubmissionRejected implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -216,7 +216,7 @@ type ActivitiesBountyAwarded implements ActivityInterface & Node & ReportActivit
   bounty_amount: String
   bounty_currency: String
   collaborator: User
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -225,7 +225,7 @@ type ActivitiesBountyAwarded implements ActivityInterface & Node & ReportActivit
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -240,7 +240,7 @@ type ActivitiesBountyRecalled implements ActivityInterface & Node & ReportActivi
   automated_response: Boolean
   bonus_amount: String
   bounty_currency: String
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -248,10 +248,10 @@ type ActivitiesBountyRecalled implements ActivityInterface & Node & ReportActivi
   internal: Boolean
   message: String
   reason: String
-  recalled_at: DateTime
+  recalled_at: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -267,7 +267,7 @@ type ActivitiesBountyScheduled implements ActivityInterface & Node & ReportActiv
   automated_response: Boolean
   bonus_amount: String
   bounty_currency: String
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -275,9 +275,9 @@ type ActivitiesBountyScheduled implements ActivityInterface & Node & ReportActiv
   internal: Boolean
   message: String
   report: Report
-  scheduled_at: DateTime
+  scheduled_at: String
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -292,7 +292,7 @@ type ActivitiesBountySuggested implements ActivityInterface & Node & ReportActiv
   bonus_amount: String
   bounty_amount: String
   bounty_currency: String
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -301,7 +301,7 @@ type ActivitiesBountySuggested implements ActivityInterface & Node & ReportActiv
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -313,7 +313,7 @@ type ActivitiesBugCloned implements ActivityInterface & Node & ReportActivityInt
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -324,7 +324,7 @@ type ActivitiesBugCloned implements ActivityInterface & Node & ReportActivityInt
   original_report_id: Int
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -336,7 +336,7 @@ type ActivitiesBugDuplicate implements ActivityInterface & Node & ReportActivity
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -347,7 +347,7 @@ type ActivitiesBugDuplicate implements ActivityInterface & Node & ReportActivity
   original_report_id: Int
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -359,7 +359,7 @@ type ActivitiesBugFiled implements ActivityInterface & Node & ReportActivityInte
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -368,7 +368,7 @@ type ActivitiesBugFiled implements ActivityInterface & Node & ReportActivityInte
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -380,7 +380,7 @@ type ActivitiesBugInactive implements ActivityInterface & Node & ReportActivityI
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -389,7 +389,7 @@ type ActivitiesBugInactive implements ActivityInterface & Node & ReportActivityI
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -401,7 +401,7 @@ type ActivitiesBugInformative implements ActivityInterface & Node & ReportActivi
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -410,7 +410,7 @@ type ActivitiesBugInformative implements ActivityInterface & Node & ReportActivi
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -422,7 +422,7 @@ type ActivitiesBugNeedsMoreInfo implements ActivityInterface & Node & ReportActi
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -431,7 +431,7 @@ type ActivitiesBugNeedsMoreInfo implements ActivityInterface & Node & ReportActi
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -443,7 +443,7 @@ type ActivitiesBugNew implements ActivityInterface & Node & ReportActivityInterf
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -452,7 +452,7 @@ type ActivitiesBugNew implements ActivityInterface & Node & ReportActivityInterf
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -464,7 +464,7 @@ type ActivitiesBugNotApplicable implements ActivityInterface & Node & ReportActi
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -473,7 +473,7 @@ type ActivitiesBugNotApplicable implements ActivityInterface & Node & ReportActi
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -485,7 +485,7 @@ type ActivitiesBugPendingProgramReview implements ActivityInterface & Node & Rep
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -494,7 +494,7 @@ type ActivitiesBugPendingProgramReview implements ActivityInterface & Node & Rep
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -506,7 +506,7 @@ type ActivitiesBugPriorityChanged implements ActivityInterface & Node & ReportAc
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -516,7 +516,7 @@ type ActivitiesBugPriorityChanged implements ActivityInterface & Node & ReportAc
   priority: TriageInboxItemPriorityEnum
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -528,7 +528,7 @@ type ActivitiesBugReopened implements ActivityInterface & Node & ReportActivityI
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -537,7 +537,7 @@ type ActivitiesBugReopened implements ActivityInterface & Node & ReportActivityI
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -549,7 +549,7 @@ type ActivitiesBugResolved implements ActivityInterface & Node & ReportActivityI
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -558,7 +558,7 @@ type ActivitiesBugResolved implements ActivityInterface & Node & ReportActivityI
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -570,7 +570,7 @@ type ActivitiesBugRetesting implements ActivityInterface & Node & ReportActivity
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -580,7 +580,7 @@ type ActivitiesBugRetesting implements ActivityInterface & Node & ReportActivity
   report: Report
   report_retest: ReportRetest
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -592,7 +592,7 @@ type ActivitiesBugSpam implements ActivityInterface & Node & ReportActivityInter
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -601,7 +601,7 @@ type ActivitiesBugSpam implements ActivityInterface & Node & ReportActivityInter
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -613,7 +613,7 @@ type ActivitiesBugTriaged implements ActivityInterface & Node & ReportActivityIn
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -622,7 +622,7 @@ type ActivitiesBugTriaged implements ActivityInterface & Node & ReportActivityIn
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -634,7 +634,7 @@ type ActivitiesCancelledDisclosureRequest implements ActivityInterface & Node & 
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -643,7 +643,7 @@ type ActivitiesCancelledDisclosureRequest implements ActivityInterface & Node & 
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -655,7 +655,7 @@ type ActivitiesChangedCampaign implements ActivityInterface & Node & ReportActiv
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -664,7 +664,7 @@ type ActivitiesChangedCampaign implements ActivityInterface & Node & ReportActiv
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -676,7 +676,7 @@ type ActivitiesChangedScope implements ActivityInterface & Node & ReportActivity
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -687,7 +687,7 @@ type ActivitiesChangedScope implements ActivityInterface & Node & ReportActivity
   old_scope: StructuredScope
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -696,7 +696,7 @@ A Activities::ChecklistCheckClaimed activity for a checklist_check
 type ActivitiesChecklistCheckClaimed implements ChecklistCheckResponseActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
@@ -705,7 +705,7 @@ type ActivitiesChecklistCheckClaimed implements ChecklistCheckResponseActivityIn
   name: String
   profile_picture(size: ProfilePictureSizes!): String!
   slug: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -714,7 +714,7 @@ A Activities::ChecklistCheckExpired activity for a checklist_check
 type ActivitiesChecklistCheckExpired implements ChecklistCheckResponseActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
@@ -723,7 +723,7 @@ type ActivitiesChecklistCheckExpired implements ChecklistCheckResponseActivityIn
   name: String
   profile_picture(size: ProfilePictureSizes!): String!
   slug: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -732,7 +732,7 @@ A Activities::ChecklistCheckReleased activity for a checklist_check
 type ActivitiesChecklistCheckReleased implements ChecklistCheckResponseActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
@@ -741,7 +741,7 @@ type ActivitiesChecklistCheckReleased implements ChecklistCheckResponseActivityI
   name: String
   profile_picture(size: ProfilePictureSizes!): String!
   slug: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -750,7 +750,7 @@ A Activities::ChecklistCheckResponseApproved activity for a checklist_check
 type ActivitiesChecklistCheckResponseApproved implements ChecklistCheckResponseActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
@@ -759,7 +759,7 @@ type ActivitiesChecklistCheckResponseApproved implements ChecklistCheckResponseA
   name: String
   profile_picture(size: ProfilePictureSizes!): String!
   slug: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -769,7 +769,7 @@ type ActivitiesChecklistCheckResponseComment implements AttachmentActivityInterf
   _id: ID!
   actor: ActorUnion
   attachments: [Attachment]
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
@@ -778,7 +778,7 @@ type ActivitiesChecklistCheckResponseComment implements AttachmentActivityInterf
   name: String
   profile_picture(size: ProfilePictureSizes!): String!
   slug: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -788,7 +788,7 @@ type ActivitiesChecklistCheckResponseCreated implements AttachmentActivityInterf
   _id: ID!
   actor: ActorUnion
   attachments: [Attachment]
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
@@ -797,7 +797,7 @@ type ActivitiesChecklistCheckResponseCreated implements AttachmentActivityInterf
   name: String
   profile_picture(size: ProfilePictureSizes!): String!
   slug: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -806,7 +806,7 @@ A Activities::ChecklistCheckResponseRejected activity for a checklist_check
 type ActivitiesChecklistCheckResponseRejected implements ChecklistCheckResponseActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
@@ -815,7 +815,7 @@ type ActivitiesChecklistCheckResponseRejected implements ChecklistCheckResponseA
   name: String
   profile_picture(size: ProfilePictureSizes!): String!
   slug: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -825,7 +825,7 @@ type ActivitiesChecklistCheckResponseUpdated implements AttachmentActivityInterf
   _id: ID!
   actor: ActorUnion
   attachments: [Attachment]
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
@@ -834,7 +834,7 @@ type ActivitiesChecklistCheckResponseUpdated implements AttachmentActivityInterf
   name: String
   profile_picture(size: ProfilePictureSizes!): String!
   slug: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -843,7 +843,7 @@ A Activities::ChecklistCheckRevoked activity for a checklist_check
 type ActivitiesChecklistCheckRevoked implements ChecklistCheckResponseActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
@@ -852,7 +852,7 @@ type ActivitiesChecklistCheckRevoked implements ChecklistCheckResponseActivityIn
   name: String
   profile_picture(size: ProfilePictureSizes!): String!
   slug: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -878,7 +878,7 @@ type ActivitiesComment implements ActivityInterface & Node & ReportActivityInter
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -887,7 +887,7 @@ type ActivitiesComment implements ActivityInterface & Node & ReportActivityInter
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -899,7 +899,7 @@ type ActivitiesCommentsClosed implements ActivityInterface & Node & ReportActivi
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -908,7 +908,7 @@ type ActivitiesCommentsClosed implements ActivityInterface & Node & ReportActivi
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -920,7 +920,7 @@ type ActivitiesCveIdAdded implements ActivityInterface & Node & ReportActivityIn
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   cve_ids: [String]
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
@@ -930,7 +930,7 @@ type ActivitiesCveIdAdded implements ActivityInterface & Node & ReportActivityIn
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -942,7 +942,7 @@ type ActivitiesDraftStarted implements ActivityInterface & Node & ReportActivity
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -951,7 +951,7 @@ type ActivitiesDraftStarted implements ActivityInterface & Node & ReportActivity
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -963,7 +963,7 @@ type ActivitiesExternalAdvisoryAdded implements ActivityInterface & Node & Repor
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -972,7 +972,7 @@ type ActivitiesExternalAdvisoryAdded implements ActivityInterface & Node & Repor
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -984,7 +984,7 @@ type ActivitiesExternalUserInvitationCancelled implements ActivityInterface & No
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   email: String
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
@@ -994,7 +994,7 @@ type ActivitiesExternalUserInvitationCancelled implements ActivityInterface & No
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1006,7 +1006,7 @@ type ActivitiesExternalUserInvited implements ActivityInterface & Node & ReportA
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   email: String
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
@@ -1017,7 +1017,7 @@ type ActivitiesExternalUserInvited implements ActivityInterface & Node & ReportA
   report: Report
   report_retest_user_id: String
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1029,7 +1029,7 @@ type ActivitiesExternalUserJoined implements ActivityInterface & Node & ReportAc
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   duplicate_report: Report
   duplicate_report_id: Int
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
@@ -1042,7 +1042,7 @@ type ActivitiesExternalUserJoined implements ActivityInterface & Node & ReportAc
   report_retest_user: User
   report_retest_user_id: Int
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1054,7 +1054,7 @@ type ActivitiesExternalUserRemoved implements ActivityInterface & Node & ReportA
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1064,7 +1064,7 @@ type ActivitiesExternalUserRemoved implements ActivityInterface & Node & ReportA
   removed_user: User
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1077,7 +1077,7 @@ type ActivitiesGroupAssignedToBug implements ActivityInterface & Node & ReportAc
   assigned_group: TeamMemberGroup
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   group: TeamMemberGroup @deprecated(reason: "deprecated in favor of assigned group")
   i_can_edit: Boolean!
@@ -1087,7 +1087,7 @@ type ActivitiesGroupAssignedToBug implements ActivityInterface & Node & ReportAc
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1099,7 +1099,7 @@ type ActivitiesHackerRequestedMediation implements ActivityInterface & Node & Re
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1108,7 +1108,7 @@ type ActivitiesHackerRequestedMediation implements ActivityInterface & Node & Re
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1158,7 +1158,7 @@ type ActivitiesManuallyDisclosed implements ActivityInterface & Node & ReportAct
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1167,7 +1167,7 @@ type ActivitiesManuallyDisclosed implements ActivityInterface & Node & ReportAct
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1179,7 +1179,7 @@ type ActivitiesMediationRequested implements ActivityInterface & Node & ReportAc
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1188,7 +1188,7 @@ type ActivitiesMediationRequested implements ActivityInterface & Node & ReportAc
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1200,7 +1200,7 @@ type ActivitiesNobodyAssignedToBug implements ActivityInterface & Node & ReportA
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1209,7 +1209,7 @@ type ActivitiesNobodyAssignedToBug implements ActivityInterface & Node & ReportA
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1221,7 +1221,7 @@ type ActivitiesNotEligibleForBounty implements ActivityInterface & Node & Report
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1230,7 +1230,7 @@ type ActivitiesNotEligibleForBounty implements ActivityInterface & Node & Report
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1239,13 +1239,13 @@ An Activities::OrganizationAssetsBulkArchived activity for an organization
 type ActivitiesOrganizationAssetsBulkArchived implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1254,13 +1254,13 @@ An Activities::OrganizationAssetsBulkCreated activity for a organization
 type ActivitiesOrganizationAssetsBulkCreated implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1269,13 +1269,13 @@ A Activities::PentestCheckAssigned activity for a pentest_check
 type ActivitiesPentestCheckAssigned implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1284,13 +1284,13 @@ A Activities::PentestCheckCompleted activity for a pentest_check
 type ActivitiesPentestCheckCompleted implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1299,13 +1299,13 @@ A Activities::PentestCheckUnassigned activity for a pentest_check
 type ActivitiesPentestCheckUnassigned implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1314,13 +1314,13 @@ A Activities::PentestCheckUpdated activity for a pentest_check
 type ActivitiesPentestCheckUpdated implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1329,13 +1329,13 @@ A Activities::PentestPublished activity for a pentest
 type ActivitiesPentestPublished implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1344,13 +1344,13 @@ A Activities::PentestStarted activity for a pentest
 type ActivitiesPentestStarted implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1359,13 +1359,13 @@ A Activities::PentesterAwarded activity for a pentester
 type ActivitiesPentesterAwarded implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1374,14 +1374,14 @@ A Activities::ProgramHackerJoined activity for a user
 type ActivitiesProgramHackerJoined implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
   team: Team!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1390,14 +1390,14 @@ A Activities::ProgramHackerLeft activity for a user
 type ActivitiesProgramHackerLeft implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
   team: Team!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1409,7 +1409,7 @@ type ActivitiesProgramInactive implements ActivityInterface & Node & ReportActiv
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1418,7 +1418,7 @@ type ActivitiesProgramInactive implements ActivityInterface & Node & ReportActiv
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1427,14 +1427,14 @@ An Activities::ProgramStructuredScopesBulkUpdated activity for a program
 type ActivitiesProgramStructuredScopesBulkUpdated implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
   team: Team!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1446,7 +1446,7 @@ type ActivitiesReassignedToTeam implements ActivityInterface & Node & ReportActi
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1457,7 +1457,7 @@ type ActivitiesReassignedToTeam implements ActivityInterface & Node & ReportActi
   old_team: Team
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1469,7 +1469,7 @@ type ActivitiesReferenceIdAdded implements ActivityInterface & Node & ReportActi
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1480,7 +1480,7 @@ type ActivitiesReferenceIdAdded implements ActivityInterface & Node & ReportActi
   reference_url: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1489,13 +1489,13 @@ A Activities::RemovedFromPentest activity for a pentest
 type ActivitiesRemovedFromPentest implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1507,7 +1507,7 @@ type ActivitiesReportBecamePublic implements ActivityInterface & Node & ReportAc
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1516,7 +1516,7 @@ type ActivitiesReportBecamePublic implements ActivityInterface & Node & ReportAc
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1528,7 +1528,7 @@ type ActivitiesReportCollaboratorInvited implements ActivityInterface & Node & R
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   email: String
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
@@ -1538,7 +1538,7 @@ type ActivitiesReportCollaboratorInvited implements ActivityInterface & Node & R
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1550,7 +1550,7 @@ type ActivitiesReportCollaboratorJoined implements ActivityInterface & Node & Re
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1559,7 +1559,7 @@ type ActivitiesReportCollaboratorJoined implements ActivityInterface & Node & Re
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1571,7 +1571,7 @@ type ActivitiesReportCustomFieldValueUpdated implements ActivityInterface & Node
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   custom_field_attribute: CustomFieldAttributeInterface
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
@@ -1583,7 +1583,7 @@ type ActivitiesReportCustomFieldValueUpdated implements ActivityInterface & Node
   old_value: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1595,7 +1595,7 @@ type ActivitiesReportOrganizationInboxesUpdated implements ActivityInterface & N
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1646,7 +1646,7 @@ type ActivitiesReportOrganizationInboxesUpdated implements ActivityInterface & N
   ): OrganizationInboxConnection!
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1658,7 +1658,7 @@ type ActivitiesReportRemediationGuidanceUpdated implements ActivityInterface & N
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1667,7 +1667,7 @@ type ActivitiesReportRemediationGuidanceUpdated implements ActivityInterface & N
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1679,7 +1679,7 @@ type ActivitiesReportRetestApproved implements ActivityInterface & Node & Report
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1689,7 +1689,7 @@ type ActivitiesReportRetestApproved implements ActivityInterface & Node & Report
   report: Report
   report_retest_user: ReportRetestUser
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1701,7 +1701,7 @@ type ActivitiesReportRetestCanceled implements ActivityInterface & Node & Report
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1711,7 +1711,7 @@ type ActivitiesReportRetestCanceled implements ActivityInterface & Node & Report
   report: Report
   report_retest_user: ReportRetestUser
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1723,7 +1723,7 @@ type ActivitiesReportRetestRejected implements ActivityInterface & Node & Report
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1732,7 +1732,7 @@ type ActivitiesReportRetestRejected implements ActivityInterface & Node & Report
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1744,7 +1744,7 @@ type ActivitiesReportSeverityUpdated implements ActivityInterface & Node & Repor
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1755,7 +1755,7 @@ type ActivitiesReportSeverityUpdated implements ActivityInterface & Node & Repor
   old_severity: Severity
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1767,7 +1767,7 @@ type ActivitiesReportTitleUpdated implements ActivityInterface & Node & ReportAc
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1778,7 +1778,7 @@ type ActivitiesReportTitleUpdated implements ActivityInterface & Node & ReportAc
   old_title: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1790,7 +1790,7 @@ type ActivitiesReportTriageSummaryCreated implements ActivityInterface & Node & 
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1799,7 +1799,7 @@ type ActivitiesReportTriageSummaryCreated implements ActivityInterface & Node & 
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1811,7 +1811,7 @@ type ActivitiesReportUndisclosed implements ActivityInterface & Node & ReportAct
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1820,7 +1820,7 @@ type ActivitiesReportUndisclosed implements ActivityInterface & Node & ReportAct
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1832,7 +1832,7 @@ type ActivitiesReportVulnerabilityTypesUpdated implements ActivityInterface & No
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1843,7 +1843,7 @@ type ActivitiesReportVulnerabilityTypesUpdated implements ActivityInterface & No
   old_weakness: Weakness
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1855,7 +1855,7 @@ type ActivitiesRetestUserExpired implements ActivityInterface & Node & ReportAct
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1864,7 +1864,7 @@ type ActivitiesRetestUserExpired implements ActivityInterface & Node & ReportAct
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1876,7 +1876,7 @@ type ActivitiesSwagAwarded implements ActivityInterface & Node & ReportActivityI
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1886,7 +1886,7 @@ type ActivitiesSwagAwarded implements ActivityInterface & Node & ReportActivityI
   report: Report
   swag: Swag
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1895,13 +1895,13 @@ A Activities::TeamBountyTableUpdated activity for a team
 type ActivitiesTeamBountyTableUpdated implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1910,13 +1910,13 @@ A Activities::TeamPolicyUpdated activity for a team
 type ActivitiesTeamPolicyUpdated implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1925,13 +1925,13 @@ A Activities::TeamPostCreated activity for a team
 type ActivitiesTeamPostCreated implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1940,13 +1940,13 @@ A Activities::TeamPublished activity for a team
 type ActivitiesTeamPublished implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1955,13 +1955,13 @@ A Activities::TeamStructuredScopeUpdated activity for a team
 type ActivitiesTeamStructuredScopeUpdated implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1974,7 +1974,7 @@ type ActivitiesUserAssignedToBug implements ActivityInterface & Node & ReportAct
   assigned_user: User
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -1983,7 +1983,7 @@ type ActivitiesUserAssignedToBug implements ActivityInterface & Node & ReportAct
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -1995,7 +1995,7 @@ type ActivitiesUserBannedFromProgram implements ActivityInterface & Node & Repor
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -2005,7 +2005,7 @@ type ActivitiesUserBannedFromProgram implements ActivityInterface & Node & Repor
   removed_user: User
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -2017,7 +2017,7 @@ type ActivitiesUserCompletedRetest implements ActivityInterface & Node & ReportA
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -2026,7 +2026,7 @@ type ActivitiesUserCompletedRetest implements ActivityInterface & Node & ReportA
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -2035,13 +2035,13 @@ A Activities::UserJoined activity for a user
 type ActivitiesUserJoined implements ActivityInterface & Node {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -2053,7 +2053,7 @@ type ActivitiesUserLeftRetest implements ActivityInterface & Node & ReportActivi
   actor_is_customer: Boolean!
   attachments: [Attachment]
   automated_response: Boolean
-  created_at: DateTime!
+  created_at: String!
   genius_execution_id: ID @deprecated(reason: "This is about to be replaced by .genius_execution")
   i_can_edit: Boolean!
   i_can_flag: Boolean!
@@ -2062,7 +2062,7 @@ type ActivitiesUserLeftRetest implements ActivityInterface & Node & ReportActivi
   message: String
   report: Report
   triage_inbox_item: TriageInboxItem
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -2073,7 +2073,7 @@ type ActivityConnection {
   A list of edges.
   """
   edges: [ActivityUnionEdge]
-  max_updated_at: DateTime
+  max_updated_at: String
 
   """
   A list of nodes.
@@ -2093,13 +2093,13 @@ A interface for the common fields on an HackerOne Activity
 interface ActivityInterface {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
   internal: Boolean
   message: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -2469,7 +2469,7 @@ type Address implements Node {
   _id: ID!
   city: String!
   country: String!
-  created_at: DateTime!
+  created_at: String!
   id: ID!
   name: String!
   phone_number: String
@@ -2487,7 +2487,7 @@ type AggregatedSlaSnapshot {
   average_time_to_first_program_response: Float
   average_time_to_report_resolved: Float
   average_time_to_report_triage: Float
-  timestamp: DateTime!
+  timestamp: String!
 }
 
 """
@@ -2511,14 +2511,14 @@ type AgileAcceleratorIntegration implements Node {
   client_id: String!
   client_secret: String!
   connected: Boolean!
-  created_at: DateTime!
+  created_at: String!
   field_prefix: String
   id: ID!
   investigation_type_id: String!
   product_tag: String!
   sandbox: Boolean!
   team: Team!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -2644,11 +2644,11 @@ An Analytics Report object
 type AnalyticsReport implements Node {
   _id: ID!
   attachment: Attachment
-  created_at: DateTime!
+  created_at: String!
   dashboard_state: DashboardState!
   id: ID!
   name: String!
-  updated_at: DateTime!
+  updated_at: String!
   user: User
 }
 
@@ -3034,7 +3034,7 @@ Global accessible information about the HackerOne application
 """
 type Application implements Node {
   id: ID!
-  system_time: DateTime!
+  system_time: String!
 }
 
 """
@@ -3239,9 +3239,9 @@ type AsmTagAssetEnrichmentSubmission implements Node {
   _id: ID!
   asm_tag: AsmTag
   asset_enrichment_submission: AssetEnrichmentSubmission
-  created_at: DateTime
+  created_at: String
   id: ID!
-  updated_at: DateTime
+  updated_at: String
 }
 
 """
@@ -3384,7 +3384,7 @@ type Asset implements Node {
     """
     last: Int
   ): TeamScopeConnection
-  archived_at: DateTime
+  archived_at: String
   asm_tags(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -3435,7 +3435,7 @@ type Asset implements Node {
   availability_requirement: SeveritySecurityRequirementEnum
   confidentiality_requirement: SeveritySecurityRequirementEnum
   coverage: AssetCoverageEnum!
-  created_at: DateTime!
+  created_at: String!
   description: String
   display_name: String
   external_source: String
@@ -3492,7 +3492,7 @@ type Asset implements Node {
     last: Int
   ): TeamScopeConnection
   triage_complexity_rating: TriageComplexityRating
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -3531,9 +3531,9 @@ enum AssetCoverageEnum {
 Settings for an Asset Discovery Engagement
 """
 type AssetDiscoverySetting implements Node {
-  ends_at: DateTime
+  ends_at: String
   id: ID!
-  starts_at: DateTime
+  starts_at: String
   time_zone: String
 }
 
@@ -3554,11 +3554,11 @@ type AssetDnsDetail implements Node {
 
 type AssetDocument implements Node {
   _id: ID!
-  archived_at: DateTime
+  archived_at: String
   asset: Asset
   asset_id: ID!
   coverage: String!
-  created_at: DateTime!
+  created_at: String!
   id: ID!
   identifier: String!
   open_vulnerabilities: Int
@@ -3607,7 +3607,7 @@ An Asset Enrichment Submission
 """
 type AssetEnrichmentSubmission implements Node {
   _id: ID!
-  created_at: DateTime
+  created_at: String
   description: String
   id: ID!
   identifier: String
@@ -3615,7 +3615,7 @@ type AssetEnrichmentSubmission implements Node {
   rejection_reason: String
   status: String
   team: Team
-  updated_at: DateTime
+  updated_at: String
   user: User
 }
 
@@ -3723,7 +3723,7 @@ type AssetImplementationAndroidApk implements AssetImplementationInterface & Nod
   _id: ID!
   app_store_id: String
   asset: Asset
-  created_at: DateTime
+  created_at: String
   id: ID!
 }
 
@@ -3734,7 +3734,7 @@ type AssetImplementationAndroidPlayStore implements AssetImplementationInterface
   _id: ID!
   app_store_id: String
   asset: Asset
-  created_at: DateTime
+  created_at: String
   id: ID!
 }
 
@@ -3745,7 +3745,7 @@ type AssetImplementationCidr implements AssetImplementationInterface & Node {
   _id: ID!
   asset: Asset
   block: String
-  created_at: DateTime
+  created_at: String
   id: ID!
 }
 
@@ -3756,7 +3756,7 @@ type AssetImplementationDomain implements AssetImplementationInterface & Node {
   _id: ID!
   asset: Asset
   coverage: AssetCoverageEnum!
-  created_at: DateTime
+  created_at: String
   domain_name: String
   id: ID!
   structured_scopes(
@@ -3788,7 +3788,7 @@ An executable asset object
 type AssetImplementationExecutable implements AssetImplementationInterface & Node {
   _id: ID!
   asset: Asset
-  created_at: DateTime
+  created_at: String
   id: ID!
   identifier: String
 }
@@ -3799,7 +3799,7 @@ A hardware asset object
 type AssetImplementationHardware implements AssetImplementationInterface & Node {
   _id: ID!
   asset: Asset
-  created_at: DateTime
+  created_at: String
   id: ID!
   identifier: String
 }
@@ -3820,7 +3820,7 @@ type AssetImplementationIosAppStore implements AssetImplementationInterface & No
   _id: ID!
   app_store_id: String
   asset: Asset
-  created_at: DateTime
+  created_at: String
   id: ID!
 }
 
@@ -3831,7 +3831,7 @@ type AssetImplementationIosIpa implements AssetImplementationInterface & Node {
   _id: ID!
   app_store_id: String
   asset: Asset
-  created_at: DateTime
+  created_at: String
   id: ID!
 }
 
@@ -3842,7 +3842,7 @@ type AssetImplementationIosTestflight implements AssetImplementationInterface & 
   _id: ID!
   app_store_id: String
   asset: Asset
-  created_at: DateTime
+  created_at: String
   id: ID!
 }
 
@@ -3852,7 +3852,7 @@ An other asset object
 type AssetImplementationOtherAsset implements AssetImplementationInterface & Node {
   _id: ID!
   asset: Asset
-  created_at: DateTime
+  created_at: String
   id: ID!
   identifier: String
 }
@@ -3863,7 +3863,7 @@ A smart contract asset object
 type AssetImplementationSmartContract implements AssetImplementationInterface & Node {
   _id: ID!
   asset: Asset
-  created_at: DateTime
+  created_at: String
   id: ID!
   url: String
 }
@@ -3875,7 +3875,7 @@ type AssetImplementationSourceCode implements AssetImplementationInterface & Nod
   _id: ID!
   asset: Asset
   available_from: String
-  created_at: DateTime
+  created_at: String
   id: ID!
 }
 
@@ -3911,7 +3911,7 @@ A URL asset object
 type AssetImplementationUrl implements AssetImplementationInterface & Node {
   _id: ID!
   asset: Asset
-  created_at: DateTime
+  created_at: String
   id: ID!
   url: String
 }
@@ -3922,7 +3922,7 @@ A wildcard asset object
 type AssetImplementationWildcard implements AssetImplementationInterface & Node {
   _id: ID!
   asset: Asset
-  created_at: DateTime
+  created_at: String
   id: ID!
   url: String
 }
@@ -3934,7 +3934,7 @@ type AssetImplementationWindowsMicrosoftStore implements AssetImplementationInte
   _id: ID!
   app_store_id: String
   asset: Asset
-  created_at: DateTime
+  created_at: String
   id: ID!
 }
 
@@ -3945,10 +3945,10 @@ type AssetRisk implements Node {
   _id: ID!
   asset: Asset!
   description: String
-  ended_at: DateTime
+  ended_at: String
   evidence: String
   id: ID!
-  mitigated: DateTime
+  mitigated: String
   proposed_action: String
   rating: String!
   readable_type: String!
@@ -4048,7 +4048,7 @@ type AssetSubmissionDocument implements Node {
   enrichment_ids: [Int!]!
   id: ID!
   identifier: String!
-  last_submitted_at: DateTime!
+  last_submitted_at: String!
   submission_id: ID!
   submission_type: String!
 }
@@ -4098,14 +4098,14 @@ interface AssetSubmissionInterface {
     where: FiltersAssetEnrichmentSubmissionFilterInput
   ): AssetEnrichmentSubmissionConnection
   asset_type: AssetSubmissionAssetTypeEnum
-  created_at: DateTime!
+  created_at: String!
   description: String
   display_name: String
   id: ID!
   identifier: String!
   source: String
   status: AssetSubmissionStatusEnum
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -4232,7 +4232,7 @@ A HackerOne attachment for a report
 type Attachment implements Node {
   _id: ID!
   content_type: String!
-  created_at: DateTime!
+  created_at: String!
   expiring_url: String!
   file_name: String!
   file_size: Int!
@@ -4260,7 +4260,7 @@ type AuditLogItem implements Node {
   _id: ID!
   abbreviated_user_agent: String
   country: CountryDetails
-  created_at: DateTime!
+  created_at: String!
   event: AuditLogEvent!
   id: ID!
   log: String!
@@ -4351,7 +4351,7 @@ type AutomatedRemediationGuidance implements Node {
   The primary key from the database
   """
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   id: ID!
   remediation_guidance_reference: String
   report: Report!
@@ -4430,7 +4430,7 @@ type BadgesUsersConnection {
 An edge in a connection.
 """
 type BadgesUsersEdge {
-  awarded_at: DateTime!
+  awarded_at: String!
 
   """
   A cursor for use in pagination.
@@ -4470,8 +4470,8 @@ type BbpLaunchConfiguration implements Node {
   has_changed_safe_harbor: Boolean!
   id: ID!
   invoice_opt_in: Boolean!
-  launch_at: DateTime
-  launch_requested_at: DateTime
+  launch_at: String
+  launch_requested_at: String
   policy_brand_promise: String
   policy_disclosure_policies: String
   policy_faq: String
@@ -4670,7 +4670,7 @@ type BlogPost implements Node & ResourceInterface {
   content: String
   id: ID!
   title: String
-  url: URI!
+  url: String
   user: User!
 }
 
@@ -4735,7 +4735,7 @@ type Bounty implements Node {
   awarded_currency: String!
   awarded_user: User
   bonus_amount: String!
-  created_at: DateTime!
+  created_at: String!
   id: ID!
   invitations: [InvitationsClaimBounty!]
   report: Report
@@ -4934,8 +4934,8 @@ type BountyTable implements Node & ResourceInterface {
   low_label: String!
   medium_label: String!
   team: Team!
-  updated_at: DateTime!
-  url: URI!
+  updated_at: String!
+  url: String
   use_range: Boolean!
 }
 
@@ -4946,12 +4946,12 @@ type BountyTableHistory implements Node & ResourceInterface {
   _id: ID!
   action: String!
   bounty_table: BountyTable
-  created_at: DateTime!
+  created_at: String!
   description_after: String
   description_before: String
   id: ID!
-  updated_at: DateTime
-  url: URI!
+  updated_at: String
+  url: String
   use_range_after: Boolean
   use_range_before: Boolean
 }
@@ -5018,10 +5018,10 @@ type BountyTableRow implements Node & ResourceInterface {
   low_minimum: Int
   medium: Int
   medium_minimum: Int
-  smart_rewards_start_at: DateTime
+  smart_rewards_start_at: String
   structured_scope: StructuredScope
-  updated_at: DateTime
-  url: URI!
+  updated_at: String
+  url: String
 }
 
 """
@@ -5068,7 +5068,7 @@ type BountyTableRowHistory implements Node & ResourceInterface {
   action: String!
   bounty_table_row: BountyTableRow
   bounty_table_row_id: Int
-  created_at: DateTime!
+  created_at: String!
   critical_after: Int
   critical_before: Int
   critical_minimum_after: Int
@@ -5090,8 +5090,8 @@ type BountyTableRowHistory implements Node & ResourceInterface {
   medium_minimum_before: Int
   structured_scope_after: StructuredScope
   structured_scope_before: StructuredScope
-  updated_at: DateTime
-  url: URI!
+  updated_at: String
+  url: String
 }
 
 """
@@ -5433,7 +5433,7 @@ type BundleSubscription implements Node & ResourceInterface {
   id: ID!
   tag: RetestSubscriptionTag
   triage: Boolean
-  url: URI!
+  url: String
 }
 
 """
@@ -5477,13 +5477,13 @@ type Campaign implements Node {
     """
     last: Int
   ): UserConnection
-  end_date: DateTime
+  end_date: String
   high: Float
   id: ID!
   low: Float
   medium: Float
   researchers_information: String
-  start_date: DateTime
+  start_date: String
   status: String!
   structured_scopes(
     """
@@ -6004,7 +6004,7 @@ type ChallengeSetting implements Node {
   id: ID!
   not_started: Boolean
   policy: String
-  stops_at: DateTime
+  stops_at: String
 }
 
 """
@@ -6087,7 +6087,7 @@ type Checklist implements Node {
     secure_order_by: FiltersChecklistCheckFilterOrder
     where: FiltersChecklistCheckFilterInput
   ): ChecklistCheckConnection
-  expires_at: DateTime!
+  expires_at: String!
   i_have_unsubmitted_checklist_check_responses: Boolean!
   id: ID!
   name: String
@@ -6231,10 +6231,10 @@ type ChecklistCheckResponse implements ActivitiesInterface & Node {
     """
     updated_at_after: String
   ): ActivityConnection
-  approved_at: DateTime
+  approved_at: String
   attachments: [Attachment]
   checklist_check: ChecklistCheck
-  expires_at: DateTime
+  expires_at: String
   i_can_update: Boolean!
   id: ID!
   message: String
@@ -6251,7 +6251,7 @@ A interface for the common fields on an HackerOne Activity
 interface ChecklistCheckResponseActivityInterface {
   _id: ID!
   actor: ActorUnion
-  created_at: DateTime!
+  created_at: String!
   i_can_edit: Boolean!
   i_can_flag: Boolean!
   id: ID!
@@ -6260,7 +6260,7 @@ interface ChecklistCheckResponseActivityInterface {
   name: String
   profile_picture(size: ProfilePictureSizes!): String!
   slug: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -6656,7 +6656,7 @@ input ClonePentestInput {
   clientMutationId: String
   pentest_id: Int!
   pentest_name: String!
-  requested_start_date: DateTime!
+  requested_start_date: String!
 }
 
 """
@@ -6718,11 +6718,11 @@ type Cluster implements Node {
     """
     last: Int
   ): WeaknessConnection
-  created_at: DateTime!
+  created_at: String!
   description: String
   id: ID!
   name: String!
-  updated_at: DateTime!
+  updated_at: String!
   weaknesses(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -6860,12 +6860,12 @@ type CommonResponse implements Node {
   The primary key from the database
   """
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   id: ID!
   message: String!
   team: Team!
   title: String!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -6913,10 +6913,10 @@ type CommunicationChannel implements Node {
   channel_link: String!
   channel_name: String!
   channel_type: String!
-  created_at: DateTime!
+  created_at: String!
   engagements_assessment: Team!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
   workspace_url: String!
 }
 
@@ -7157,7 +7157,7 @@ A consumption subscription
 type ConsumptionSubscription implements Node {
   _id: ID!
   active: Boolean!
-  ends_at: DateTime!
+  ends_at: String!
   expired: Boolean!
   id: ID!
   number_remaining: Float!
@@ -7165,8 +7165,8 @@ type ConsumptionSubscription implements Node {
   number_used: Int!
   organization_id: ID!
   pentest_opportunities: [PentestOpportunity]
-  purchase_by_date: DateTime!
-  starts_at: DateTime!
+  purchase_by_date: String!
+  starts_at: String!
 }
 
 """
@@ -7818,12 +7818,12 @@ input CreateCampaignInput {
   """
   clientMutationId: String
   critical: Float
-  end_date: DateTime!
+  end_date: String!
   high: Float
   low: Float
   medium: Float
   researchers_information: String!
-  start_date: DateTime!
+  start_date: String!
   structured_scope_ids: [ID!]
   team_id: ID!
 }
@@ -8779,8 +8779,8 @@ input CreateExternalReportInput {
   hacker_requested_team_name: String
   hacker_summary: String!
   handle: String!
-  reported_date: DateTime
-  resolved_date: DateTime
+  reported_date: String
+  resolved_date: String
   title: String!
   vulnerability_information: String
 }
@@ -11784,8 +11784,8 @@ input CreateUserVerificationLetterReportInput {
   A unique identifier for the client performing the mutation.
   """
   clientMutationId: String
-  end_date: DateTime
-  start_date: DateTime
+  end_date: String
+  start_date: String
 }
 
 """
@@ -12076,7 +12076,7 @@ Credentials of a team
 type Credential implements Node {
   _id: ID!
   account_details: String
-  claimed_at: DateTime
+  claimed_at: String
   credentials: Hash
   id: ID!
   revoked: Boolean!
@@ -12124,7 +12124,7 @@ Credential Inquiry of a Structured Scope
 """
 type CredentialInquiry implements Node {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   credential_inquiry_responses(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -12155,7 +12155,7 @@ Credential Inquiry Response of a Credential Inquiry
 """
 type CredentialInquiryResponse implements Node {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   details: String
   id: ID!
   user: User!
@@ -12303,8 +12303,8 @@ An interface for the common fields on an HackerOne CustomFieldAttribute
 """
 interface CustomFieldAttributeInterface {
   _id: ID!
-  archived_at: DateTime
-  created_at: DateTime!
+  archived_at: String
+  created_at: String!
   custom_field_values(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -12335,7 +12335,7 @@ interface CustomFieldAttributeInterface {
   label: String!
   position: Int
   required: Boolean!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -12343,7 +12343,7 @@ Possible types of custom field attribute
 """
 enum CustomFieldAttributeTypes {
   Checkbox
-  DateTime
+  String
   List
   Text
 }
@@ -12351,13 +12351,13 @@ enum CustomFieldAttributeTypes {
 """
 CustomFieldAttributes can be of multiple types
 """
-union CustomFieldAttributeUnion = CustomFieldAttributesCheckbox | CustomFieldAttributesDatetime | CustomFieldAttributesList | CustomFieldAttributesText
+union CustomFieldAttributeUnion = CustomFieldAttributesCheckbox | CustomFieldAttributesString | CustomFieldAttributesList | CustomFieldAttributesText
 
 type CustomFieldAttributesCheckbox implements CustomFieldAttributeInterface & Node {
   _id: ID!
-  archived_at: DateTime
+  archived_at: String
   checkbox_text: String
-  created_at: DateTime!
+  created_at: String!
   custom_field_values(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -12388,13 +12388,13 @@ type CustomFieldAttributesCheckbox implements CustomFieldAttributeInterface & No
   label: String!
   position: Int
   required: Boolean!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
-type CustomFieldAttributesDatetime implements CustomFieldAttributeInterface & Node {
+type CustomFieldAttributesString implements CustomFieldAttributeInterface & Node {
   _id: ID!
-  archived_at: DateTime
-  created_at: DateTime!
+  archived_at: String
+  created_at: String!
   custom_field_values(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -12425,14 +12425,14 @@ type CustomFieldAttributesDatetime implements CustomFieldAttributeInterface & No
   label: String!
   position: Int
   required: Boolean!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 type CustomFieldAttributesList implements CustomFieldAttributeInterface & Node {
   _id: ID!
-  archived_at: DateTime
+  archived_at: String
   configuration: String!
-  created_at: DateTime!
+  created_at: String!
   custom_field_values(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -12464,13 +12464,13 @@ type CustomFieldAttributesList implements CustomFieldAttributeInterface & Node {
   label: String!
   position: Int
   required: Boolean!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 type CustomFieldAttributesText implements CustomFieldAttributeInterface & Node {
   _id: ID!
-  archived_at: DateTime
-  created_at: DateTime!
+  archived_at: String
+  created_at: String!
   custom_field_values(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -12502,7 +12502,7 @@ type CustomFieldAttributesText implements CustomFieldAttributeInterface & Node {
   position: Int
   regex: String
   required: Boolean!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 input CustomFieldInput {
@@ -12515,10 +12515,10 @@ A custom field value for a report
 """
 type CustomFieldValue implements Node {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   custom_field_attribute: CustomFieldAttributeInterface!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
   value: String!
 }
 
@@ -12569,11 +12569,11 @@ custom remediation guidance for a report
 type CustomRemediationGuidance implements Node {
   _id: ID!
   author: User!
-  created_at: DateTime!
+  created_at: String!
   id: ID!
   message: String
   report: Report!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -12670,7 +12670,7 @@ A request for a CVE
 type CveRequest implements Node & ResourceInterface {
   _id: ID!
   auto_submit_on_publicly_disclosing_report: Boolean
-  created_at: DateTime
+  created_at: String
   cve_identifier: String
   description: String
   id: ID!
@@ -12683,9 +12683,9 @@ type CveRequest implements Node & ResourceInterface {
   request_type: String!
   state: CveRequestStateEnum!
   team: Team!
-  updated_at: DateTime
-  url: URI!
-  vulnerability_discovered_at: DateTime
+  updated_at: String
+  url: String
+  vulnerability_discovered_at: String
   weakness: Weakness
 }
 
@@ -12745,11 +12745,11 @@ type CvssAssetEnrichmentSubmission implements Node {
   asset_enrichment_submission: AssetEnrichmentSubmission
   availability_requirement: SeveritySecurityRequirementEnum
   confidentiality_requirement: SeveritySecurityRequirementEnum
-  created_at: DateTime
+  created_at: String
   id: ID!
   integrity_requirement: SeveritySecurityRequirementEnum
   max_severity: String
-  updated_at: DateTime
+  updated_at: String
 }
 
 """
@@ -12939,14 +12939,14 @@ A Dashboard State object
 type DashboardState implements Node {
   analytics_report: AnalyticsReport!
   applied_filters: [DashboardStateFilters!]!
-  created_at: DateTime!
+  created_at: String!
   dashboard_key: String!
-  end_at: DateTime!
+  end_at: String!
   id: ID!
   interval: String!
-  start_at: DateTime!
+  start_at: String!
   teams: [Team!]!
-  updated_at: DateTime!
+  updated_at: String!
   uuid: String!
 }
 
@@ -13018,16 +13018,18 @@ Converts a date to iso8601
 """
 scalar DateInput
 
+
+# Renamed from DateInput to String (sexurity)
 input DateInputPredicateInput {
-  _eq: DateInput
-  _gt: DateInput
-  _gte: DateInput
-  _in: [DateInput]
+  _eq: String
+  _gt: String
+  _gte: String
+  _in: [String]
   _is_null: Boolean
-  _lt: DateInput
-  _lte: DateInput
-  _neq: DateInput
-  _nin: [DateInput]
+  _lt: String
+  _lte: String
+  _neq: String
+  _nin: [String]
 }
 
 """
@@ -13042,20 +13044,20 @@ enum DateSeriesIntervalEnum {
 }
 
 """
-Converts a datetime to iso8601
+Converts a String to iso8601
 """
-scalar DateTime
+scalar String
 
-input DateTimePredicateInput {
-  _eq: DateTime
-  _gt: DateTime
-  _gte: DateTime
-  _in: [DateTime]
+input StringPredicateInput {
+  _eq: String
+  _gt: String
+  _gte: String
+  _in: [String]
   _is_null: Boolean
-  _lt: DateTime
-  _lte: DateTime
-  _neq: DateTime
-  _nin: [DateTime]
+  _lt: String
+  _lte: String
+  _neq: String
+  _nin: [String]
 }
 
 """
@@ -14010,7 +14012,7 @@ A derived pentest - A view model representing either a pentest or pentest opport
 type DerivedPentest implements Node {
   _id: ID!
   aasm_state: String
-  details_date: DateTime
+  details_date: String
   findings: Int
   hours: Int
   i_can_delete: Boolean
@@ -14048,9 +14050,9 @@ type DerivedPentest implements Node {
   phase: String
   phase_weight: Int
   remediated: Int
-  retesting_ends_at: DateTime
+  retesting_ends_at: String
   size: Int
-  start_date: DateTime
+  start_date: String
   summary_report: PentestSummaryReport
   team: Team
   token: String
@@ -14656,12 +14658,12 @@ A HacktivityItems::Disclosed for a report
 """
 type Disclosed implements HacktivityItemInterface & Node {
   _id: ID!
-  created_at: DateTime
+  created_at: String
   currency: String
   id: ID!
   is_collaboration: Boolean
   latest_disclosable_action: String
-  latest_disclosable_activity_at: DateTime
+  latest_disclosable_activity_at: String
   recommended_hacktivity_items(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -14955,17 +14957,17 @@ A domain ownership object
 """
 type DomainOwnership implements Node {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   domain: String!
   id: ID!
   may_cancel: Boolean!
   secret: String!
   state: String!
-  updated_at: DateTime!
+  updated_at: String!
   verification_content: String
   verification_method: String!
   verification_method_label: String!
-  verified_at: DateTime
+  verified_at: String
 }
 
 """
@@ -15037,7 +15039,7 @@ type Earning implements Node {
   amount: Float!
   bounty: Bounty
   checklist_check_response: ChecklistCheckResponse
-  created_at: DateTime!
+  created_at: String!
   id: ID!
   pentester: Pentester
   report_retest_user: ReportRetestUser
@@ -16368,7 +16370,7 @@ input FiltersAuditLogItemFilterInput {
   _and: [FiltersAuditLogItemFilterInput]
   _not: FiltersAuditLogItemFilterInput
   _or: [FiltersAuditLogItemFilterInput]
-  created_at: DateTimePredicateInput
+  created_at: StringPredicateInput
   event: StringPredicateInput
   id: IntPredicateInput
   source_type: AuditLogSourceTypeEnumInputPredicateInput
@@ -16396,7 +16398,7 @@ input FiltersBountyFilterInput {
   _and: [FiltersBountyFilterInput]
   _not: FiltersBountyFilterInput
   _or: [FiltersBountyFilterInput]
-  created_at: DateTimePredicateInput
+  created_at: StringPredicateInput
   id: IntPredicateInput
 }
 
@@ -16784,11 +16786,11 @@ input FiltersReportFilterInput {
   _and: [FiltersReportFilterInput]
   _not: FiltersReportFilterInput
   _or: [FiltersReportFilterInput]
-  bounty_awarded_at: DateTimePredicateInput
-  bug_reporter_agreed_on_going_public_at: DateTimePredicateInput
-  closed_at: DateTimePredicateInput
+  bounty_awarded_at: StringPredicateInput
+  bug_reporter_agreed_on_going_public_at: StringPredicateInput
+  closed_at: StringPredicateInput
   custom_field_values: FiltersCustomFieldValueFilterInput
-  disclosed_at: DateTimePredicateInput
+  disclosed_at: StringPredicateInput
   hacker_published: BooleanPredicateInput
   hackerone_hacker_submissions: Boolean
   has_pentest: Boolean
@@ -16803,20 +16805,20 @@ input FiltersReportFilterInput {
   state: ReportStateEnumInputPredicateInput
   structured_scope: FiltersStructuredScopeFilterInput
   structured_scope_id: IntPredicateInput
-  submitted_at: DateTimePredicateInput
+  submitted_at: StringPredicateInput
   substate: ReportStateEnumInputPredicateInput
   team: FiltersTeamFilterInput
-  team_member_agreed_on_going_public_at: DateTimePredicateInput
+  team_member_agreed_on_going_public_at: StringPredicateInput
   timer_bounty_awarded_elapsed_time: IntPredicateInput
-  timer_bounty_awarded_miss_at: DateTimePredicateInput
+  timer_bounty_awarded_miss_at: StringPredicateInput
   timer_first_program_response_elapsed_time: IntPredicateInput
-  timer_first_program_response_miss_at: DateTimePredicateInput
+  timer_first_program_response_miss_at: StringPredicateInput
   timer_report_resolved_elapsed_time: IntPredicateInput
-  timer_report_resolved_miss_at: DateTimePredicateInput
+  timer_report_resolved_miss_at: StringPredicateInput
   timer_report_triage_elapsed_time: IntPredicateInput
-  timer_report_triage_miss_at: DateTimePredicateInput
+  timer_report_triage_miss_at: StringPredicateInput
   title: StringPredicateInput
-  triaged_at: DateTimePredicateInput
+  triaged_at: StringPredicateInput
   use_case: [FiltersReportFilterUseCases]
   violated_sla: SlaTypeEnum
   vulnerability_information: StringPredicateInput
@@ -16840,7 +16842,7 @@ input FiltersReportRetestFilterInput {
   _and: [FiltersReportRetestFilterInput]
   _not: FiltersReportRetestFilterInput
   _or: [FiltersReportRetestFilterInput]
-  approved_at: DateTimePredicateInput
+  approved_at: StringPredicateInput
   derived_report_retest: FiltersDerivedReportRetestFilterInput
   id: IntPredicateInput
   report_retest_users: FiltersReportRetestUserFilterInput
@@ -17206,7 +17208,7 @@ Forwarded email type for a team
 """
 type ForwardedEmails implements Node {
   body: String
-  created_at: DateTime!
+  created_at: String!
   dkim_passed: Boolean
   email_signature_valid: Boolean!
   headers: String
@@ -17413,7 +17415,7 @@ type HackerAssetSubmission implements AssetSubmissionInterface & Node {
     where: FiltersAssetEnrichmentSubmissionFilterInput
   ): AssetEnrichmentSubmissionConnection
   asset_type: AssetSubmissionAssetTypeEnum
-  created_at: DateTime!
+  created_at: String!
   description: String
   display_name: String
   id: ID!
@@ -17421,7 +17423,7 @@ type HackerAssetSubmission implements AssetSubmissionInterface & Node {
   source: String
   status: AssetSubmissionStatusEnum
   team: Team
-  updated_at: DateTime!
+  updated_at: String!
   user: User!
 }
 
@@ -17445,7 +17447,7 @@ type HackerInvitationsProfile implements Node {
   id: ID!
   min_bounty: Float
   receive_invites: Boolean
-  time_off_ends_at: DateTime
+  time_off_ends_at: String
 }
 
 """
@@ -17483,10 +17485,10 @@ A HacktivityItems::HackerPublished for a report
 """
 type HackerPublished implements HacktivityItemInterface & Node {
   _id: ID!
-  created_at: DateTime
+  created_at: String
   id: ID!
   is_collaboration: Boolean
-  latest_disclosable_activity_at: DateTime
+  latest_disclosable_activity_at: String
   recommended_hacktivity_items(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -17544,7 +17546,7 @@ type HackerReview implements Node & ResourceInterface {
   id: ID!
   public_feedback: String
   team: Team!
-  url: URI!
+  url: String
 }
 
 """
@@ -17589,10 +17591,10 @@ A HackerOne Hacker Ban Type
 type HackerTempBan implements Node & ResourceInterface {
   _id: ID!
   duration_in_days: Int
-  ends_at: DateTime
+  ends_at: String
   id: ID!
-  starts_at: DateTime
-  url: URI!
+  starts_at: String
+  url: String
 }
 
 """
@@ -17707,7 +17709,7 @@ A HackerOne hacktivity item interface
 """
 interface HacktivityItemInterface {
   _id: ID!
-  created_at: DateTime
+  created_at: String
   id: ID!
   is_collaboration: Boolean
   recommended_hacktivity_items(
@@ -18334,10 +18336,10 @@ An invitation to perform a bounty claim
 """
 type InvitationsClaimBounty implements InvitationInterface & Node {
   _id: ID!
-  accepted_at: DateTime
+  accepted_at: String
   bounty: Bounty!
   email: String
-  expires_at: DateTime
+  expires_at: String
   id: ID!
   team: Team
   token: String
@@ -18348,10 +18350,10 @@ An invitation to join an organization as a member
 """
 type InvitationsOrganizationMember implements InvitationInterface & Node {
   _id: ID!
-  accepted_at: DateTime
-  created_at: DateTime
+  accepted_at: String
+  created_at: String
   email: String
-  expires_at: DateTime
+  expires_at: String
   id: ID!
   invitation_data: Hash
   invited_by_id: Int
@@ -18361,7 +18363,7 @@ type InvitationsOrganizationMember implements InvitationInterface & Node {
   recipient: User
   recipient_id: Int
   token: String
-  updated_at: DateTime
+  updated_at: String
 }
 
 """
@@ -18369,15 +18371,15 @@ An invitation to a report participant
 """
 type InvitationsReport implements InvitationInterface & Node {
   _id: ID!
-  accepted_at: DateTime
-  created_at: DateTime!
+  accepted_at: String
+  created_at: String!
   email: String
-  expires_at: DateTime
+  expires_at: String
   id: ID!
   report: InvitationsReport!
   team: Team
   token: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -18385,8 +18387,8 @@ An invitation to perform a retest of a report
 """
 type InvitationsRetest implements InvitationInterface & Node {
   _id: ID!
-  accepted_at: DateTime
-  expires_at: DateTime
+  accepted_at: String
+  expires_at: String
   id: ID!
   report: Report!
   team: Team
@@ -18399,14 +18401,14 @@ An invitation to join a private team as a hacker
 type InvitationsSoftLaunch implements InvitationInterface & Node {
   _id: ID!
   email: String
-  expires_at: DateTime
+  expires_at: String
   id: ID!
   message: String
   recipient: User
   source: InvitationSourceEnum
   state: InvitationStateEnum
   team: Team
-  terms_accepted_at: DateTime
+  terms_accepted_at: String
   token: String
 }
 
@@ -18415,10 +18417,10 @@ An invitation to join a program as a member
 """
 type InvitationsTeamMember implements InvitationInterface & Node {
   _id: ID!
-  accepted_at: DateTime
-  created_at: DateTime
+  accepted_at: String
+  created_at: String
   email: String
-  expires_at: DateTime
+  expires_at: String
   group_names: [String!]
   id: ID!
   recipient: User
@@ -18515,7 +18517,7 @@ A JIRA integration for a team
 type JiraIntegration implements Node {
   assignee: String
   base_url: String!
-  created_at: DateTime!
+  created_at: String!
   custom: String
   description: String!
   id: ID!
@@ -18547,7 +18549,7 @@ type JiraIntegration implements Node {
   project_selection_enabled: Boolean!
   summary: String!
   team: Team!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 input JiraPrioritySeverityInput {
@@ -18562,12 +18564,12 @@ input JiraPrioritySeverityInput {
 A map of JIRA Priority to HackerOne Severity Rating
 """
 type JiraPriorityToSeverityRating implements Node {
-  created_at: DateTime!
+  created_at: String!
   id: ID!
   jira_integration: JiraIntegration!
   priority_id: ID
   severity_rating: SeverityRatingEnum!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -18615,18 +18617,18 @@ A JIRA webhook for a team
 """
 type JiraWebhook implements Node {
   close_status_id: String
-  created_at: DateTime!
+  created_at: String!
   has_received_events: Boolean!
   id: ID!
-  last_event_received_at: DateTime
-  last_token_issued_at: DateTime
+  last_event_received_at: String
+  last_token_issued_at: String
   process_assignee_change: Boolean!
   process_comment_add: Boolean!
   process_priority_change: Boolean!
   process_resolution_change: Boolean!
   process_status_change: Boolean!
   team: Team!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -18635,7 +18637,7 @@ A HackerOne job listing
 type JobListing implements Node {
   _id: ID!
   contract: Boolean
-  created_at: DateTime!
+  created_at: String!
   description: String!
   fulltime: Boolean
   id: ID!
@@ -19284,21 +19286,21 @@ type LockReportPayload implements MutationResult {
 Settings for a user's Lufthansa Account
 """
 type LufthansaAccount implements Node {
-  created_at: DateTime!
+  created_at: String!
   first_name: String!
   id: ID!
   last_name: String!
   number: String!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
 Platform maintenance banner
 """
 type MaintenanceBanner implements Node {
-  end_at: DateTime
+  end_at: String
   id: ID!
-  start_at: DateTime
+  start_at: String
 }
 
 """
@@ -22344,10 +22346,10 @@ An interface for the common fields on a HackerOne NotificationDeliveryPreference
 """
 interface NotificationDeliveryPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   delivery_preference: NotificationDeliveryPreferenceEnum!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22375,10 +22377,10 @@ A NotificationDeliveryPreferences::Award preference for a user
 """
 type NotificationDeliveryPreferencesAward implements Node & NotificationDeliveryPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   delivery_preference: NotificationDeliveryPreferenceEnum!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22386,10 +22388,10 @@ A NotificationDeliveryPreferences::Disclose preference for a user
 """
 type NotificationDeliveryPreferencesDisclose implements Node & NotificationDeliveryPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   delivery_preference: NotificationDeliveryPreferenceEnum!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22397,10 +22399,10 @@ A NotificationDeliveryPreferences::HackerComment preference for a user
 """
 type NotificationDeliveryPreferencesHackerComment implements Node & NotificationDeliveryPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   delivery_preference: NotificationDeliveryPreferenceEnum!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22408,10 +22410,10 @@ A NotificationDeliveryPreferences::Mention preference for a user
 """
 type NotificationDeliveryPreferencesMention implements Node & NotificationDeliveryPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   delivery_preference: NotificationDeliveryPreferenceEnum!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22419,10 +22421,10 @@ A NotificationDeliveryPreferences::NewSubmission preference for a user
 """
 type NotificationDeliveryPreferencesNewSubmission implements Node & NotificationDeliveryPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   delivery_preference: NotificationDeliveryPreferenceEnum!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22430,10 +22432,10 @@ A NotificationDeliveryPreferences::SubmissionConfirmation preference for a user
 """
 type NotificationDeliveryPreferencesSubmissionConfirmation implements Node & NotificationDeliveryPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   delivery_preference: NotificationDeliveryPreferenceEnum!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22441,10 +22443,10 @@ A NotificationDeliveryPreferences::SubmissionUpdate preference for a user
 """
 type NotificationDeliveryPreferencesSubmissionUpdate implements Node & NotificationDeliveryPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   delivery_preference: NotificationDeliveryPreferenceEnum!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22452,10 +22454,10 @@ A NotificationDeliveryPreferences::TeamComment preference for a user
 """
 type NotificationDeliveryPreferencesTeamComment implements Node & NotificationDeliveryPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   delivery_preference: NotificationDeliveryPreferenceEnum!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22484,10 +22486,10 @@ An interface for the common fields on a HackerOne NotificationPreference
 """
 interface NotificationPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   enabled: Boolean
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22525,10 +22527,10 @@ A NotificationPreferences::All preference for a user
 """
 type NotificationPreferencesAll implements Node & NotificationPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   enabled: Boolean
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22536,10 +22538,10 @@ A NotificationPreferences::Assigned preference for a user
 """
 type NotificationPreferencesAssigned implements Node & NotificationPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   enabled: Boolean
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22547,10 +22549,10 @@ A NotificationPreferences::Interact preference for a user
 """
 type NotificationPreferencesInteract implements Node & NotificationPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   enabled: Boolean
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22586,10 +22588,10 @@ A NotificationPreferences::Mention preference for a user
 """
 type NotificationPreferencesMention implements Node & NotificationPreferenceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   enabled: Boolean
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -22618,7 +22620,7 @@ input OpportunitiesQuery {
 type OpportunityDocument implements Node {
   allows_bounty_splitting: Boolean
   allows_private_disclosure: Boolean
-  bounty_table_updated_at: DateTime
+  bounty_table_updated_at: String
   cached_response_efficiency_percentage: Int
   campaign: Campaign
   credentials_set_up: Boolean
@@ -22630,8 +22632,8 @@ type OpportunityDocument implements Node {
   handle: String!
   id: ID!
   industry: String
-  last_updated_at: DateTime
-  launched_at: DateTime
+  last_updated_at: String
+  launched_at: String
   maximum_bounty_table_value: Int
   minimum_bounty_table_value: Int
   name: String!
@@ -22892,7 +22894,7 @@ type Organization implements Node {
   ): AuditLogItemConnection
   available_organization_inboxes_count: Int
   consumption_subscriptions: [ConsumptionSubscription!]
-  created_at: DateTime
+  created_at: String
   darktrace_customer: DarktraceCustomer
   darktrace_instances: [DarktraceInstance!]
   derived_pentests(
@@ -23270,7 +23272,7 @@ type Organization implements Node {
     where: FiltersTeamFilterInput
   ): TeamConnection
   tray_profile: TrayProfile
-  updated_at: DateTime
+  updated_at: String
   users(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -23359,7 +23361,7 @@ An organization inbox object
 """
 type OrganizationInbox implements Node {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   handle: String!
   id: ID!
   inbox_type: OrganizationInboxTypeEnum!
@@ -23510,7 +23512,7 @@ A HackerOne organization member
 """
 type OrganizationMember implements Node & ResourceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   id: ID!
   organization: Organization!
   organization_admin: Boolean!
@@ -23560,8 +23562,8 @@ type OrganizationMember implements Node & ResourceInterface {
     order_by: FiltersOrganizationMemberGroupFilterOrder
     where: FiltersOrganizationMemberGroupFilterInput
   ): OrganizationMemberGroupConnection
-  updated_at: DateTime!
-  url: URI!
+  updated_at: String!
+  url: String
   user: User!
 }
 
@@ -23620,13 +23622,13 @@ type OrganizationMemberGroup implements Node & ResourceInterface {
   can_update_permissions: Boolean!
   can_update_teams: Boolean!
   can_update_users: Boolean!
-  created_at: DateTime!
+  created_at: String!
   eligibility_setting: TeamMemberEligibilitySettings
   grants_access_to_asset_inventory: Boolean!
   id: ID!
   inbox_permissions: [OrganizationPermissionsEnum!]!
   key: String
-  migrated_at: DateTime
+  migrated_at: String
   name: String!
   organization: Organization!
   organization_inboxes(
@@ -23679,8 +23681,8 @@ type OrganizationMemberGroup implements Node & ResourceInterface {
   permissions: [OrganizationPermissionsEnum!]!
   program_permissions: [OrganizationPermissionsEnum!]!
   teams: [Team!]!
-  updated_at: DateTime!
-  url: URI!
+  updated_at: String!
+  url: String
 }
 
 """
@@ -23868,7 +23870,7 @@ type ParticipantWithReputationEdge {
 An object with payment transaction data
 """
 type PaymentTransaction implements Node {
-  activity_date: DateTime!
+  activity_date: String!
   activity_description: String
   balance: Float!
   bounty_award: Float
@@ -24017,7 +24019,7 @@ A pentest
 type Pentest implements Node {
   _id: ID!
   analytics_id: String
-  archived_at: DateTime
+  archived_at: String
   asset_descriptions(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -24107,13 +24109,13 @@ type Pentest implements Node {
   award_amount_lead: Int
   citizenship_restrictions: [String!]
   community_display_count: String
-  completed_at: DateTime
+  completed_at: String
   counts_per_asset: Hash
   counts_per_severity: Hash
   counts_per_weakness: Hash
   description: String
   end_date: Date
-  ends_at: DateTime
+  ends_at: String
   findings_per_asset: Hash
   high_critical_count: Int
   hour_cap: Int
@@ -24367,7 +24369,7 @@ type Pentest implements Node {
     without_scope: Boolean = null
   ): ReportConnection
   retesting_end_date: Date
-  retesting_ends_at: DateTime
+  retesting_ends_at: String
   salesforce_tpm_email: String
   schedule_day_restrictions: [String!]!
   schedule_restrictions: String
@@ -24377,11 +24379,11 @@ type Pentest implements Node {
   slack_workspace_url: String
   start_date: Date
   started: Boolean
-  starts_at: DateTime
+  starts_at: String
   state: PentestStateEnum
   structured_scope_types: [String!]
   summary_form_state: PentestSummaryFormStateEnum
-  summary_report_delivery_date: DateTime
+  summary_report_delivery_date: String
   supporting_pentesters(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -24907,16 +24909,16 @@ type PentestOpportunity implements Node {
   name: String
   organization: Organization
   package_name: String
-  requested_start_date: DateTime
+  requested_start_date: String
   salesforce_account: String
   salesforce_opportunity: String
   schedule_day_restrictions: [String!]
   schedule_restrictions: String
   schedule_time_restrictions_end: String
   schedule_time_restrictions_start: String
-  sold_at: DateTime
+  sold_at: String
   state: String!
-  submitted_at: DateTime
+  submitted_at: String
   token: String!
   total_pentester_awards: Int
   total_pentester_hours: Int
@@ -25395,11 +25397,11 @@ A pentest summary report
 type PentestSummaryReport implements Node {
   _id: ID!
   attachment: Attachment!
-  created_at: DateTime
+  created_at: String
   description: String
   id: ID!
   name: String
-  updated_at: DateTime
+  updated_at: String
 }
 
 """
@@ -25531,13 +25533,13 @@ A pentester
 type Pentester implements Node {
   _id: ID!
   aasm_state: PentesterStateEnum!
-  accepted_at: DateTime
-  applied_at: DateTime
+  accepted_at: String
+  applied_at: String
   award_amount: String!
-  completed_at: DateTime
+  completed_at: String
   id: ID!
   pentest: Pentest
-  revoked_at: DateTime
+  revoked_at: String
   user: User!
 }
 
@@ -25678,8 +25680,8 @@ type PentesterProfile implements Node {
 input PentesterProfileCertificationInput {
   certification_id: ID!
   certification_identifier: String
-  ends_at: DateTime
-  starts_at: DateTime
+  ends_at: String
+  starts_at: String
 }
 
 """
@@ -25803,7 +25805,7 @@ A Phabricator integration for a team
 """
 type PhabricatorIntegration implements Node {
   base_url: String
-  created_at: DateTime!
+  created_at: String!
   description: String
   id: ID!
   linkable: Boolean!
@@ -25814,7 +25816,7 @@ type PhabricatorIntegration implements Node {
   project_tags: String
   team: Team!
   title: String
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -25828,8 +25830,8 @@ input PingPageActivityInput {
   """
   clientMutationId: String
   page_type: String!
-  pinged_at: DateTime!
-  report_closed_at: DateTime
+  pinged_at: String!
+  report_closed_at: String
   report_id: ID!
 }
 
@@ -25879,14 +25881,14 @@ type PolicySetting implements Node {
   i_can_subscribe_to_policy_changes: Boolean!
   i_can_view_policy_versions: Boolean!
   id: ID!
-  last_policy_change_at: DateTime
+  last_policy_change_at: String
   policy: String
   structured_policy: StructuredPolicy
   subscribed: Boolean!
 }
 
 type Post implements Node {
-  created_at: DateTime!
+  created_at: String!
   id: ID!
   message: String
   title: String
@@ -26082,7 +26084,7 @@ A program_health_acknowledgement for a team_member
 """
 type ProgramHealthAcknowledgement implements Node {
   acknowledged: Boolean
-  created_at: DateTime
+  created_at: String
   dismissed: Boolean
   id: ID!
   reason: ProgramHealthAcknowledgementReasonEnum
@@ -26915,8 +26917,8 @@ type Query implements Node {
     where: FiltersPentestFilterInput
   ): PentestConnection
   popular_now: [Hash!]
-  program_analytics(end_date: DateTime!, from: ProgramAnalyticsFromEnum!, group: ProgramAnalyticsGroupEnum!, secondary_group: ProgramAnalyticsSecondaryGroupInput, select: ProgramAnalyticsSelectEnum!, start_date: DateTime!, teams: [String!]!, where: ProgramAnalyticsFilterInput!): [DataPoint]
-  program_analytics_benchmarks(end_date: DateTime!, from: ProgramAnalyticsFromEnum!, group: ProgramAnalyticsGroupEnum!, select: ProgramAnalyticsBenchmarkSelectEnum!, start_date: DateTime!, teams: [String!]!, where: ProgramAnalyticsBenchmarkFilterInput!): [DataPoint]
+  program_analytics(end_date: String!, from: ProgramAnalyticsFromEnum!, group: ProgramAnalyticsGroupEnum!, secondary_group: ProgramAnalyticsSecondaryGroupInput, select: ProgramAnalyticsSelectEnum!, start_date: String!, teams: [String!]!, where: ProgramAnalyticsFilterInput!): [DataPoint]
+  program_analytics_benchmarks(end_date: String!, from: ProgramAnalyticsFromEnum!, group: ProgramAnalyticsGroupEnum!, select: ProgramAnalyticsBenchmarkSelectEnum!, start_date: String!, teams: [String!]!, where: ProgramAnalyticsBenchmarkFilterInput!): [DataPoint]
   query: Query!
   ranked_cve_entries(
     """
@@ -27274,7 +27276,7 @@ input RangeInput {
 }
 
 input RangeOperatorInput {
-  gte: DateTime
+  gte: String
 }
 
 """
@@ -28611,7 +28613,7 @@ type Report implements ActivitiesInterface & Node & ResourceInterface {
     updated_at_after: String
   ): ActivityConnection
   allow_singular_disclosure_after: String
-  allow_singular_disclosure_at: DateTime
+  allow_singular_disclosure_at: String
   anc_reasons: [String]
   assignee: AssigneeUnion
   attachments: [Attachment]
@@ -28660,10 +28662,10 @@ type Report implements ActivitiesInterface & Node & ResourceInterface {
     """
     last: Int
   ): BountyConnection
-  bounty_awarded_at: DateTime
+  bounty_awarded_at: String
   bounty_awarded_staleness_threshold: Int
   bounty_calculator: BountyCalculator
-  bug_reporter_agreed_on_going_public_at: DateTime
+  bug_reporter_agreed_on_going_public_at: String
   campaign: Campaign
   can_change_organization_inboxes: Boolean
   can_manage: Boolean
@@ -28689,9 +28691,9 @@ type Report implements ActivitiesInterface & Node & ResourceInterface {
     """
     last: Int
   ): ReportConnection
-  closed_at: DateTime
+  closed_at: String
   comments_closed: Boolean
-  created_at: DateTime!
+  created_at: String!
   credential: Credential
   custom_field_values(
     """
@@ -28760,7 +28762,7 @@ type Report implements ActivitiesInterface & Node & ResourceInterface {
     where: FiltersCustomRemediationGuidanceFilterInput
   ): CustomRemediationGuidanceConnection
   cve_ids: [String]
-  disclosed_at: DateTime
+  disclosed_at: String
   duplicates(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -28806,7 +28808,7 @@ type Report implements ActivitiesInterface & Node & ResourceInterface {
     where: FiltersEscalationFilterInput
   ): EscalationConnection
   extracted_report_data: ExtractedReportData
-  first_program_activity_at: DateTime
+  first_program_activity_at: String
   hacker_published: Boolean
   i_am_organization_group_member: Boolean
   i_am_participant: Boolean
@@ -28830,14 +28832,14 @@ type Report implements ActivitiesInterface & Node & ResourceInterface {
   id: ID!
   is_external_bug: Boolean
   is_link_sharing_enabled: Boolean
-  jira_escalation_last_state_change_at: DateTime
+  jira_escalation_last_state_change_at: String
   jira_escalation_state: String
-  latest_activity_at: DateTime
-  latest_public_activity_at: DateTime
-  latest_public_activity_of_reporter_at: DateTime
-  latest_public_activity_of_team_at: DateTime
-  latest_report_state_change_at: DateTime
-  mediation_requested_at: DateTime
+  latest_activity_at: String
+  latest_public_activity_at: String
+  latest_public_activity_of_reporter_at: String
+  latest_public_activity_of_team_at: String
+  latest_report_state_change_at: String
+  mediation_requested_at: String
   new_staleness_threshold: Int
   organization: Organization
   organization_inboxes(
@@ -28878,7 +28880,7 @@ type Report implements ActivitiesInterface & Node & ResourceInterface {
   remediation_status_verbose: String
   report_generated_content: ReportGeneratedContent
   report_metadata: ReportMetadata
-  report_pending_party_last_activity: DateTime
+  report_pending_party_last_activity: String
   report_share_tokens: [ReportShareToken!]!
   reporter: User
   resolution_staleness_threshold: Int
@@ -28889,33 +28891,33 @@ type Report implements ActivitiesInterface & Node & ResourceInterface {
   stage: String
   state: String
   structured_scope: StructuredScope
-  submitted_at: DateTime
+  submitted_at: String
   substate: String!
   suggested_bounty: String
   summaries: [Summary]
   swag: [Swag]
-  swag_awarded_at: DateTime
+  swag_awarded_at: String
   team: Team
-  team_member_agreed_on_going_public_at: DateTime
+  team_member_agreed_on_going_public_at: String
   timer_bounty_awarded_elapsed_time: Int
-  timer_bounty_awarded_miss_at: DateTime
+  timer_bounty_awarded_miss_at: String
   timer_bounty_awarded_until_missed: Int
   timer_first_program_response_elapsed_time: Int
-  timer_first_program_response_miss_at: DateTime
+  timer_first_program_response_miss_at: String
   timer_first_program_response_until_missed: Int
   timer_report_resolved_elapsed_time: Int
-  timer_report_resolved_miss_at: DateTime
+  timer_report_resolved_miss_at: String
   timer_report_resolved_until_missed: Int
   timer_report_triage_elapsed_time: Int
-  timer_report_triage_miss_at: DateTime
+  timer_report_triage_miss_at: String
   timer_report_triage_until_missed: Int
   title: String
   triage_complexity_rating: TriageComplexityRating
   triage_meta: TriageMeta
-  triaged_at: DateTime
+  triaged_at: String
   triaged_staleness_threshold: Int
   undismissed_triage_inbox_items: [TriageInboxItem]! @deprecated(reason: "This field is deprecated.")
-  url: URI!
+  url: String
   visibility: String
   votes(
     """
@@ -29053,7 +29055,7 @@ type ReportConnection {
 A combination of custom field attributes and values for each report
 """
 type ReportCustomField implements Node {
-  archived_at: DateTime
+  archived_at: String
   checkbox_text: String
   configuration: String
   custom_field_attribute: CustomFieldAttributeInterface
@@ -29146,42 +29148,42 @@ type ReportEdge {
 
 input ReportFilterInput {
   assignee: [String]
-  bounty_awarded_at__gt: DateTime
-  bounty_awarded_at__lt: DateTime
+  bounty_awarded_at__gt: String
+  bounty_awarded_at__lt: String
   bounty_awarded_at__null: Boolean
-  closed_at__gt: DateTime
-  closed_at__lt: DateTime
+  closed_at__gt: String
+  closed_at__lt: String
   closed_at__null: Boolean
-  created_at__gt: DateTime
-  created_at__lt: DateTime
+  created_at__gt: String
+  created_at__lt: String
   custom_fields: [CustomFieldInput]
-  disclosed_at__gt: DateTime
-  disclosed_at__lt: DateTime
+  disclosed_at__gt: String
+  disclosed_at__lt: String
   disclosed_at__null: Boolean
-  first_program_activity_at__gt: DateTime
-  first_program_activity_at__lt: DateTime
+  first_program_activity_at__gt: String
+  first_program_activity_at__lt: String
   first_program_activity_at__null: Boolean
   hacker_published: Boolean
   id: [Int]
   keyword: String
-  last_activity_at__gt: DateTime
-  last_activity_at__lt: DateTime
-  last_program_activity_at__gt: DateTime
-  last_program_activity_at__lt: DateTime
-  last_public_activity_at__gt: DateTime
-  last_public_activity_at__lt: DateTime
-  last_reporter_activity_at__gt: DateTime
-  last_reporter_activity_at__lt: DateTime
+  last_activity_at__gt: String
+  last_activity_at__lt: String
+  last_program_activity_at__gt: String
+  last_program_activity_at__lt: String
+  last_public_activity_at__gt: String
+  last_public_activity_at__lt: String
+  last_reporter_activity_at__gt: String
+  last_reporter_activity_at__lt: String
   program: [String]!
   reporter: [String]!
   reporter_agreed_on_going_public: Boolean
   severity: [SeverityRatingEnum]
   state: [ReportStateEnum] = []
-  swag_awarded_at__gt: DateTime
-  swag_awarded_at__lt: DateTime
+  swag_awarded_at__gt: String
+  swag_awarded_at__lt: String
   swag_awarded_at__null: Boolean
-  triaged_at__gt: DateTime
-  triaged_at__lt: DateTime
+  triaged_at__gt: String
+  triaged_at__lt: String
   triaged_at__null: Boolean
   weakness_id: [Int]
 }
@@ -29285,13 +29287,13 @@ type ReportRetest implements Node {
   _id: ID!
   asset_name: String
   asset_type: String
-  assigned_at: DateTime
+  assigned_at: String
   award_amount: String!
-  claimed_at: DateTime
-  created_at: DateTime
+  claimed_at: String
+  created_at: String
   created_by: User
   id: ID!
-  needs_approval_at: DateTime
+  needs_approval_at: String
   report: Report
   report_retest_users(
     """
@@ -29419,10 +29421,10 @@ type ReportRetestUser implements Node {
   _id: ID!
   activity: ActivitiesUserCompletedRetest
   answered_fix_can_be_bypassed: Boolean
-  assigned_at: DateTime
+  assigned_at: String
   bypass_report_id: Int
-  claimed_at: DateTime
-  completed_at: DateTime
+  claimed_at: String
+  completed_at: String
   fixed: Boolean
   id: ID!
   invitation: InvitationsRetest
@@ -29509,12 +29511,12 @@ A report share token used for link sharing
 """
 type ReportShareToken implements Node {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   created_by: User!
-  expires_at: DateTime!
+  expires_at: String!
   id: ID!
   report_visibility: ReportVisibilityEnum!
-  revoked_at: DateTime
+  revoked_at: String
   secure_link: String!
   usable: Boolean!
 }
@@ -30081,7 +30083,7 @@ type ResetAllCredentialsPayload implements MutationResult {
 Represents a type that can be retrieved by a URL.
 """
 interface ResourceInterface {
-  url: URI!
+  url: String
 }
 
 """
@@ -30525,15 +30527,15 @@ type SamlProvider implements Node {
   allow_sign_up: Boolean!
   alternative_certificate: String
   alternative_certificate_fingerprint: String
-  approval_requested_at: DateTime
+  approval_requested_at: String
   certificate: String!
   certificate_fingerprint: String!
-  created_at: DateTime!
-  disabled_at: DateTime
+  created_at: String!
+  disabled_at: String
   id: ID!
   jit_provisioning: Boolean
   name: String
-  rejected_at: DateTime
+  rejected_at: String
   saml_provider_domains(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -30608,7 +30610,7 @@ type SamlProvider implements Node {
     secure_order_by: FiltersTeamFilterOrder
     where: FiltersTeamFilterInput
   ): TeamConnection
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -30636,11 +30638,11 @@ type SamlProviderConnection {
 A SAML provider domain
 """
 type SamlProviderDomain implements Node {
-  created_at: DateTime
+  created_at: String
   domain: String!
   domain_ownership: DomainOwnership
   id: ID!
-  updated_at: DateTime
+  updated_at: String
 }
 
 """
@@ -30729,17 +30731,17 @@ A SAML integration test
 """
 type SamlTest implements Node & ResourceInterface {
   _id: ID!
-  completed_at: DateTime
-  created_at: DateTime!
+  completed_at: String
+  created_at: String!
   created_by: User!
   id: ID!
   saml_errors: [String!]!
   saml_response_log: SamlResponseLog
-  started_at: DateTime
+  started_at: String
   state: SamlTestStateEnum!
   test_url: String
-  updated_at: DateTime!
-  url: URI!
+  updated_at: String!
+  url: String
 }
 
 """
@@ -30951,14 +30953,14 @@ type ScannerAssetSubmission implements AssetSubmissionInterface & Node {
     where: FiltersAssetEnrichmentSubmissionFilterInput
   ): AssetEnrichmentSubmissionConnection
   asset_type: AssetSubmissionAssetTypeEnum
-  created_at: DateTime!
+  created_at: String!
   description: String
   display_name: String
   id: ID!
   identifier: String!
   source: String
   status: AssetSubmissionStatusEnum
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -31169,7 +31171,7 @@ type Severity implements Node {
   author_type: SeverityAuthorEnum
   availability: SeverityAvailabilityEnum
   confidentiality: SeverityConfidentialityEnum
-  created_at: DateTime
+  created_at: String
   id: ID!
   integrity: SeverityIntegrityEnum
   privileges_required: SeverityPrivilegesRequiredEnum
@@ -31456,7 +31458,7 @@ type SlaSnapshot implements Node {
   average_time_to_report_resolved: Float
   average_time_to_report_triage: Float
   bounty_awarded_sla_misses_count: Int
-  created_at: DateTime!
+  created_at: String!
   first_program_response_sla_failures_count: Int
   first_program_response_sla_misses_count: Int
   id: ID!
@@ -31589,8 +31591,8 @@ type SlackPipeline implements Node & ResourceInterface {
   notification_report_triaged: Boolean!
   notification_report_user_completed_retest: Boolean!
   team: Team!
-  updated_at: DateTime!
-  url: URI!
+  updated_at: String!
+  url: String
 }
 
 """
@@ -31690,7 +31692,7 @@ type Solution implements Node & ResourceInterface {
   name: String!
   test_button_enabled: Boolean!
   title: String!
-  url: URI!
+  url: String
 }
 
 """
@@ -31738,7 +31740,7 @@ Tray::SolutionInstance
 """
 type SolutionInstance implements Node & ResourceInterface {
   _id: ID!
-  created: DateTime
+  created: String
   description: String
   edit_url: String!
   enabled: Boolean!
@@ -31746,7 +31748,7 @@ type SolutionInstance implements Node & ResourceInterface {
   linkable: Boolean!
   name: String!
   solution: Solution!
-  url: URI!
+  url: String
 }
 
 """
@@ -31907,7 +31909,7 @@ type StaticDashboard implements Node & ResourceInterface {
   queries: [StaticDashboardQuery]!
   title: String!
   type: String!
-  url: URI!
+  url: String
 }
 
 """
@@ -31952,7 +31954,7 @@ type StaticDashboardChart implements Node & ResourceInterface {
   stacked: Boolean
   title: String!
   type: String!
-  url: URI!
+  url: String
 }
 
 """
@@ -31962,7 +31964,7 @@ type StaticDashboardElement implements Node & ResourceInterface {
   id: ID!
   markdown: String!
   type: String!
-  url: URI!
+  url: String
 }
 
 """
@@ -31994,7 +31996,7 @@ type StaticDashboardQuery implements Node & ResourceInterface {
   id: ID!
   key: String!
   query: String!
-  url: URI!
+  url: String
 }
 
 """
@@ -32219,7 +32221,7 @@ type StructuredPolicy implements Node & ResourceInterface {
   process: String
   safe_harbor: String
   scope: String
-  url: URI!
+  url: String
 }
 
 """
@@ -32227,7 +32229,7 @@ A defined scope of a HackerOne program
 """
 type StructuredScope implements Node & ResourceInterface {
   _id: ID!
-  archived_at: DateTime
+  archived_at: String
   asset_identifier: String!
   asset_type: StructuredScopeAssetTypeEnum
   availability_requirement: SeveritySecurityRequirementEnum
@@ -32276,7 +32278,7 @@ type StructuredScope implements Node & ResourceInterface {
   claimed_credential: Credential
   confidentiality_requirement: SeveritySecurityRequirementEnum
   country: String
-  created_at: DateTime!
+  created_at: String!
   credential_inquiry: CredentialInquiry
   credentials(
     """
@@ -32402,9 +32404,9 @@ type StructuredScope implements Node & ResourceInterface {
     last: Int
   ): StructuredScopeVersionConnection
   team: Team
-  unarchived_at: DateTime
-  updated_at: DateTime
-  url: URI!
+  unarchived_at: String
+  updated_at: String
+  url: String
 }
 
 """
@@ -32465,7 +32467,7 @@ type StructuredScopeDocument implements Node {
   asset_type: StructuredScopeAssetTypeEnum
   availability_requirement: SeveritySecurityRequirementEnum
   confidentiality_requirement: SeveritySecurityRequirementEnum
-  created_at: DateTime
+  created_at: String
   cvss_score: String
   display_name: String!
   eligible_for_bounty: Boolean!
@@ -32475,7 +32477,7 @@ type StructuredScopeDocument implements Node {
   instruction: String
   integrity_requirement: SeveritySecurityRequirementEnum
   new: Boolean!
-  updated_at: DateTime
+  updated_at: String
 }
 
 """
@@ -32519,9 +32521,9 @@ A versioned log of a scope of a HackerOne program
 """
 type StructuredScopeVersion implements Node & ResourceInterface {
   _id: ID!
-  archived_at: DateTime
+  archived_at: String
   asset_identifier: String
-  created_at: DateTime!
+  created_at: String!
   eligible_for_bounty: Boolean
   eligible_for_submission: Boolean
   id: ID!
@@ -32530,7 +32532,7 @@ type StructuredScopeVersion implements Node & ResourceInterface {
   structured_scope: StructuredScope
   structured_scope_id: ID!
   team: Team
-  url: URI!
+  url: String
 }
 
 """
@@ -32541,7 +32543,7 @@ type StructuredScopeVersionConnection {
   A list of edges.
   """
   edges: [StructuredScopeVersionEdge]
-  max_updated_at: DateTime
+  max_updated_at: String
 
   """
   A list of nodes.
@@ -32578,7 +32580,7 @@ type StructuredScopesConnection {
   A list of edges.
   """
   edges: [StructuredScopeEdge]
-  max_updated_at: DateTime
+  max_updated_at: String
 
   """
   A list of nodes.
@@ -32596,12 +32598,12 @@ type StructuredScopesConnection {
 A HackerOne programs's submission requirements
 """
 type SubmissionRequirements implements Node {
-  created_at: DateTime
+  created_at: String
   id: ID!
-  mfa_required_at: DateTime
+  mfa_required_at: String
   severity_options: SeverityInputEnum!
-  severity_required_at: DateTime
-  terms_required_at: DateTime
+  severity_required_at: String
+  terms_required_at: String
 }
 
 """
@@ -32841,9 +32843,9 @@ type Summary implements Node {
   attachments: [Attachment]
   category: String @deprecated(reason: "The implementation of this field contains hard to reason about polymorphism")
   content: String!
-  created_at: DateTime!
+  created_at: String!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
   user: User!
 }
 
@@ -32875,7 +32877,7 @@ type Survey implements Node & ResourceInterface {
     """
     last: Int
   ): SurveyStructuredResponseConnection
-  url: URI!
+  url: String
 }
 
 """
@@ -32883,7 +32885,7 @@ A survey filled out by a hacker
 """
 type SurveyAnswer implements Node {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   feedback: String
   id: ID!
   source_type: String
@@ -32909,7 +32911,7 @@ type SurveyAnswer implements Node {
     last: Int
   ): SurveyStructuredResponseConnection
   team: Team
-  updated_at: DateTime
+  updated_at: String
   user: User
 }
 
@@ -33019,8 +33021,8 @@ A survey rating
 """
 type SurveyRating implements Node {
   _id: ID!
-  completed_at: DateTime
-  created_at: DateTime!
+  completed_at: String
+  created_at: String!
   id: ID!
   respondent: User
   state: SurveyRatingStateEnum
@@ -33047,7 +33049,7 @@ type SurveyRating implements Node {
   ): SurveyRatingItemsConnection
   team: Team
   type: String
-  updated_at: DateTime
+  updated_at: String
 }
 
 """
@@ -33055,7 +33057,7 @@ A survey rating item
 """
 type SurveyRatingItem implements Node {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   i_can_toggle_survey_rating_item: Boolean!
   id: ID!
   key: String!
@@ -33068,7 +33070,7 @@ type SurveyRatingItem implements Node {
   subject: SurveyRatingItemSubjectUnion
   survey_rating: SurveyRating
   team: Team
-  updated_at: DateTime
+  updated_at: String
   visible_on_user_profile: Boolean
 }
 
@@ -33283,7 +33285,7 @@ A HackerOne swag awarded for a report
 """
 type Swag implements Node {
   _id: ID!
-  created_at: DateTime
+  created_at: String
   id: ID!
   report: Report
   sent: Boolean!
@@ -33443,11 +33445,11 @@ Task
 type Task implements Node & ResourceInterface {
   _id: ID!
   completed: Boolean
-  completed_at: DateTime
+  completed_at: String
   description: String!
   id: ID!
   key: TaskKeyEnum!
-  url: URI!
+  url: String
 }
 
 """
@@ -33503,10 +33505,10 @@ enum TaskKeyEnum {
 A tax form for a user
 """
 type TaxForm implements Node {
-  created_at: DateTime!
+  created_at: String!
   hello_sign_client_id: String
   id: ID!
-  signed_at: DateTime
+  signed_at: String
   status: TaxFormStateEnum!
   type: TaxFormTypeEnum!
   url: String
@@ -33694,7 +33696,7 @@ type Team implements ActivitiesInterface & Node & ResourceInterface {
     """
     last: Int
   ): BountyConnection
-  bounties_awarded_in_period(end_date: DateTime, start_date: DateTime): Float
+  bounties_awarded_in_period(end_date: String, start_date: String): Float
   bounties_total: String
   bounty_awarded_staleness_threshold: Int
   bounty_competitiveness_percentile(input: BountyCompetitivenessPercentileInput!): BountyCompetitivenessPercentile
@@ -33704,7 +33706,7 @@ type Team implements ActivitiesInterface & Node & ResourceInterface {
   """
   bounty_earned_for_user: Float
   bounty_table: BountyTable
-  bounty_time(date_start: DateTime): Float
+  bounty_time(date_start: String): Float
   campaign(id: Int!): Campaign
   campaigns(
     """
@@ -33785,7 +33787,7 @@ type Team implements ActivitiesInterface & Node & ResourceInterface {
     """
     last: Int
   ): TeamConnection
-  churned_at: DateTime
+  churned_at: String
   claimed_credential: Credential
   common_responses(
     """
@@ -33835,8 +33837,8 @@ type Team implements ActivitiesInterface & Node & ResourceInterface {
   controlled_launch_setting: ControlledLaunchSetting
   cover_color: String
   cover_photo_url: String
-  coverage_analytics_summary(current_path: String = null, end_date: DateTime, group_by: [String] = [], http_host: String = null, order_by: CoverageAnalyticsOrderInput = null, page: Int = null, start_date: DateTime): [CoverageAnalyticsSummary!]!
-  created_at: DateTime
+  coverage_analytics_summary(current_path: String = null, end_date: String, group_by: [String] = [], http_host: String = null, order_by: CoverageAnalyticsOrderInput = null, page: Int = null, start_date: String): [CoverageAnalyticsSummary!]!
+  created_at: String
   credential_instruction: String
   credentials(
     """
@@ -34005,7 +34007,7 @@ type Team implements ActivitiesInterface & Node & ResourceInterface {
   ): TeamConnection
   fancy_slack_integration: Boolean
   features: [Feature]
-  first_response_time(date_start: DateTime): Float
+  first_response_time(date_start: String): Float
   first_time_invite: Boolean
   formatted_bounties_paid_last_90_days: Int
   formatted_total_bounties_paid_amount: Int
@@ -34187,11 +34189,11 @@ type Team implements ActivitiesInterface & Node & ResourceInterface {
   """
   The participant's date of accepted the teams invitation
   """
-  last_invitation_accepted_at_for_user: DateTime
-  last_report_resolved_at: DateTime
-  last_updated_at: DateTime
+  last_invitation_accepted_at_for_user: String
+  last_report_resolved_at: String
+  last_updated_at: String
   launch_link: String
-  launched_at: DateTime
+  launched_at: String
   maximum_bounty_table_value: Int
   maximum_number_of_team_mediation_requests: Float
   minimum_bounty: Int
@@ -34489,13 +34491,13 @@ type Team implements ActivitiesInterface & Node & ResourceInterface {
     without_scope: Boolean = null
   ): ReportConnection
   reports_received_last_90_days: Int
-  resolution_time(date_start: DateTime): Float
+  resolution_time(date_start: String): Float
   resolved_report_count: Int
   resolved_staleness_threshold: Int
   response_efficiency_indicator: ResponseEfficiencyIndicatorEnum
   response_efficiency_percentage: Int
-  review_rejected_at: DateTime
-  review_requested_at: DateTime
+  review_rejected_at: String
+  review_requested_at: String
   salesforce_account_consumption_tier: SalesforceAccountConsumptionTier
   saml_provider: SamlProvider
   scope_description: String
@@ -34515,7 +34517,7 @@ type Team implements ActivitiesInterface & Node & ResourceInterface {
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
-    end_date: DateTime
+    end_date: String
 
     """
     Returns the first _n_ elements from the list.
@@ -34527,7 +34529,7 @@ type Team implements ActivitiesInterface & Node & ResourceInterface {
     """
     last: Int
     of: SlaSnapshotFilterField
-    start_date: DateTime
+    start_date: String
   ): SlaSnapshotConnection
   slack_integration: SlackIntegration
   slack_pipelines(
@@ -34573,8 +34575,8 @@ type Team implements ActivitiesInterface & Node & ResourceInterface {
     last: Int
   ): InvitationUnionConnection @deprecated(reason: "This should be a generic invitation connection. Used interim until generic invitation type is defined")
   solution(solution_id: String!): Solution
-  spark_line(end_date: DateTime!, spark_line_type: SparkLineEnum!, start_date: DateTime!): [Int!]
-  started_accepting_at: DateTime
+  spark_line(end_date: String!, spark_line_type: SparkLineEnum!, start_date: String!): [Int!]
+  started_accepting_at: String
   state: TeamState
   static_participants(
     """
@@ -34915,7 +34917,7 @@ type Team implements ActivitiesInterface & Node & ResourceInterface {
   triage_note: String
   triage_plus: Boolean
   triage_retesting: Boolean
-  triage_time(date_start: DateTime): Float
+  triage_time(date_start: String): Float
   triage_workflow: TriageWorkflow
   triaged_staleness_threshold: Int
   triaged_staleness_threshold_limit: Int
@@ -34943,8 +34945,8 @@ type Team implements ActivitiesInterface & Node & ResourceInterface {
   ): TriggerConnection
   twitter_handle: String
   type: String
-  updated_at: DateTime
-  url: URI!
+  updated_at: String
+  url: String
   user_feedback: UserOpportunitiesFeedback
   user_open_to_collaboration: Boolean
   user_vpn_instances(
@@ -35265,7 +35267,7 @@ type TeamInboxView implements Node {
   assigned_to_group_ids: [Int!]!
   assigned_to_user_ids: [Int!]!
   built_in: Boolean!
-  created_at: DateTime!
+  created_at: String!
   custom_fields: [String!]!
   filters: [String!]!
   hackathons: [Int!]!
@@ -35281,7 +35283,7 @@ type TeamInboxView implements Node {
   substates: [String!]!
   team: Team!
   text_query: String!
-  updated_at: DateTime!
+  updated_at: String!
   visible: Boolean!
 }
 
@@ -35513,7 +35515,7 @@ type TeamMember implements Node & NotificationPreferencesInterface {
   _id: ID!
   auto_subscribe: Boolean @deprecated(reason: "Query notification_preferences on TeamMember instead")
   concealed: Boolean
-  created_at: DateTime!
+  created_at: String!
   groups: [TeamMemberGroup]
   i_can_leave_team: Boolean!
   id: ID!
@@ -35589,11 +35591,11 @@ type TeamMemberEligibilitySettings implements Node {
   _id: ID!
   allowed_domains: [String!]!
   allowed_domains_enabled: Boolean!
-  created_at: DateTime
+  created_at: String
   id: ID!
   name: String
   organization_id: ID
-  updated_at: DateTime
+  updated_at: String
 }
 
 """
@@ -35638,7 +35640,7 @@ A HackerOne team member group
 type TeamMemberGroup implements Node {
   _id: ID!
   assigned_to_h1_triage: Boolean!
-  created_at: DateTime
+  created_at: String
   description: String
   id: ID!
   immutable: Boolean!
@@ -35774,13 +35776,13 @@ A subscription to team updates
 """
 type TeamPolicySubscription implements Node & ResourceInterface {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   id: ID!
   source_type: String
   team: Team!
-  unsubscribed_at: DateTime
-  updated_at: DateTime
-  url: URI!
+  unsubscribed_at: String
+  updated_at: String
+  url: String
   user: User!
 }
 
@@ -36784,7 +36786,7 @@ Triage Inbox
 """
 type TriageInbox implements Node {
   id: ID!
-  oldest_undismissed_at(product_editions: [TriageInboxItemProductEditionFilterEnum!]!, view: TriageInboxItemViewEnum!): DateTime
+  oldest_undismissed_at(product_editions: [TriageInboxItemProductEditionFilterEnum!]!, view: TriageInboxItemViewEnum!): String
   owned_by_me_total_count: Int!
   owned_by_triage_total_count: Int!
   prioritization_total_count: Int!
@@ -36799,8 +36801,8 @@ A Triage Inbox Item
 type TriageInboxItem implements Node {
   _id: ID!
   activity: ActivityUnion
-  created_at: DateTime!
-  dismissed_at: DateTime
+  created_at: String!
+  dismissed_at: String
   dismissed_by: User
   id: ID!
   report: Report
@@ -36913,7 +36915,7 @@ type TriageMeta implements Node & ResourceInterface {
   noise_reason: String
   oldest_undismissed_triage_inbox_item: TriageInboxItem
   owned_by: User
-  owned_by_at: DateTime
+  owned_by_at: String
   plus: Boolean
   priority: String
   priority_classification: String
@@ -36921,10 +36923,10 @@ type TriageMeta implements Node & ResourceInterface {
   pristine: Boolean
   report: Report
   report_id: ID
-  report_metadata_reviewed_at: DateTime
+  report_metadata_reviewed_at: String
   team_triage_meta: TeamTriageMeta
   timer_goals: [Hash!]
-  url: URI!
+  url: String
 }
 
 """
@@ -37012,7 +37014,7 @@ type Trigger implements Node & ResourceInterface {
   _id: ID!
   action_message: String!
   action_type: String!
-  created_at: DateTime!
+  created_at: String!
   expression_operator: String!
   expressions(
     """
@@ -37060,7 +37062,7 @@ type Trigger implements Node & ResourceInterface {
     """
     last: Int
   ): TriggerActionLogConnection
-  url: URI!
+  url: String
 }
 
 """
@@ -37332,12 +37334,12 @@ A HacktivityItems::Undisclosed for a report
 """
 type Undisclosed implements HacktivityItemInterface & Node {
   _id: ID!
-  created_at: DateTime
+  created_at: String
   currency: String
   id: ID!
   is_collaboration: Boolean
   latest_disclosable_action: String
-  latest_disclosable_activity_at: DateTime
+  latest_disclosable_activity_at: String
   recommended_hacktivity_items(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -38404,12 +38406,12 @@ input UpdateCampaignInput {
   """
   clientMutationId: String
   critical: Float
-  end_date: DateTime!
+  end_date: String!
   high: Float
   low: Float
   medium: Float
   researchers_information: String!
-  start_date: DateTime!
+  start_date: String!
   structured_scope_ids: [ID!]!
   team_id: ID!
 }
@@ -39567,7 +39569,7 @@ input UpdateInvitationPreferencesInput {
   exclude_crypto_programs: Boolean
   min_bounty: Float
   receive_invites: Boolean
-  time_off_ends_at: DateTime
+  time_off_ends_at: String
 }
 
 """
@@ -41916,7 +41918,7 @@ type UpdateReportWeaknessPayload implements MutationResult {
 Autogenerated input type of UpdateSfdcAgileAcceleratorSettings
 """
 input UpdateSfdcAgileAcceleratorSettingsInput {
-  api_url: URI!
+  api_url: String
   assignee_id: String!
 
   """
@@ -44304,8 +44306,8 @@ A HackerOne user
 type User implements Node & ResourceInterface {
   _id: ID!
   account_recovery_phone_number: String
-  account_recovery_phone_number_sent_at: DateTime
-  account_recovery_phone_number_verified_at: DateTime
+  account_recovery_phone_number_sent_at: String
+  account_recovery_phone_number_verified_at: String
   account_recovery_unverified_phone_number: String
   active_ban: HackerTempBan
   address: Address
@@ -44510,8 +44512,8 @@ type User implements Node & ResourceInterface {
   cleared: Boolean!
   cobalt_handle: String
   country: String
-  created_at: DateTime!
-  current_sign_in_at: DateTime
+  created_at: String!
+  current_sign_in_at: String
   demo_hacker: Boolean!
   disabled: Boolean!
   duplicate_users(
@@ -45222,7 +45224,7 @@ type User implements Node & ResourceInterface {
   twitter_handle: String
   unconfirmed_email: String
   unread_notification_count: Int
-  url: URI!
+  url: String
 
   """
   A Resolver for User Availabilities
@@ -45410,7 +45412,7 @@ A device that's been authorized to sign into a HackerOne account
 """
 type UserDevice implements Node {
   abbreviated_user_agent: String
-  created_at: DateTime!
+  created_at: String!
   device_id: String!
   id: ID!
   ip_address: String!
@@ -45524,7 +45526,7 @@ type UserInputDraft implements Node {
   content: String
   field_key: String!
   id: ID!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -45608,7 +45610,7 @@ type UserResolvedReportCounts implements Node & ResourceInterface {
   severity_high_count: Int
   severity_low_count: Int
   severity_medium_count: Int
-  url: URI!
+  url: String
   valid_vulnerability_count: Int
 }
 
@@ -45619,9 +45621,9 @@ type UserSession implements Node {
   _id: ID!
   abbreviated_user_agent: String
   country: CountryDetails
-  created_at: DateTime!
+  created_at: String!
   current: Boolean!
-  deactivated_at: DateTime
+  deactivated_at: String
   device_type: String
   id: ID!
   ip_address: String
@@ -45707,8 +45709,8 @@ type VdpLaunchConfiguration implements Node {
   has_changed_safe_harbor: Boolean!
   has_changed_scope: Boolean!
   id: ID!
-  launch_at: DateTime
-  launch_requested_at: DateTime
+  launch_at: String
+  launch_requested_at: String
   policy_brand_promise: String
   policy_disclosure_policies: String
   policy_out_of_scope: String
@@ -45911,7 +45913,7 @@ type VirtualNotification implements Node {
   award_amount_lead: String
   bonus_amount: String
   checklist_check_title: String
-  created_at: DateTime!
+  created_at: String!
   custom_message: String
   expiration_date: String
   group_name: String
@@ -46112,7 +46114,7 @@ type Weakness implements Node {
     last: Int
     order_by: ClusterOrder = {direction: ASC, field: BROWSING_FRIENDLY}
   ): ClusterConnection!
-  created_at: DateTime!
+  created_at: String!
   critical_reports(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -46161,7 +46163,7 @@ type Weakness implements Node {
   ): ReportConnection
   reputation_change: Int
   time_spent: Int!
-  updated_at: DateTime!
+  updated_at: String!
 }
 
 """
@@ -46232,9 +46234,9 @@ Configuration for a webhook defined by a team.
 """
 type Webhook implements Node {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   created_by: User!
-  deleted_at: DateTime
+  deleted_at: String
   id: ID!
   integration_events_configuration: IntegrationEventsConfiguration!
   name: String!
@@ -46304,7 +46306,7 @@ A recorded webhook request sent according to a webhook configuration.
 """
 type WebhookRequest implements Node {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   id: ID!
   request_headers: Hash!
   request_payload: Hash
@@ -46375,7 +46377,7 @@ A received response for a given request.
 """
 type WebhookResponse implements Node {
   _id: ID!
-  created_at: DateTime!
+  created_at: String!
   execution_time: Float!
   id: ID!
   response_body: Hash
@@ -46426,10 +46428,10 @@ A program's whitelisted reporter
 type WhitelistedReporter implements Node & ResourceInterface {
   _id: ID!
   cleared: Boolean!
-  created_at: DateTime!
+  created_at: String!
   email_alias: String
   id: ID!
-  url: URI!
+  url: String
   username: String!
 }
 

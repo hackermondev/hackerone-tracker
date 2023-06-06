@@ -30,8 +30,15 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     let mut last_rep_data = get_old_reputation_data(&mut redis_conn);
     let rep_data = get_reputation_data(&config.team_handle, &config.hackerone).unwrap();
 
-    debug!("reputation poll event: last_run_time {}", last_run_time.clone().unwrap_or("-1".into()));
-    debug!("reputation poll event: last_rep_data len: {}, current rep_data len: {}", last_rep_data.clone().unwrap_or(vec![]).len(), rep_data.len());
+    debug!(
+        "reputation poll event: last_run_time {}",
+        last_run_time.clone().unwrap_or("-1".into())
+    );
+    debug!(
+        "reputation poll event: last_rep_data len: {}, current rep_data len: {}",
+        last_rep_data.clone().unwrap_or(vec![]).len(),
+        rep_data.len()
+    );
 
     if last_run_time.is_none() || last_rep_data.is_none() {
         // first run

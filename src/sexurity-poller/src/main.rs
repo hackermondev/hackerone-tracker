@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 extern crate pretty_env_logger;
-#[macro_use] extern crate log;
+#[macro_use]
+extern crate log;
 
 mod polls;
 use chrono;
@@ -59,8 +60,12 @@ fn main() {
         redis_client: redis,
     };
 
-    // polls::reputation::run_poll(&config).unwrap();
+    polls::reputation::run_poll(&config).unwrap();
+    polls::reports::run_poll(&config).unwrap();
+
+
     polls::reputation::start_poll_event_loop(&config);
+    polls::reports::start_poll_event_loop(&config);
     keep_alive();
 }
 

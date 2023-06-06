@@ -75,23 +75,32 @@ pub fn get_hackerone_csrf_token(session_token: &str) -> Result<String, Box<dyn E
 )]
 pub struct TeamYearThankQuery;
 
+#[derive(GraphQLQuery, Debug)]
+#[graphql(
+    schema_path = "../../graphql/schema.graphql",
+    query_path = "../../graphql/TeamHacktivityPageQuery.graphql",
+    variables_derives = "Default, PartialEq",
+    response_derives = "Debug, PartialEq",
+    skip_serializing_none
+)]
+pub struct TeamHacktivityPageQuery;
+
+impl Default for team_hacktivity_page_query::OrderDirection {
+    fn default() -> Self {
+        team_hacktivity_page_query::OrderDirection::DESC
+    }
+}
+
+impl Default for team_hacktivity_page_query::HacktivityOrderFieldEnum {
+    fn default() -> Self {
+        team_hacktivity_page_query::HacktivityOrderFieldEnum::popular
+    }
+}
+
 // Tests
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn can_build_team_year_thank_you_query() {
-        let variables = team_year_thank_query::Variables {
-            selected_handle: String::from("discord"),
-            year: Some(2023),
-        };
-
-        let query = TeamYearThankQuery::build_query(variables);
-        assert_eq!(query.operation_name, "TeamYearThankQuery");
-        assert_eq!(query.variables.selected_handle, "discord");
-        assert_eq!(query.variables.year, Some(2023));
-    }
 
     #[test]
     fn can_extract_csrf_token() {

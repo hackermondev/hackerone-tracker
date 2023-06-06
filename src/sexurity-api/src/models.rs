@@ -29,9 +29,45 @@ impl RepDataQueueItem {
     }
 }
 
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct ReportData {
+    pub user_name: String,
+    pub user_id: String,
+
+    pub currency: String,
+    pub awarded_amount: f64,
+
+    pub id: Option<String>,
+    pub title: Option<String>,
+    pub url: Option<String>,
+
+    pub severity: Option<String>,
+    pub collaboration: bool,
+    pub disclosed: bool,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct ReportsDataQueueItem {
+    pub id: Option<String>,
+    pub team_handle: String,
+    pub diff: Vec<Vec<ReportData>>,
+
+    #[serde(with = "my_date_format")]
+    pub created_at: DateTime<Utc>,
+}
+
+impl ReportsDataQueueItem {
+    pub fn create_id(&mut self) {
+        // TODO: get rid of nanoid, write a unique id func
+        let id = nanoid!();
+        self.id = Some(id);
+    }
+}
+
 pub mod embed_colors {
     pub const NEGATIVE: u32 = 16711680;
     pub const POSTIVE: u32 = 5222492;
+    pub const TRANSPARENT: u32 = 2829617;
 }
 
 pub mod redis_keys {
@@ -39,6 +75,10 @@ pub mod redis_keys {
     pub const REPUTATION_QUEUE_PUBSUB: &str = "reputation_poll_queue";
     pub const REPUTATION_QUEUE_LAST_RUN_TIME: &str = "reputation_poll_last_run_time";
     pub const REPUTATION_QUEUE_LAST_DATA: &str = "reputation_poll_last_data";
+
+    pub const REPORTS_QUEUE_PUBSUB: &str = "reports_poll_queue";
+    pub const REPORTS_POLL_LAST_RUN_TIME: &str = "reports_poll_last_run_time";
+    pub const REPORTS_POLL_LAST_DATA: &str = "reports_poll_last_data";
 }
 
 mod my_date_format {

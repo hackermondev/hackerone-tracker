@@ -1,5 +1,6 @@
 extern crate pretty_env_logger;
-#[macro_use] extern crate log;
+#[macro_use]
+extern crate log;
 
 mod subscriptions;
 use clap::Parser;
@@ -51,6 +52,11 @@ fn main() {
 
     // Subscriptions
     subscriptions::reputation::start_reputation_subscription(
+        redis.get_connection().unwrap(),
+        on_message_data.clone(),
+    );
+
+    subscriptions::reports::start_reports_subscription(
         redis.get_connection().unwrap(),
         on_message_data.clone(),
     );

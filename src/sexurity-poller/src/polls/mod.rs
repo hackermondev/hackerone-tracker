@@ -1,5 +1,6 @@
 use sexurity_api::hackerone::HackerOneClient;
 use sexurity_api::redis::redis::Client;
+pub mod reports;
 pub mod reputation;
 
 #[derive(Clone)]
