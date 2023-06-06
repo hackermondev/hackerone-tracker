@@ -52,6 +52,7 @@ pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data:
 
 pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Send + 'static>(
     mut conn: Connection,
+    mut conn2: Connection,
     on_message_data: E,
 ) {
     info!("reputation: starting subscription");
@@ -60,7 +61,7 @@ pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Sen
         pubsub
             .subscribe(models::redis_keys::REPUTATION_QUEUE_PUBSUB)
             .unwrap();
-
+        
         // let test_embed = EmbedBuilder::new().description("hey").build();
         // on_message_data(vec![test_embed]);
         loop {
@@ -83,6 +84,11 @@ pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Sen
                     on_message_data(vec![embed.unwrap()]);
                 }
             }
+
+            cmd("DEL")
+                .arg(models::redis_keys::REPUTATION_QUEUE_BACKLOG)
+                .query::<i32>(&mut conn2)
+                .unwrap();
         }
     });
 }

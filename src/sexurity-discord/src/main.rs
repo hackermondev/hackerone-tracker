@@ -53,6 +53,7 @@ fn main() {
     // Subscriptions
     subscriptions::reputation::start_reputation_subscription(
         redis.get_connection().unwrap(),
+        redis.get_connection().unwrap(),
         on_message_data.clone(),
     );
 
