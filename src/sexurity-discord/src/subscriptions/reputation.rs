@@ -95,9 +95,9 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
     let old = &diff[0];
     let new = &diff[1];
 
-    if old.rank == -1 {
+    if old.reputation == -1 {
         // new user added to leaderboard
-        let text = format!(
+        let mut text = format!(
             "[**``{}``**]({}) was added to [**``{}``**]({}) with **{} reputation** (rank: #{})",
             new.user_name,
             format!("https://hackerone.com/{}", new.user_name),
@@ -107,15 +107,26 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
             new.rank
         );
 
+        if new.rank == -1 {
+            text = format!(
+                "[**``{}``**]({}) was added to [**``{}``**]({}) with **{} reputation** (rank: <100)",
+                new.user_name,
+                format!("https://hackerone.com/{}", new.user_name),
+                handle,
+                format!("https://hackerone.com/{}", handle),
+                new.reputation
+            );
+        }
+
         let embed = EmbedBuilder::new()
             .description(text)
             .color(models::embed_colors::POSTIVE)
             .build();
         return Some(embed);
-    } else if new.rank == -1 {
+    } else if new.reputation == -1 {
         // user removed from leaderboard
         let text = format!(
-            "[**``{}``**]({}) was removed from top 100",
+            "[**``{}``**]({}) was removed from the leaderboard",
             old.user_name,
             format!("https://hackerone.com/{}", old.user_name),
         );

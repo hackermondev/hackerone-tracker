@@ -1,6 +1,7 @@
 query TeamYearThankQuery(
   $selectedHandle: String!
   $year: Int
+  $cursor: String!
 ) {
   selectedTeam: team(handle: $selectedHandle) {
     ...TeamThanksSelectedTeam
@@ -11,8 +12,11 @@ fragment TeamThanksSelectedTeam on Team {
   name
   state
   handle
-  participants(first: 100, year: $year) {
-    year_range
+  participants(first: 999, year: $year, after: $cursor) {
+    pageInfo {
+			hasNextPage
+			endCursor
+		}
     edges {
       node {
         id

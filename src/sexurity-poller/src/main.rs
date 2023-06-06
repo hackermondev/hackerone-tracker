@@ -76,6 +76,7 @@ fn ensure_args(client: &HackerOneClient, args: &Arguments) -> bool {
     let variables = hackerone::team_year_thank_query::Variables {
         selected_handle: args.hackerone_handle.clone(),
         year: Some(now.year().into()),
+        cursor: "".into(),
     };
 
     let query = hackerone::TeamYearThankQuery::build_query(variables);
