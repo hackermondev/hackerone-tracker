@@ -63,7 +63,6 @@ fn main() {
     polls::reputation::run_poll(&config).unwrap();
     polls::reports::run_poll(&config).unwrap();
 
-
     polls::reputation::start_poll_event_loop(&config);
     polls::reports::start_poll_event_loop(&config);
     keep_alive();

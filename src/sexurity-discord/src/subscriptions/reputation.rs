@@ -61,7 +61,7 @@ pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Sen
         pubsub
             .subscribe(models::redis_keys::REPUTATION_QUEUE_PUBSUB)
             .unwrap();
-        
+
         // let test_embed = EmbedBuilder::new().description("hey").build();
         // on_message_data(vec![test_embed]);
         loop {
@@ -114,14 +114,7 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
         );
 
         if new.rank == -1 {
-            text = format!(
-                "[**``{}``**]({}) was added to [**``{}``**]({}) with **{} reputation** (rank: <100)",
-                new.user_name,
-                format!("https://hackerone.com/{}", new.user_name),
-                handle,
-                format!("https://hackerone.com/{}", handle),
-                new.reputation
-            );
+            text = format!("[**``{}``**]({}) was added to [**``{}``**]({}) with **{} reputation** (rank: <100)", new.user_name, format!("https://hackerone.com/{}", new.user_name), handle, format!("https://hackerone.com/{}", handle), new.reputation);
         }
 
         let embed = EmbedBuilder::new()

@@ -147,12 +147,8 @@ fn set_last_run_time_now(conn: &mut redis::Connection) {
         .unwrap();
 }
 
-fn get_reputation_data(
-    handle: &str,
-    client: &HackerOneClient,
-    previous_data: Option<Vec<models::RepData>>,
-    next_cursor: Option<String>,
-) -> Result<Vec<models::RepData>, Box<dyn std::error::Error>> {
+#[cfg_attr(rustfmt, rustfmt_skip)]
+fn get_reputation_data(handle: &str, client: &HackerOneClient, previous_data: Option<Vec<models::RepData>>, next_cursor: Option<String>) -> Result<Vec<models::RepData>, Box<dyn std::error::Error>> {
     debug!("get reputation data, cursor: {}", next_cursor.as_ref().unwrap_or(&String::from("")));
     let variables = hackerone::team_year_thank_query::Variables {
         selected_handle: handle.to_string(),
@@ -161,11 +157,7 @@ fn get_reputation_data(
     };
 
     let query = hackerone::TeamYearThankQuery::build_query(variables);
-    let response = client
-        .http
-        .post("https://hackerone.com/graphql")
-        .json(&query)
-        .send()?;
+    let response = client.http.post("https://hackerone.com/graphql").json(&query).send()?;
 
     let mut result: Vec<models::RepData> = vec![];
     if previous_data.is_some() {
@@ -173,39 +165,13 @@ fn get_reputation_data(
     }
 
     let data = response.json::<graphql_client::Response<<hackerone::TeamYearThankQuery as GraphQLQuery>::ResponseData>>().unwrap();
-    let page_info = &data
-        .data
-        .as_ref()
-        .unwrap()
-        .selected_team
-        .as_ref()
-        .unwrap()
-        .participants
-        .as_ref()
-        .unwrap()
-        .page_info;
 
-    let researchers = data
-        .data
-        .as_ref()
-        .unwrap()
-        .selected_team
-        .as_ref()
-        .unwrap()
-        .participants
-        .as_ref()
-        .unwrap()
-        .edges
-        .as_ref()
-        .unwrap();
+    let page_info = &data.data.as_ref().unwrap().selected_team.as_ref().unwrap().participants.as_ref().unwrap().page_info; // rustfmt::skip
+    let researchers = data.data.as_ref().unwrap().selected_team.as_ref().unwrap().participants.as_ref().unwrap().edges.as_ref().unwrap();
+
     for researcher in researchers {
         let user = researcher.as_ref().unwrap().node.as_ref().unwrap();
-        let reputation = researcher
-            .as_ref()
-            .unwrap()
-            .top_participant_participant
-            .reputation
-            .unwrap_or(0);
+        let reputation = researcher.as_ref().unwrap().top_participant_participant.reputation.unwrap_or(0);
         let rank = researcher.as_ref().unwrap().rank.unwrap_or(-1);
 
         let data = models::RepData {

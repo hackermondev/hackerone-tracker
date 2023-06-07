@@ -128,63 +128,34 @@ fn set_last_run_time_now(conn: &mut redis::Connection) {
         .unwrap();
 }
 
-fn get_reports_data(
-    handle: &str,
-    client: &HackerOneClient,
-) -> Result<Vec<models::ReportData>, Box<dyn std::error::Error>> {
+#[cfg_attr(rustfmt, rustfmt_skip)]
+fn get_reports_data(handle: &str, client: &HackerOneClient) -> Result<Vec<models::ReportData>, Box<dyn std::error::Error>> {
     let variables = hackerone::team_hacktivity_page_query::Variables {
         count: Some(10),
-        order_by: Some(
-            hackerone::team_hacktivity_page_query::HacktivityItemOrderInput {
-                field: hackerone::team_hacktivity_page_query::HacktivityOrderFieldEnum::popular,
-                direction: hackerone::team_hacktivity_page_query::OrderDirection::DESC,
-            },
-        ),
+        order_by: Some(hackerone::team_hacktivity_page_query::HacktivityItemOrderInput {
+            field: hackerone::team_hacktivity_page_query::HacktivityOrderFieldEnum::popular,
+            direction: hackerone::team_hacktivity_page_query::OrderDirection::DESC,
+        }),
 
         secure_order_by: None,
-        where_: Some(
-            hackerone::team_hacktivity_page_query::FiltersHacktivityItemFilterInput {
-                team: Box::new(Some(
-                    hackerone::team_hacktivity_page_query::FiltersTeamFilterInput {
-                        handle: Some(
-                            hackerone::team_hacktivity_page_query::StringPredicateInput {
-                                eq: Some(handle.to_string()),
-                                ..Default::default()
-                            },
-                        ),
-                        ..Default::default()
-                    },
-                )),
+        where_: Some(hackerone::team_hacktivity_page_query::FiltersHacktivityItemFilterInput {
+            team: Box::new(Some(hackerone::team_hacktivity_page_query::FiltersTeamFilterInput {
+                handle: Some(hackerone::team_hacktivity_page_query::StringPredicateInput { eq: Some(handle.to_string()), ..Default::default() }),
                 ..Default::default()
-            },
-        ),
+            })),
+            ..Default::default()
+        }),
 
         ..Default::default()
     };
 
     let query = hackerone::TeamHacktivityPageQuery::build_query(variables);
-    let response = client
-        .http
-        .post("https://hackerone.com/graphql")
-        .json(&query)
-        .send()?;
+    let response = client.http.post("https://hackerone.com/graphql").json(&query).send()?;
 
     let mut result: Vec<models::ReportData> = vec![];
-    let data =
-        response
-            .json::<graphql_client::Response<
-                <hackerone::TeamHacktivityPageQuery as GraphQLQuery>::ResponseData,
-            >>()
-            .unwrap();
+    let data = response.json::<graphql_client::Response<<hackerone::TeamHacktivityPageQuery as GraphQLQuery>::ResponseData>>().unwrap();
 
-    let reports = data
-        .data
-        .unwrap()
-        .hacktivity_items
-        .unwrap()
-        .hacktivity_list
-        .edges
-        .unwrap();
+    let reports = data.data.unwrap().hacktivity_items.unwrap().hacktivity_list.edges.unwrap();
     for report in reports {
         let item = report.unwrap().hacktivity_item.node.unwrap();
         let mut report = ReportData {
@@ -204,28 +175,13 @@ fn get_reports_data(
             hackerone::team_hacktivity_page_query::HacktivityItemNode::Undisclosed(undisclosed) => {
                 report.id = Some(undisclosed.hacktivity_item_undisclosed.id.clone());
                 report.currency = undisclosed.hacktivity_item_undisclosed.currency.unwrap();
-                report.awarded_amount = undisclosed
-                    .hacktivity_item_undisclosed
-                    .total_awarded_amount
-                    .unwrap_or(-1.0);
+                report.awarded_amount = undisclosed.hacktivity_item_undisclosed.total_awarded_amount.unwrap_or(-1.0);
                 report.disclosed = false;
-                report.url = Some(format!(
-                    "https://hackerone.com/reports/{}",
-                    undisclosed.hacktivity_item_undisclosed.id
-                ));
-                report.collaboration = undisclosed
-                    .hacktivity_item_undisclosed
-                    .is_collaboration
-                    .unwrap();
+                report.url = Some(format!("https://hackerone.com/reports/{}", undisclosed.hacktivity_item_undisclosed.id));
+                report.collaboration = undisclosed.hacktivity_item_undisclosed.is_collaboration.unwrap();
 
                 if undisclosed.hacktivity_item_undisclosed.reporter.is_some() {
-                    report.user_name = undisclosed
-                        .hacktivity_item_undisclosed
-                        .reporter
-                        .as_ref()
-                        .unwrap()
-                        .username
-                        .clone();
+                    report.user_name = undisclosed.hacktivity_item_undisclosed.reporter.as_ref().unwrap().username.clone();
                     report.user_id = undisclosed.hacktivity_item_undisclosed.reporter.unwrap().id;
                 } else {
                     report.user_name = "(unknown)".into();
@@ -236,65 +192,24 @@ fn get_reports_data(
                 report.id = Some(disclosed.hacktivity_item_disclosed.id.clone());
                 report.title = disclosed.hacktivity_item_disclosed.report.unwrap().title;
                 report.currency = disclosed.hacktivity_item_disclosed.currency.unwrap();
-                report.awarded_amount = disclosed
-                    .hacktivity_item_disclosed
-                    .total_awarded_amount
-                    .unwrap();
+                report.awarded_amount = disclosed.hacktivity_item_disclosed.total_awarded_amount.unwrap();
                 report.disclosed = true;
-                report.url = Some(format!(
-                    "https://hackerone.com/reports/{}",
-                    disclosed.hacktivity_item_disclosed.id
-                ));
-                report.collaboration = disclosed
-                    .hacktivity_item_disclosed
-                    .is_collaboration
-                    .unwrap();
-                report.severity = Some(
-                    if disclosed
-                        .hacktivity_item_disclosed
-                        .severity_rating
-                        .as_ref()
-                        .unwrap()
-                        == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::critical
-                    {
-                        String::from("critical")
-                    } else if disclosed
-                        .hacktivity_item_disclosed
-                        .severity_rating
-                        .as_ref()
-                        .unwrap()
-                        == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::high
-                    {
-                        String::from("high")
-                    } else if disclosed
-                        .hacktivity_item_disclosed
-                        .severity_rating
-                        .as_ref()
-                        .unwrap()
-                        == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::high
-                    {
-                        String::from("low")
-                    } else if disclosed
-                        .hacktivity_item_disclosed
-                        .severity_rating
-                        .as_ref()
-                        .unwrap()
-                        == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::high
-                    {
-                        String::from("medium")
-                    } else {
-                        String::from("none")
-                    },
-                );
+                report.url = Some(format!("https://hackerone.com/reports/{}", disclosed.hacktivity_item_disclosed.id));
+                report.collaboration = disclosed.hacktivity_item_disclosed.is_collaboration.unwrap();
+                report.severity = Some(if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::critical {
+                    String::from("critical")
+                } else if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::high {
+                    String::from("high")
+                } else if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::high {
+                    String::from("low")
+                } else if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::high {
+                    String::from("medium")
+                } else {
+                    String::from("none")
+                });
 
                 if disclosed.hacktivity_item_disclosed.reporter.is_some() {
-                    report.user_name = disclosed
-                        .hacktivity_item_disclosed
-                        .reporter
-                        .as_ref()
-                        .unwrap()
-                        .username
-                        .clone();
+                    report.user_name = disclosed.hacktivity_item_disclosed.reporter.as_ref().unwrap().username.clone();
                     report.user_id = disclosed.hacktivity_item_disclosed.reporter.unwrap().id;
                 } else {
                     report.user_name = "(unknown)".into();
