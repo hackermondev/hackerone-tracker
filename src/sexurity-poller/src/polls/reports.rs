@@ -28,7 +28,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         .arg(models::redis_keys::REPORTS_POLL_LAST_RUN_TIME)
         .query(&mut redis_conn)?;
 
-    let mut last_report_data = get_old_reports_data(&mut redis_conn);
+    let last_report_data = get_old_reports_data(&mut redis_conn);
     let report_data = get_reports_data(&config.team_handle, &config.hackerone).unwrap();
 
     debug!(
@@ -54,14 +54,16 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
 
     let mut changed: Vec<Vec<models::ReportData>> = Vec::new();
     let report_data_cloned = report_data.clone();
+    trace!("old data {:#?}", last_report_data.clone().unwrap());
     for report in report_data {
-        let user_id = report.user_id.clone();
+        let report_id: String = report.id.as_ref().unwrap_or(&"".into()).clone();
         let old_data = last_report_data
             .as_ref()
             .unwrap()
             .into_iter()
-            .find(|p| p.user_id == user_id);
+            .find(|p| p.id.as_ref().unwrap_or(&"".into()) == &report_id);
 
+        trace!("{:#?}", report);
         if old_data.is_none() {
             // new report
             let empty = models::ReportData {
@@ -84,15 +86,6 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
                 let diff: Vec<models::ReportData> = vec![old_data.unwrap().clone(), report.clone()];
                 changed.push(diff);
             }
-
-            let index = last_report_data
-                .as_ref()
-                .unwrap()
-                .into_iter()
-                .position(|d| d.user_id == report.user_id)
-                .unwrap();
-
-            last_report_data.as_mut().unwrap().remove(index);
         }
     }
 

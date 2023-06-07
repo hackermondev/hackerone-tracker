@@ -25,6 +25,7 @@ services:
     environment:
       - APP_NAME=sexurity-poller
       - CONFIG_NAME=poller
+      - RUST_LOG=debug
     command: [ "bash", "/usr/local/bin/yaml_to_cli.sh", "/etc/sexurity/config.yaml" ]
 
   sexurity-discord:
