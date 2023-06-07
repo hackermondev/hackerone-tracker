@@ -20,8 +20,6 @@ services:
       - type: bind
         source: config.yaml
         target: /etc/sexurity/config.yaml
-        volume:
-          nocopy: true
     environment:
       - APP_NAME=sexurity-poller
       - CONFIG_NAME=poller
@@ -41,13 +39,11 @@ services:
       - type: bind
         source: config.yaml
         target: /etc/sexurity/config.yaml
-        volume:
-          nocopy: true
 
     environment:
       - APP_NAME=sexurity-discord
       - CONFIG_NAME=discord
-      - RUST_LOG=trace
+      - RUST_LOG=debug
 
     command: [ "bash", "/usr/local/bin/yaml_to_cli.sh", "/etc/sexurity/config.yaml" ]
 
