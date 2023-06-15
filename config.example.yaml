@@ -1,8 +1,8 @@
 discord:
-  redis: redis://redis:6379 # Don't change this if you're using the default Docker compose configuration
+  redis: redis://redis:6379 # Don't change this if you're using the default Docker compose/Replit configuration
   webhook_url: "" # Discord webhook URL (the format has to be: https://discord.com/api/webhooks/{webhook_id}/{webhook_token})
 
 poller:
-  redis: redis://redis:6379 # Don't change this if you're using the default Docker compose configuration
+  redis: redis://redis:6379 # Don't change this if you're using the default Docker compose/Replit configuration
   handle: "" # HackerOne team handle
   session_token: "" # HackerOne session token (the "__Host-session" cookie), this is optional if you're using a public team

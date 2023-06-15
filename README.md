@@ -19,21 +19,22 @@ or clone on Replit:<br>
 
 
 
-### Setup your configuration:
+### Setup your configuration (config.example.yaml):
 ```yaml
 discord:
-  redis: redis://redis:6379 # Don't change this if you're using the default Docker compose configuration
+  redis: redis://redis:6379 # Don't change this if you're using the default Docker compose/Replit configuration
   webhook_url: "" # Discord webhook URL (the format has to be: https://discord.com/api/webhooks/{webhook_id}/{webhook_token})
 
 poller:
-  redis: redis://redis:6379 # Don't change this if you're using the default Docker compose configuration
+  redis: redis://redis:6379 # Don't change this if you're using the default Docker compose/Replit configuration
   handle: "" # HackerOne team handle
   session_token: "" # HackerOne session token (the "__Host-session" cookie), this is only required if you're tracking a private team
 ```
 (If you're entering your session token and using Replit, make sure your repl is set to private)
 
 
-After entering your config, **rename the file to ``config.yaml``**. If you're using Replit, simply click the ``Run`` button, otherwise with Docker compose run: ``sudo docker compose up --build -d``. You should now be tracking the leaderboad changes. If you use this, Star the repository please :)
+After entering your config, **rename the file to ``config.yaml``**. If you're using Replit, simply click the ``Run`` button, otherwise with Docker compose run: ``sudo docker compose up --build -d``. Wait for it to build (this can take up to 5 minutes) and then you should now be tracking the leaderboad changes.
+If you use this, Star the repository please :)
 
 
 ## Contributing

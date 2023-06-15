@@ -1,0 +1,20 @@
+run = "bash run_replit.sh"
+hidden = ["target", "dump.rdb", ".git"]
+entrypoint = "README.md"
+
+[packager]
+language = "rust"
+
+[packager.features]
+packageSearch = true
+
+[nix]
+channel = "unstable"
+
+[languages]
+
+[languages.rust]
+pattern = "**/*.rs"
+
+[languages.rust.languageServer]
+start = "rust-analyzer"
