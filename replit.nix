@@ -7,5 +7,6 @@
                 pkgs.openssl
                 pkgs.jq.bin
                 pkgs.yq-go
+                pkgs.pkgconfig
         ];
 }

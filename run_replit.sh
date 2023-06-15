@@ -15,7 +15,7 @@ if [ ! -f "config.yaml" ]; then
 fi
 
 
-if [ ! -d "target/release" ]; then
+if [ ! -d "target/release/sexurity-poller" ]; then
   echo "Building project..."
   cargo build --release
 fi

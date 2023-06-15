@@ -36,6 +36,7 @@ poller:
 After entering your config, **rename the file to ``config.yaml``**. If you're using Replit, simply click the ``Run`` button, otherwise with Docker compose run: ``sudo docker compose up --build -d``. Wait for it to build (this can take up to 5 minutes) and then you should now be tracking the leaderboad changes.
 If you use this, Star the repository please :)
 
+If you're using Replit, make sure to enable "Always On" with Replit or use a pinger to make sure it's always running.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
