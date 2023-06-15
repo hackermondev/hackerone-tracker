@@ -1,6 +1,6 @@
 use sexurity_api::models;
 use sexurity_api::redis::redis::Connection;
-use std::thread;
+use std::thread::{self, JoinHandle};
 use twilight_model::channel::message::embed::Embed;
 use twilight_util::builder::embed::EmbedFieldBuilder;
 use twilight_util::builder::embed::{EmbedBuilder, EmbedFooterBuilder};
@@ -8,7 +8,7 @@ use twilight_util::builder::embed::{EmbedBuilder, EmbedFooterBuilder};
 pub fn start_reports_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Send + 'static>(
     mut conn: Connection,
     on_message_data: E,
-) {
+) -> JoinHandle<()> {
     info!("reports: starting subscription");
     thread::spawn(move || {
         let mut pubsub = conn.as_pubsub();
@@ -35,7 +35,7 @@ pub fn start_reports_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Send +
                 }
             }
         }
-    });
+    })
 }
 
 fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {

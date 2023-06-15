@@ -57,11 +57,12 @@ fn main() {
         on_message_data.clone(),
     );
 
-    subscriptions::reports::start_reports_subscription(
+    let reports_thread = subscriptions::reports::start_reports_subscription(
         redis.get_connection().unwrap(),
         on_message_data.clone(),
     );
-    keep_alive();
+
+    reports_thread.join().unwrap(); // Keep main program alive forever
 }
 
 fn ensure_args_and_return_webhook(args: &Arguments) {
@@ -94,9 +95,3 @@ fn extract_webhook_info(url: &str) -> Option<(u64, &str)> {
     }
 }
 
-/// Keep main thread from dying
-fn keep_alive() {
-    loop {
-        let _ = 1 + 1;
-    }
-}

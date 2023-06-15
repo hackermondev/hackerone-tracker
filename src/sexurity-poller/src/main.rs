@@ -4,6 +4,9 @@ extern crate pretty_env_logger;
 extern crate log;
 
 mod polls;
+use std::thread;
+use std::time::Duration;
+
 use chrono;
 use chrono::Datelike;
 use clap::Parser;
@@ -65,7 +68,11 @@ fn main() {
 
     polls::reputation::start_poll_event_loop(&config);
     polls::reports::start_poll_event_loop(&config);
-    keep_alive();
+
+    // keep main thread alive
+    loop {
+        thread::sleep(Duration::from_secs(60 * 100));
+    }
 }
 
 fn ensure_args(client: &HackerOneClient, args: &Arguments) -> bool {
@@ -94,11 +101,4 @@ fn ensure_args(client: &HackerOneClient, args: &Arguments) -> bool {
         .is_some();
 
     return can_fetch_team;
-}
-
-/// Keep main thread from dying
-fn keep_alive() {
-    loop {
-        let _ = 1 + 1;
-    }
 }

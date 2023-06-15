@@ -2,6 +2,7 @@ use sexurity_api::models;
 use sexurity_api::redis::redis::cmd;
 use sexurity_api::redis::redis::Connection;
 use std::thread;
+use std::thread::JoinHandle;
 use twilight_model::channel::message::embed::Embed;
 use twilight_model::util::Timestamp;
 use twilight_util::builder::embed::{EmbedBuilder, EmbedFooterBuilder};
@@ -54,7 +55,7 @@ pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Sen
     mut conn: Connection,
     mut conn2: Connection,
     on_message_data: E,
-) {
+) -> JoinHandle<()> {
     info!("reputation: starting subscription");
     thread::spawn(move || {
         let mut pubsub = conn.as_pubsub();
@@ -90,7 +91,7 @@ pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Sen
                 .query::<i32>(&mut conn2)
                 .unwrap();
         }
-    });
+    })
 }
 
 fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
