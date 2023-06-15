@@ -7,6 +7,10 @@ Monitor HackerOne reports and track changes in the leaderboard of programs using
 
 It uses the HackerOne GraphQL API to poll for new reports and leaderboard changes every 5 minutes, then sends a message to the webhook you conifugre.
 
+[HackerOne reputation overview](https://docs.hackerone.com/hackers/reputation.html)
+![showcase](https://i.imgur.com/g2J0xRK.png)
+
+
 ## Setup
 
 Clone the repository (requires [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)):
@@ -40,4 +44,3 @@ If you're using Replit, make sure to enable "Always On" with Replit or use a pin
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
