@@ -192,7 +192,7 @@ fn get_reports_data(handle: &str, client: &HackerOneClient) -> Result<Vec<models
                 report.id = Some(disclosed.hacktivity_item_disclosed.id.clone());
                 report.title = disclosed.hacktivity_item_disclosed.report.unwrap().title;
                 report.currency = disclosed.hacktivity_item_disclosed.currency.unwrap();
-                report.awarded_amount = disclosed.hacktivity_item_disclosed.total_awarded_amount.unwrap();
+                report.awarded_amount = disclosed.hacktivity_item_disclosed.total_awarded_amount.unwrap_or(-1.0);
                 report.disclosed = true;
                 report.url = Some(format!("https://hackerone.com/reports/{}", disclosed.hacktivity_item_disclosed.id));
                 report.collaboration = disclosed.hacktivity_item_disclosed.is_collaboration.unwrap();
