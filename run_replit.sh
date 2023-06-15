@@ -17,7 +17,6 @@ fi
 
 if [ ! -d "target/release" ]; then
   echo "Building project..."
-  wget -qO yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && chmod +x yq
   cargo build --release
 fi
 
