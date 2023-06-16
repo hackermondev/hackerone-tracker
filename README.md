@@ -35,7 +35,7 @@ poller:
   handle: "" # HackerOne team handle
   session_token: "" # HackerOne session token (the "__Host-session" cookie), this is only required if you're tracking a private team
 ```
-(If you're entering your session token and using Replit, make sure your repl is set to private)
+(If you're entering your session token and using Replit, make sure your repl is set to private. You'll also need to make sure you're logged in with HackerOne on the "2 weeks" session option and update your session token every 2 weeks)
 
 
 After entering your config, **rename the file to ``config.yaml``**. If you're using Replit, simply click the ``Run`` button, otherwise with Docker compose run: ``sudo docker compose up --build -d``. Wait for it to build (this can take up to 5 minutes) and then you should now be tracking the leaderboad changes.
