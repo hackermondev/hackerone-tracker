@@ -11,6 +11,7 @@ It uses the HackerOne GraphQL API to poll for new reports and leaderboard change
 
 ![showcase](https://i.imgur.com/g2J0xRK.png)
 
+https://github.com/hackermondev/hackerone-tracker
 
 ## Setup
 
