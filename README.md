@@ -1,6 +1,6 @@
 # HackerOne tracker
-[![GitHub stars](https://img.shields.io/github/stars/hackermondev/sexurity)](https://github.com/hackermondev/sexurity/stargazers)
-[![License](https://img.shields.io/github/license/hackermondev/sexurity)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/hackermondev/hackerone-tracker)](https://github.com/hackermondev/hackerone-tracker/stargazers)
+[![License](https://img.shields.io/github/license/hackermondev/hackerone-tracker)](LICENSE)
 
 ## Overview
 Monitor HackerOne reports and track changes in the leaderboard of programs using a Discord webhook.
@@ -19,7 +19,7 @@ Clone the repository (requires [Docker](https://docs.docker.com/get-docker/) and
 git clone https://github.com/hackermondev/sexurity
 ```
 or clone on Replit:<br>
-[![Run on Repl.it](https://replit.com/badge/github/hackermondev/sexurity)](https://replit.com/new/github/hackermondev/sexurity)
+[![Run on Repl.it](https://replit.com/badge/github/hackermondev/hackerone-tracker)](https://replit.com/new/github/hackermondev/hackerone-tracker)
 
 
 
