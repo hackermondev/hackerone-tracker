@@ -28,8 +28,13 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         .arg(models::redis_keys::REPUTATION_QUEUE_LAST_RUN_TIME)
         .query(&mut redis_conn)?;
     let mut last_rep_data = get_old_reputation_data(&mut redis_conn);
-    let rep_data = get_reputation_data(&config.team_handle, &config.hackerone, None, None).unwrap();
+    let rep_data = get_reputation_data(&config.team_handle, &config.hackerone, None, None);
+    if rep_data.is_err() {
+        error!("reputation poll event: error getting reputation data: {}", rep_data.err().unwrap());
+        return Ok(());
+    }
 
+    let rep_data = rep_data.unwrap();
     debug!(
         "reputation poll event: last_run_time {}",
         last_run_time.clone().unwrap_or("-1".into())
@@ -164,8 +169,7 @@ fn get_reputation_data(handle: &str, client: &HackerOneClient, previous_data: Op
         result = previous_data.unwrap();
     }
 
-    let data = response.json::<graphql_client::Response<<hackerone::TeamYearThankQuery as GraphQLQuery>::ResponseData>>().unwrap();
-
+    let data = response.json::<graphql_client::Response<<hackerone::TeamYearThankQuery as GraphQLQuery>::ResponseData>>()?;
     let page_info = &data.data.as_ref().unwrap().selected_team.as_ref().unwrap().participants.as_ref().unwrap().page_info; // rustfmt::skip
     let researchers = data.data.as_ref().unwrap().selected_team.as_ref().unwrap().participants.as_ref().unwrap().edges.as_ref().unwrap();
 

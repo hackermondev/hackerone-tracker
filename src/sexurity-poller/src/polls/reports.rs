@@ -29,8 +29,13 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         .query(&mut redis_conn)?;
 
     let last_report_data = get_old_reports_data(&mut redis_conn);
-    let report_data = get_reports_data(&config.team_handle, &config.hackerone).unwrap();
+    let report_data = get_reports_data(&config.team_handle, &config.hackerone);
+    if report_data.is_err() {
+        error!("reports poll event: error getting reports data: {}", report_data.err().unwrap());
+        return Ok(());
+    }
 
+    let report_data = report_data.unwrap();
     debug!(
         "reports poll event: last_run_time {}",
         last_run_time.clone().unwrap_or("-1".into())
@@ -153,7 +158,7 @@ fn get_reports_data(handle: &str, client: &HackerOneClient) -> Result<Vec<models
     let response = client.http.post("https://hackerone.com/graphql").json(&query).send()?;
 
     let mut result: Vec<models::ReportData> = vec![];
-    let data = response.json::<graphql_client::Response<<hackerone::TeamHacktivityPageQuery as GraphQLQuery>::ResponseData>>().unwrap();
+    let data = response.json::<graphql_client::Response<<hackerone::TeamHacktivityPageQuery as GraphQLQuery>::ResponseData>>()?;
 
     let reports = data.data.unwrap().hacktivity_items.unwrap().hacktivity_list.edges.unwrap();
     for report in reports {
