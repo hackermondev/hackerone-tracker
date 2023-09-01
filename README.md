@@ -1,6 +1,6 @@
 # HackerOne tracker
-[![GitHub stars](https://img.shields.io/github/stars/hackermondev/sexurity)](https://github.com/hackermondev/sexurity/stargazers)
-[![License](https://img.shields.io/github/license/hackermondev/sexurity)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/hackermondev/hackerone-tracker)](https://github.com/hackermondev/hackerone-tracker/stargazers)
+[![License](https://img.shields.io/github/license/hackermondev/hackerone-tracker)](LICENSE)
 
 ## Overview
 Monitor HackerOne reports and track changes in the leaderboard of programs using a Discord webhook.
@@ -11,6 +11,7 @@ It uses the HackerOne GraphQL API to poll for new reports and leaderboard change
 
 ![showcase](https://i.imgur.com/g2J0xRK.png)
 
+https://github.com/hackermondev/hackerone-tracker
 
 ## Setup
 
@@ -19,7 +20,7 @@ Clone the repository (requires [Docker](https://docs.docker.com/get-docker/) and
 git clone https://github.com/hackermondev/sexurity
 ```
 or clone on Replit:<br>
-[![Run on Repl.it](https://replit.com/badge/github/hackermondev/sexurity)](https://replit.com/new/github/hackermondev/sexurity)
+[![Run on Repl.it](https://replit.com/badge/github/hackermondev/hackerone-tracker)](https://replit.com/new/github/hackermondev/hackerone-tracker)
 
 
 
@@ -35,7 +36,7 @@ poller:
   handle: "" # HackerOne team handle
   session_token: "" # HackerOne session token (the "__Host-session" cookie), this is only required if you're tracking a private team
 ```
-(If you're entering your session token and using Replit, make sure your repl is set to private)
+(If you're entering your session token and using Replit, make sure your repl is set to private. You'll also need to make sure you're logged in with HackerOne on the "2 weeks" session option and update your session token every 2 weeks)
 
 
 After entering your config, **rename the file to ``config.yaml``**. If you're using Replit, simply click the ``Run`` button, otherwise with Docker compose run: ``sudo docker compose up --build -d``. Wait for it to build (this can take up to 5 minutes) and then you should now be tracking the leaderboad changes.
