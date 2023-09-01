@@ -43,9 +43,10 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
         panic!("invalid diff data");
     }
 
-    let old = &diff[0];
+    let _old = &diff[0];
     let new = &diff[1];
 
+    // tracks disclosed reports
     if new.disclosed == true {
         // report closed (undisclosed)
         let mut user_field = format!(
@@ -61,9 +62,10 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
         let embed = EmbedBuilder::new()
             .color(models::embed_colors::TRANSPARENT)
             .title(format!(
-                "DISCLOSED: {}",
+                "{}",
                 new.title.as_ref().unwrap_or(&"(unknown title)".to_string())
             ))
+            .footer(EmbedFooterBuilder::new("This report was disclosed").build())
             .url(
                 new.url
                     .as_ref()
@@ -92,43 +94,45 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
             .build();
 
         return Some(embed);
-    } else if old.id.is_none() {
-        // new report
-        let mut user_field = format!(
-            "[**``{}``**]({})",
-            new.user_name,
-            format!("https://hackerone.com/{}", new.user_name)
-        );
+    } 
+    
+    // else if old.id.is_none() {
+    //     // new report
+    //     let mut user_field = format!(
+    //         "[**``{}``**]({})",
+    //         new.user_name,
+    //         format!("https://hackerone.com/{}", new.user_name)
+    //     );
 
-        if new.collaboration {
-            user_field = format!("{} (+ unknown collaborator)", user_field);
-        }
+    //     if new.collaboration {
+    //         user_field = format!("{} (+ unknown collaborator)", user_field);
+    //     }
 
-        let embed = EmbedBuilder::new()
-            .color(models::embed_colors::TRANSPARENT)
-            .title(format!("#{} - Report Closed", new.id.as_ref().unwrap()))
-            .url(
-                new.url
-                    .as_ref()
-                    .unwrap_or(&"https://hackerone.com/???".to_string()),
-            )
-            .field(EmbedFieldBuilder::new("Reporter", user_field).build())
-            .field(
-                EmbedFieldBuilder::new(
-                    "Bounty Award",
-                    if new.awarded_amount < 0.0 {
-                        String::from("???")
-                    } else {
-                        format!("{} {}", new.awarded_amount, new.currency)
-                    },
-                )
-                .build(),
-            )
-            .footer(EmbedFooterBuilder::new("This report is currently private").build())
-            .build();
+    //     let embed = EmbedBuilder::new()
+    //         .color(models::embed_colors::TRANSPARENT)
+    //         .title(format!("#{} - Report Closed", new.id.as_ref().unwrap()))
+    //         .url(
+    //             new.url
+    //                 .as_ref()
+    //                 .unwrap_or(&"https://hackerone.com/???".to_string()),
+    //         )
+    //         .field(EmbedFieldBuilder::new("Reporter", user_field).build())
+    //         .field(
+    //             EmbedFieldBuilder::new(
+    //                 "Bounty Award",
+    //                 if new.awarded_amount < 0.0 {
+    //                     String::from("???")
+    //                 } else {
+    //                     format!("{} {}", new.awarded_amount, new.currency)
+    //                 },
+    //             )
+    //             .build(),
+    //         )
+    //         .footer(EmbedFooterBuilder::new("This report is currently private").build())
+    //         .build();
 
-        return Some(embed);
-    }
+    //     return Some(embed);
+    // }
 
     None
 }
