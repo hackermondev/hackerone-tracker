@@ -31,7 +31,10 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     let last_report_data = get_old_reports_data(&mut redis_conn);
     let report_data = get_reports_data(&config.team_handle, &config.hackerone);
     if report_data.is_err() {
-        error!("reports poll event: error getting reports data: {}", report_data.err().unwrap());
+        error!(
+            "reports poll event: error getting reports data: {}",
+            report_data.err().unwrap()
+        );
         return Ok(());
     }
 

@@ -94,8 +94,8 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
             .build();
 
         return Some(embed);
-    } 
-    
+    }
+
     // else if old.id.is_none() {
     //     // new report
     //     let mut user_field = format!(

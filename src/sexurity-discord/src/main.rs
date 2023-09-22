@@ -94,4 +94,3 @@ fn extract_webhook_info(url: &str) -> Option<(u64, &str)> {
         None
     }
 }
-
