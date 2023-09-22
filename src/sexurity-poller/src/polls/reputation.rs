@@ -169,6 +169,10 @@ fn get_reputation_data(handle: &str, client: &HackerOneClient, previous_data: Op
         result = previous_data.unwrap();
     }
 
+    if !response.status().is_success() {
+        return Err("HackerOne API returned bad status code".into())
+    }
+    
     let data = response.json::<graphql_client::Response<<hackerone::TeamYearThankQuery as GraphQLQuery>::ResponseData>>()?;
     let page_info = &data.data.as_ref().unwrap().selected_team.as_ref().unwrap().participants.as_ref().unwrap().page_info; // rustfmt::skip
     let researchers = data.data.as_ref().unwrap().selected_team.as_ref().unwrap().participants.as_ref().unwrap().edges.as_ref().unwrap();
