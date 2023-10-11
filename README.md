@@ -10,6 +10,7 @@ It uses the HackerOne GraphQL API to poll for new reports and leaderboard change
 [HackerOne reputation overview](https://docs.hackerone.com/hackers/reputation.html)
 
 ![showcase](https://i.imgur.com/g2J0xRK.png)
+![showcase 2](https://i.imgur.com/N1CbWJp.png)
 
 https://github.com/hackermondev/hackerone-tracker
 
