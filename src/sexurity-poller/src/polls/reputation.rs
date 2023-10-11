@@ -11,7 +11,10 @@ use sexurity_api::redis::{load_set_to_vec, redis, redis::cmd, save_vec_to_set};
 pub fn start_poll_event_loop(config: &PollConfiguration) {
     let poll_config = config.clone();
     let mut cron = CronJob::new("reputation_poll", move |_name: &str| {
-        run_poll(&poll_config).unwrap();
+        let run = run_poll(&poll_config);
+        if run.is_err() {
+            error!("error while running reputation poll {:#?}", run.err().unwrap());
+        }
     });
 
     // Every 5 minutes

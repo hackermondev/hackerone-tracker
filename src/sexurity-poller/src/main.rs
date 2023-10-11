@@ -63,8 +63,9 @@ fn main() {
         redis_client: redis,
     };
 
-    polls::reputation::run_poll(&config).unwrap();
-    polls::reports::run_poll(&config).unwrap();
+    // No error handling here so we don't check the result
+    let _ = polls::reputation::run_poll(&config);
+    let _ = polls::reports::run_poll(&config);
 
     polls::reputation::start_poll_event_loop(&config);
     polls::reports::start_poll_event_loop(&config);
