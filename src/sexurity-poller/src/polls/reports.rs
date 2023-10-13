@@ -168,7 +168,17 @@ fn get_reports_data(handle: &str, client: &HackerOneClient) -> Result<Vec<models
 
     let reports = data.data.unwrap().hacktivity_items.unwrap().hacktivity_list.edges.unwrap();
     for report in reports {
-        let item = report.unwrap().hacktivity_item.node.unwrap();
+        if report.is_none() {
+            continue
+        }
+
+        let report = report.unwrap();
+        let item = report.hacktivity_item.node;
+        if item.is_none() {
+            continue
+        }
+
+        let item = item.unwrap();
         let mut report = ReportData {
             id: None,
             severity: None,
@@ -182,14 +192,15 @@ fn get_reports_data(handle: &str, client: &HackerOneClient) -> Result<Vec<models
             disclosed: true,
         };
 
+        debug!("got report: {:#?}", item);
         match item {
             hackerone::team_hacktivity_page_query::HacktivityItemNode::Undisclosed(undisclosed) => {
                 report.id = Some(undisclosed.hacktivity_item_undisclosed.id.clone());
-                report.currency = undisclosed.hacktivity_item_undisclosed.currency.unwrap();
+                report.currency = undisclosed.hacktivity_item_undisclosed.currency.unwrap_or(String::from("(unknown currency)"));
                 report.awarded_amount = undisclosed.hacktivity_item_undisclosed.total_awarded_amount.unwrap_or(-1.0);
                 report.disclosed = false;
                 report.url = Some(format!("https://hackerone.com/reports/{}", undisclosed.hacktivity_item_undisclosed.id));
-                report.collaboration = undisclosed.hacktivity_item_undisclosed.is_collaboration.unwrap();
+                report.collaboration = undisclosed.hacktivity_item_undisclosed.is_collaboration.unwrap_or(false);
 
                 if undisclosed.hacktivity_item_undisclosed.reporter.is_some() {
                     report.user_name = undisclosed.hacktivity_item_undisclosed.reporter.as_ref().unwrap().username.clone();
@@ -200,14 +211,20 @@ fn get_reports_data(handle: &str, client: &HackerOneClient) -> Result<Vec<models
                 }
             }
             hackerone::team_hacktivity_page_query::HacktivityItemNode::Disclosed(disclosed) => {
+                if disclosed.hacktivity_item_disclosed.report.is_none() {
+                    continue;
+                }
+
                 report.id = Some(disclosed.hacktivity_item_disclosed.id.clone());
                 report.title = disclosed.hacktivity_item_disclosed.report.unwrap().title;
-                report.currency = disclosed.hacktivity_item_disclosed.currency.unwrap();
+                report.currency = disclosed.hacktivity_item_disclosed.currency.unwrap_or(String::from("(unknown currency)"));
                 report.awarded_amount = disclosed.hacktivity_item_disclosed.total_awarded_amount.unwrap_or(-1.0);
                 report.disclosed = true;
                 report.url = Some(format!("https://hackerone.com/reports/{}", disclosed.hacktivity_item_disclosed.id));
-                report.collaboration = disclosed.hacktivity_item_disclosed.is_collaboration.unwrap();
-                report.severity = Some(if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::critical {
+                report.collaboration = disclosed.hacktivity_item_disclosed.is_collaboration.unwrap_or(false);
+                report.severity = Some(if disclosed.hacktivity_item_disclosed.severity_rating.is_none() {
+                    String::from("unknown")
+                } else if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::critical {
                     String::from("critical")
                 } else if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::high {
                     String::from("high")
