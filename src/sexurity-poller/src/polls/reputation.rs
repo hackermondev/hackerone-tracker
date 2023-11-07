@@ -201,7 +201,7 @@ fn get_reputation_data(handle: &str, client: &HackerOneClient, previous_data: Op
 
     if page_info.has_next_page {
         let end_cursor = page_info.end_cursor.as_ref().unwrap();
-        return Ok(get_reputation_data(handle, client, Some(result), Some(end_cursor.clone())).unwrap());
+        return Ok(get_reputation_data(handle, client, Some(result), Some(end_cursor.clone())?);
     }
 
     Ok(result)
