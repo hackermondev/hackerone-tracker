@@ -58,11 +58,20 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
         if new.collaboration {
             user_field = format!("{} (+ unknown collaborator)", user_field);
         }
-        
-        let title = format!("{}", new.title.clone().unwrap_or(String::from("(unknown title)")));
+
+        let title = format!(
+            "{}",
+            new.title.clone().unwrap_or(String::from("(unknown title)"))
+        );
         let summary = new.summary.clone();
-        let url = new.url.clone().unwrap_or(String::from("https://hackerone.com/???"));
-        let severity = format!("{}", new.severity.clone().unwrap_or(String::from("unknown")));
+        let url = new
+            .url
+            .clone()
+            .unwrap_or(String::from("https://hackerone.com/???"));
+        let severity = format!(
+            "{}",
+            new.severity.clone().unwrap_or(String::from("unknown"))
+        );
         let bounty = if new.awarded_amount < 0.0 {
             String::from("unknown")
         } else {
@@ -76,22 +85,20 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
             .field(EmbedFieldBuilder::new("Reporter", user_field).build());
 
         if summary.is_some() {
-            embed = embed.field(
-                EmbedFieldBuilder::new("Summary", summary.unwrap())
-                .build(),
-            )
+            embed = embed.field(EmbedFieldBuilder::new("Summary", summary.unwrap()).build())
         }
 
-        embed = embed.field(
-            EmbedFieldBuilder::new("Severity", severity)
-            .inline()
-            .build(),
-        )
-        .field(
-            EmbedFieldBuilder::new("Bounty Award", bounty)
-            .inline()
-            .build(),
-        );
+        embed = embed
+            .field(
+                EmbedFieldBuilder::new("Severity", severity)
+                    .inline()
+                    .build(),
+            )
+            .field(
+                EmbedFieldBuilder::new("Bounty Award", bounty)
+                    .inline()
+                    .build(),
+            );
 
         let embed = embed.build();
         return Some(embed);

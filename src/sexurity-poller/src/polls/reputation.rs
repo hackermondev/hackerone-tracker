@@ -13,7 +13,10 @@ pub fn start_poll_event_loop(config: &PollConfiguration) {
     let mut cron = CronJob::new("reputation_poll", move |_name: &str| {
         let run = run_poll(&poll_config);
         if run.is_err() {
-            error!("error while running reputation poll {:#?}", run.err().unwrap());
+            error!(
+                "error while running reputation poll {:#?}",
+                run.err().unwrap()
+            );
         }
     });
 

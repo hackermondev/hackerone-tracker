@@ -108,7 +108,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     if last_report_data.is_some() {
         let last_report_data = last_report_data.unwrap();
         if last_report_data.len() > 0 && report_data_cloned.len() < 1 {
-            return Ok(())
+            return Ok(());
         }
     }
 
