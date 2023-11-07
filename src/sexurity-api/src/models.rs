@@ -41,6 +41,7 @@ pub struct ReportData {
     pub title: Option<String>,
     pub url: Option<String>,
 
+    pub summary: Option<String>,
     pub severity: Option<String>,
     pub collaboration: bool,
     pub disclosed: bool,

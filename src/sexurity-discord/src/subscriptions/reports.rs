@@ -59,7 +59,8 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
             user_field = format!("{} (+ unknown collaborator)", user_field);
         }
         
-        let title = format!("{}",new.title.clone().unwrap_or(&"(unknown title)".to_string()));
+        let title = format!("{}", new.title.clone().unwrap_or(String::from("(unknown title)")));
+        let summary = new.summary.clone();
         let url = new.url.clone().unwrap_or(String::from("https://hackerone.com/???"));
         let severity = format!("{}", new.severity.clone().unwrap_or(String::from("unknown")));
         let bounty = if new.awarded_amount < 0.0 {
@@ -68,23 +69,31 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
             format!("{} {}", new.awarded_amount, new.currency)
         };
 
-        let embed = EmbedBuilder::new()
+        let mut embed = EmbedBuilder::new()
             .color(models::embed_colors::TRANSPARENT)
             .title(title)
             .url(url)
-            .field(EmbedFieldBuilder::new("Reporter", user_field).build())
-            .field(
-                EmbedFieldBuilder::new("Severity", severity)
-                .inline()
-                .build(),
-            )
-            .field(
-                EmbedFieldBuilder::new("Bounty Award", bounty)
-                .inline()
-                .build(),
-            )
-            .build();
+            .field(EmbedFieldBuilder::new("Reporter", user_field).build());
 
+        if summary.is_some() {
+            embed = embed.field(
+                EmbedFieldBuilder::new("Summary", summary.unwrap())
+                .build(),
+            )
+        }
+
+        embed = embed.field(
+            EmbedFieldBuilder::new("Severity", severity)
+            .inline()
+            .build(),
+        )
+        .field(
+            EmbedFieldBuilder::new("Bounty Award", bounty)
+            .inline()
+            .build(),
+        );
+
+        let embed = embed.build();
         return Some(embed);
     }
 

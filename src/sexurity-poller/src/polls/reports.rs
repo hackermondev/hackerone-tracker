@@ -77,19 +77,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         trace!("{:#?}", report);
         if old_data.is_none() {
             // new report
-            let empty = models::ReportData {
-                id: None,
-                severity: None,
-                collaboration: false,
-                currency: "".into(),
-                awarded_amount: -1.0,
-                disclosed: false,
-                title: None,
-                url: None,
-                user_name: "".into(),
-                user_id: "".into(),
-            };
-
+            let empty = models::ReportData::default();
             let diff: Vec<models::ReportData> = vec![empty, report];
             changed.push(diff);
         } else {
@@ -210,14 +198,21 @@ fn get_reports_data(handle: &str, client: &HackerOneClient) -> Result<Vec<models
                 if disclosed.hacktivity_item_disclosed.report.is_none() {
                     continue;
                 }
-
+                
+                let hackerone_report = disclosed.hacktivity_item_disclosed.report.unwrap();
                 report.id = Some(disclosed.hacktivity_item_disclosed.id.clone());
-                report.title = disclosed.hacktivity_item_disclosed.report.unwrap().title;
+                report.title = hackerone_report.title;
                 report.currency = disclosed.hacktivity_item_disclosed.currency.unwrap_or(String::from("(unknown currency)"));
                 report.awarded_amount = disclosed.hacktivity_item_disclosed.total_awarded_amount.unwrap_or(-1.0);
                 report.disclosed = true;
                 report.url = Some(format!("https://hackerone.com/reports/{}", disclosed.hacktivity_item_disclosed.id));
                 report.collaboration = disclosed.hacktivity_item_disclosed.is_collaboration.unwrap_or(false);
+                report.summary = if hackerone_report.report_generated_content.is_some() {
+                    let summary = hackerone_report.report_generated_content.unwrap().hacktivity_summary;
+                    Some(summary.unwrap_or(String::from("This report does not have a summary")))
+                } else {
+                    None
+                };
                 report.severity = Some(if disclosed.hacktivity_item_disclosed.severity_rating.is_none() {
                     String::from("unknown")
                 } else if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::critical {
