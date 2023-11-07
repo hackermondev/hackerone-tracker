@@ -29,7 +29,7 @@ impl RepDataQueueItem {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, Default)]
 pub struct ReportData {
     pub user_name: String,
     pub user_id: String,

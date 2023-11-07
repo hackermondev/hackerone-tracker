@@ -58,36 +58,28 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
         if new.collaboration {
             user_field = format!("{} (+ unknown collaborator)", user_field);
         }
+        
+        let title = format!("{}",new.title.clone().unwrap_or(&"(unknown title)".to_string()));
+        let url = new.url.clone().unwrap_or(String::from("https://hackerone.com/???"));
+        let severity = format!("{}", new.severity.clone().unwrap_or(String::from("unknown")));
+        let bounty = if new.awarded_amount < 0.0 {
+            String::from("unknown")
+        } else {
+            format!("{} {}", new.awarded_amount, new.currency)
+        };
 
         let embed = EmbedBuilder::new()
             .color(models::embed_colors::TRANSPARENT)
-            .title(format!(
-                "{}",
-                new.title.as_ref().unwrap_or(&"(unknown title)".to_string())
-            ))
-            .footer(EmbedFooterBuilder::new("This report was disclosed").build())
-            .url(
-                new.url
-                    .as_ref()
-                    .unwrap_or(&"https://hackerone.com/???".to_string()),
-            )
+            .title(title)
+            .url(url)
             .field(EmbedFieldBuilder::new("Reporter", user_field).build())
             .field(
-                EmbedFieldBuilder::new(
-                    "Severity",
-                    format!(
-                        "{}",
-                        new.severity.as_ref().unwrap_or(&"unknown".to_string())
-                    ),
-                )
+                EmbedFieldBuilder::new("Severity", severity)
                 .inline()
                 .build(),
             )
             .field(
-                EmbedFieldBuilder::new(
-                    "Bounty Award",
-                    format!("{} {}", new.awarded_amount, new.currency),
-                )
+                EmbedFieldBuilder::new("Bounty Award", bounty)
                 .inline()
                 .build(),
             )

@@ -186,20 +186,9 @@ fn get_reports_data(handle: &str, client: &HackerOneClient) -> Result<Vec<models
         }
 
         let item = item.unwrap();
-        let mut report = ReportData {
-            id: None,
-            severity: None,
-            collaboration: false,
-            currency: "".into(),
-            awarded_amount: -1.0,
-            title: None,
-            url: None,
-            user_name: "".into(),
-            user_id: "".into(),
-            disclosed: true,
-        };
-
+        let mut report = ReportData::default();
         debug!("got report: {:#?}", item);
+        
         match item {
             hackerone::team_hacktivity_page_query::HacktivityItemNode::Undisclosed(undisclosed) => {
                 report.id = Some(undisclosed.hacktivity_item_undisclosed.id.clone());
@@ -235,9 +224,9 @@ fn get_reports_data(handle: &str, client: &HackerOneClient) -> Result<Vec<models
                     String::from("critical")
                 } else if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::high {
                     String::from("high")
-                } else if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::high {
+                } else if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::low {
                     String::from("low")
-                } else if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::high {
+                } else if disclosed.hacktivity_item_disclosed.severity_rating.as_ref().unwrap() == &hackerone::team_hacktivity_page_query::SeverityRatingEnum::medium {
                     String::from("medium")
                 } else {
                     String::from("none")
