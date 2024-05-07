@@ -7,6 +7,7 @@ use twilight_model::channel::message::embed::Embed;
 use twilight_model::util::Timestamp;
 use twilight_util::builder::embed::{EmbedBuilder, EmbedFooterBuilder};
 
+use crate::breakdown::calculate_rep_breakdown;
 static MAX_BACKLOG: usize = 100;
 pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data: E) {
     let backlog_raw = cmd("ZRANGE")
@@ -138,26 +139,46 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
         return Some(embed);
     } else if new.reputation > old.reputation {
         // reputation gain
+        let change = new.reputation - old.reputation;
+        let breakdown = calculate_rep_breakdown(change as i32);
         let text = format!(
             "[**``{}``**]({}) gained **+{} reputation** and now has **{} reputation**",
             new.user_name,
             format!("https://hackerone.com/{}", new.user_name),
-            new.reputation - old.reputation,
+            change,
             new.reputation,
         );
 
         let mut embed_builder = EmbedBuilder::new()
             .description(text)
             .color(models::embed_colors::POSTIVE);
-        if new.rank < old.rank {
-            let footer = format!("#{} -> #{} (+{})", old.rank, new.rank, old.rank - new.rank);
-            embed_builder = embed_builder.footer(EmbedFooterBuilder::new(footer));
+
+        {
+            let mut footer = String::from("");
+            if new.rank < old.rank {
+                footer += &format!("#{} -> #{} (+{})", old.rank, new.rank, old.rank - new.rank);
+            }
+
+            let breakdown = breakdown.to_string();
+            if breakdown.len() > 0 {
+                if footer.len() > 0 {
+                    footer += "| "
+                };
+
+                footer += &breakdown;
+            }
+
+            if footer.len() > 0 {
+                embed_builder = embed_builder.footer(EmbedFooterBuilder::new(footer));
+            }
         }
 
         let embed = embed_builder.build();
         return Some(embed);
     } else if old.reputation > new.reputation {
         // reputation lost
+        let change = new.reputation - old.reputation;
+        let breakdown = calculate_rep_breakdown(change as i32);
         let text = format!(
             "[**``{}``**]({}) lost **{} reputation** and now has **{} reputation**",
             new.user_name,
@@ -169,9 +190,25 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
         let mut embed_builder = EmbedBuilder::new()
             .description(text)
             .color(models::embed_colors::NEGATIVE);
-        if new.rank > old.rank {
-            let footer = format!("#{} -> #{} (-{})", old.rank, new.rank, new.rank - old.rank);
-            embed_builder = embed_builder.footer(EmbedFooterBuilder::new(footer));
+
+        {
+            let mut footer = String::from("");
+            if new.rank < old.rank {
+                footer += &format!("#{} -> #{} (-{})", old.rank, new.rank, new.rank - old.rank);
+            }
+
+            let breakdown = breakdown.to_string();
+            if breakdown.len() > 0 {
+                if footer.len() > 0 {
+                    footer += "| "
+                };
+
+                footer += &breakdown;
+            }
+
+            if footer.len() > 0 {
+                embed_builder = embed_builder.footer(EmbedFooterBuilder::new(footer));
+            }
         }
 
         let embed = embed_builder.build();

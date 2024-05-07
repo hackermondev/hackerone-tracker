@@ -14,7 +14,7 @@ pub fn save_vec_to_set<'a, V: serde::Deserialize<'a> + serde::Serialize>(
     if overwrite {
         redis::cmd("DEL").arg(&name).query(&mut conn)?;
     }
-    
+
     for i in data {
         let value_name = serde_json::to_string(&i)?;
         redis::cmd("SADD")

@@ -2,6 +2,7 @@ extern crate pretty_env_logger;
 #[macro_use]
 extern crate log;
 
+mod breakdown;
 mod subscriptions;
 use clap::Parser;
 use reqwest::blocking as reqwest;
