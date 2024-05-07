@@ -59,6 +59,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         save_vec_to_set(
             models::redis_keys::REPUTATION_QUEUE_LAST_DATA.to_string(),
             rep_data,
+            true,
             &mut redis_conn,
         )?;
         set_last_run_time_now(&mut redis_conn);
@@ -142,6 +143,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     save_vec_to_set(
         models::redis_keys::REPUTATION_QUEUE_LAST_DATA.to_string(),
         rep_data_cloned,
+        true,
         &mut redis_conn,
     )?;
     set_last_run_time_now(&mut redis_conn);

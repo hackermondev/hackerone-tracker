@@ -8,9 +8,13 @@ pub fn open(url: &str) -> Result<redis::Client, Box<dyn std::error::Error>> {
 pub fn save_vec_to_set<'a, V: serde::Deserialize<'a> + serde::Serialize>(
     name: String,
     data: Vec<V>,
+    overwrite: bool,
     mut conn: &mut redis::Connection,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    redis::cmd("DEL").arg(&name).query(&mut conn)?;
+    if overwrite {
+        redis::cmd("DEL").arg(&name).query(&mut conn)?;
+    }
+    
     for i in data {
         let value_name = serde_json::to_string(&i)?;
         redis::cmd("SADD")
