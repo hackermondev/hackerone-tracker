@@ -162,7 +162,7 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
             let breakdown = breakdown.to_string();
             if breakdown.len() > 0 {
                 if footer.len() > 0 {
-                    footer += "| "
+                    footer += " • "
                 };
 
                 footer += &breakdown;
