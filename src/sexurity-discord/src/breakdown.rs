@@ -82,6 +82,17 @@ pub fn calculate_rep_breakdown(mut rep_points: i32) -> ReputationBreakdown {
         index += 1;
     }
 
+    if rep_points != 0 {
+        return ReputationBreakdown {
+            high_bounty: 0,
+            medium_bounty: 0,
+            low_bounty: 0,
+            triaged: 0,
+            not_applicable: 0,
+            spam: 0,
+        };
+    }
+
     breakdown
 }
 

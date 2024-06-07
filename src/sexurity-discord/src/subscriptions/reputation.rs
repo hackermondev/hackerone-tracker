@@ -116,7 +116,7 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
         );
 
         if new.rank == -1 {
-            text = format!("[**``{}``**]({}) was added to [**``{}``**]({}) with **{} reputation** (rank: <100)", new.user_name, format!("https://hackerone.com/{}", new.user_name), handle, format!("https://hackerone.com/{}", handle), new.reputation);
+            text = format!("[**``{}``**]({}) was added to [**``{}``**]({}) with **{} reputation** (rank: >100)", new.user_name, format!("https://hackerone.com/{}", new.user_name), handle, format!("https://hackerone.com/{}", handle), new.reputation);
         }
 
         let embed = EmbedBuilder::new()

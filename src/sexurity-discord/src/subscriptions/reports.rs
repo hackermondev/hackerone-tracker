@@ -3,7 +3,7 @@ use sexurity_api::redis::redis::Connection;
 use std::thread::{self, JoinHandle};
 use twilight_model::channel::message::embed::Embed;
 use twilight_util::builder::embed::EmbedFieldBuilder;
-use twilight_util::builder::embed::{EmbedBuilder, EmbedFooterBuilder};
+use twilight_util::builder::embed::EmbedBuilder;
 
 pub fn start_reports_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Send + 'static>(
     mut conn: Connection,
