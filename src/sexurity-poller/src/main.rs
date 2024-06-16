@@ -35,9 +35,6 @@ struct Arguments {
 
     #[arg(default_value = "false", long)]
     disable_hackactivity_polling: bool,
-
-    #[arg(default_value = "false", long)]
-    disable_user_report_count_polling: bool,
 }
 fn main() {
     pretty_env_logger::init();
@@ -63,12 +60,20 @@ fn main() {
         redis_client: redis,
     };
 
-    // No error handling here so we don't check the result
-    let _ = polls::reputation::run_poll(&config);
-    let _ = polls::reports::run_poll(&config);
 
-    polls::reputation::start_poll_event_loop(&config);
-    polls::reports::start_poll_event_loop(&config);
+    // We don't check the result on the first call 
+    // since there's no error handling here
+
+    if !args.disable_reputation_polling {
+        let _ = polls::reputation::run_poll(&config);
+        polls::reputation::start_poll_event_loop(&config);
+    }
+
+    if !args.disable_hackactivity_polling {
+        let _ = polls::reports::run_poll(&config);
+        polls::reports::start_poll_event_loop(&config);
+    }
+
 
     // keep main thread alive
     loop {
