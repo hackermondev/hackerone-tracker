@@ -165,7 +165,7 @@ fn build_embed_data(
 
         if include_team_handle {
             text += &format!(
-                "in [**``{}``**]({})",
+                " in [**``{}``**]({})",
                 handle,
                 format!("https://hackerone.com/{}", handle)
             );
@@ -211,7 +211,7 @@ fn build_embed_data(
 
         if include_team_handle {
             text += &format!(
-                "in [**``{}``**]({})",
+                " in [**``{}``**]({})",
                 handle,
                 format!("https://hackerone.com/{}", handle)
             );
