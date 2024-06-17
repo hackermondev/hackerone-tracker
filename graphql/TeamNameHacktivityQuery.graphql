@@ -1,0 +1,7 @@
+query TeamNameHacktivityQuery($handle: String!) {
+  team(handle: $handle) {
+    id
+    name
+    __typename
+  }
+}

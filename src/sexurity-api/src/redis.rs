@@ -33,7 +33,11 @@ pub fn load_set_to_vec(
     let set_values: Vec<String> = redis::cmd("SMEMBERS").arg(&name).query(&mut conn)?;
 
     let mut result = Vec::new();
-    for value in set_values {
+    for mut value in set_values {
+        if value.starts_with('"') {
+            value = value[1..value.len() - 1].to_string();
+        }
+
         result.push(value);
     }
 

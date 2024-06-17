@@ -35,7 +35,11 @@ pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data:
         // try to sort by rep
         item.diff.sort_by_key(|k| k[1].rank);
         for diff in item.diff {
-            let embed = build_embed_data(diff, &item.team_handle);
+            let handle = diff[0]
+                .team_handle
+                .clone()
+                .unwrap_or_else(|| diff[1].team_handle.clone().unwrap());
+            let embed = build_embed_data(diff, &handle, item.include_team_handle).clone();
             if embed.is_some() {
                 let mut embed_unwrapped = embed.unwrap();
                 embed_unwrapped.timestamp =
@@ -81,7 +85,11 @@ pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Sen
             // try to sort by rep
             decoded.diff.sort_by_key(|k| k[1].rank);
             for diff in decoded.diff {
-                let embed = build_embed_data(diff, &decoded.team_handle);
+                let handle = diff[0]
+                    .team_handle
+                    .clone()
+                    .unwrap_or_else(|| diff[1].team_handle.clone().unwrap());
+                let embed = build_embed_data(diff, &handle, decoded.include_team_handle);
                 if embed.is_some() {
                     on_message_data(vec![embed.unwrap()]);
                 }
@@ -95,7 +103,11 @@ pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Sen
     })
 }
 
-fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
+fn build_embed_data(
+    diff: Vec<models::RepData>,
+    handle: &str,
+    include_team_handle: bool,
+) -> Option<Embed> {
     if diff.len() < 2 {
         panic!("invalid diff data");
     }
@@ -127,9 +139,11 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
     } else if new.reputation == -1 {
         // user removed from leaderboard
         let text = format!(
-            "[**``{}``**]({}) was removed from the leaderboard",
+            "[**``{}``**]({}) was removed from [**``{}``**]({})",
             old.user_name,
             format!("https://hackerone.com/{}", old.user_name),
+            handle,
+            format!("https://hackerone.com/{}", handle),
         );
 
         let embed = EmbedBuilder::new()
@@ -141,13 +155,21 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
         // reputation gain
         let change = new.reputation - old.reputation;
         let breakdown = calculate_rep_breakdown(change as i32);
-        let text = format!(
+        let mut text = format!(
             "[**``{}``**]({}) gained **+{} reputation** and now has **{} reputation**",
             new.user_name,
             format!("https://hackerone.com/{}", new.user_name),
             change,
             new.reputation,
         );
+
+        if include_team_handle {
+            text += &format!(
+                "in [**``{}``**]({})",
+                handle,
+                format!("https://hackerone.com/{}", handle)
+            );
+        }
 
         let mut embed_builder = EmbedBuilder::new()
             .description(text)
@@ -179,13 +201,21 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
         // reputation lost
         let change = new.reputation - old.reputation;
         let breakdown = calculate_rep_breakdown(change as i32);
-        let text = format!(
+        let mut text = format!(
             "[**``{}``**]({}) lost **{} reputation** and now has **{} reputation**",
             new.user_name,
             format!("https://hackerone.com/{}", new.user_name),
             new.reputation - old.reputation,
             new.reputation,
         );
+
+        if include_team_handle {
+            text += &format!(
+                "in [**``{}``**]({})",
+                handle,
+                format!("https://hackerone.com/{}", handle)
+            );
+        }
 
         let mut embed_builder = EmbedBuilder::new()
             .description(text)
@@ -212,22 +242,6 @@ fn build_embed_data(diff: Vec<models::RepData>, handle: &str) -> Option<Embed> {
         }
 
         let embed = embed_builder.build();
-        return Some(embed);
-    } else if old.rank != new.rank {
-        // rank change
-        let text = format!(
-            "[**``{}``**]({}) rank changed. #{} -> #{}",
-            new.user_name,
-            format!("https://hackerone.com/{}", new.user_name),
-            old.rank,
-            new.rank
-        );
-
-        let embed = EmbedBuilder::new()
-            .description(text)
-            .color(models::embed_colors::POSTIVE)
-            .build();
-
         return Some(embed);
     }
 

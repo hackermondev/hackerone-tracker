@@ -26,7 +26,7 @@ impl HackerOneClient {
         );
 
         let client = ClientBuilder::new()
-            .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50")
+            .user_agent("HackerOneTracker (+github.com/hackermondev/hackerone-tracker)")
             .default_headers(headers)
             .connect_timeout(Duration::from_secs(5))
             .build()
@@ -66,11 +66,15 @@ pub fn get_hackerone_csrf_token(session_token: &str) -> Result<String, Box<dyn E
 }
 
 // GraphQL types
+type DateTime = String;
+type DateInput = String;
+type URI = String;
 
 #[derive(GraphQLQuery, Debug)]
 #[graphql(
     schema_path = "../../graphql/schema.graphql",
     query_path = "../../graphql/TeamYearThankQuery.graphql",
+    request_derives = "Debug",
     response_derives = "Debug"
 )]
 pub struct TeamYearThankQuery;
@@ -84,6 +88,36 @@ pub struct TeamYearThankQuery;
     skip_serializing_none
 )]
 pub struct TeamHacktivityPageQuery;
+
+#[derive(GraphQLQuery, Debug)]
+#[graphql(
+    schema_path = "../../graphql/schema.graphql",
+    query_path = "../../graphql/CompleteHacktivitySearchQuery.graphql",
+    variables_derives = "Default, PartialEq",
+    response_derives = "Debug, PartialEq",
+    skip_serializing_none
+)]
+pub struct CompleteHacktivitySearchQuery;
+
+#[derive(GraphQLQuery, Debug)]
+#[graphql(
+    schema_path = "../../graphql/schema.graphql",
+    query_path = "../../graphql/TeamNameHacktivityQuery.graphql",
+    variables_derives = "Default, PartialEq",
+    response_derives = "Debug, PartialEq",
+    skip_serializing_none
+)]
+pub struct TeamNameHacktivityQuery;
+
+#[derive(GraphQLQuery, Debug)]
+#[graphql(
+    schema_path = "../../graphql/schema.graphql",
+    query_path = "../../graphql/DiscoveryQuery.graphql",
+    variables_derives = "Default, PartialEq",
+    response_derives = "Debug, PartialEq",
+    skip_serializing_none
+)]
+pub struct DiscoveryQuery;
 
 impl Default for team_hacktivity_page_query::OrderDirection {
     fn default() -> Self {

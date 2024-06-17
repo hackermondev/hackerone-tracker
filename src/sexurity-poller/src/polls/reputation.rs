@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use super::PollConfiguration;
 extern crate cronjob;
 use chrono;
@@ -20,9 +22,16 @@ pub fn start_poll_event_loop(config: &PollConfiguration) {
         }
     });
 
-    // Every 5 minutes
-    cron.minutes("*/5");
-    cron.seconds("0");
+    if config.team_handle.is_some() {
+        // Every 5 minutes if tracking a specific program
+        cron.minutes("*/5");
+        cron.seconds("0");
+    } else {
+        // Every 10 minutes if tracking all programs
+        cron.minutes("*/10");
+        cron.seconds("0");
+    }
+
     CronJob::start_job_threaded(cron);
     info!("reputation: started poll event loop");
 }
@@ -33,17 +42,38 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     let last_run_time: Option<String> = cmd("GET")
         .arg(models::redis_keys::REPUTATION_QUEUE_LAST_RUN_TIME)
         .query(&mut redis_conn)?;
-    let mut last_rep_data = get_old_reputation_data(&mut redis_conn);
-    let rep_data = get_reputation_data(&config.team_handle, &config.hackerone, None, None);
-    if rep_data.is_err() {
-        error!(
-            "reputation poll event: error getting reputation data: {}",
-            rep_data.err().unwrap()
-        );
-        return Ok(());
+    let last_rep_data = get_old_reputation_data(&mut redis_conn);
+    let mut programs = vec![];
+
+    if let Some(team_handle) = &config.team_handle {
+        programs.push(team_handle.to_owned());
+    } else {
+        // Get reputation data from all programs
+        let mut _programs =
+            load_set_to_vec(models::redis_keys::PROGRAMS.to_string(), &mut redis_conn)?;
+        programs.append(&mut _programs);
     }
 
-    let rep_data = rep_data.unwrap();
+    debug!("getting rep data for {} programs", programs.len());
+
+    let mut rep_data = vec![];
+    let one_program = programs.len() == 1;
+    for program in programs {
+        let _rep_data = get_reputation_data(&program, &config.hackerone, true, None, None);
+        if _rep_data.is_err() {
+            error!(
+                "reputation poll event: error getting reputation data({}): {}",
+                program,
+                _rep_data.err().unwrap()
+            );
+
+            return Ok(());
+        }
+
+        let mut _rep_data = _rep_data.unwrap();
+        rep_data.append(&mut _rep_data);
+    }
+
     debug!(
         "reputation poll event: last_run_time {}",
         last_run_time.clone().unwrap_or("-1".into())
@@ -67,58 +97,54 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     }
 
     let mut changed: Vec<Vec<models::RepData>> = Vec::new();
-    let rep_data_cloned = rep_data.clone();
-    for rep in rep_data {
-        let user_id = rep.user_id.clone();
-        let old_data = last_rep_data
-            .as_ref()
-            .unwrap()
-            .into_iter()
-            .find(|p| p.user_id == user_id);
+    // let rep_data_cloned = rep_data.clone();
 
-        if old_data.is_none() {
-            // user was added
-            let empty = models::RepData {
-                reputation: -1,
-                rank: -1,
-                user_name: "".into(),
-                user_profile_image_url: "".into(),
-                user_id: "".into(),
-            };
-
-            let diff: Vec<models::RepData> = vec![empty, rep];
-            changed.push(diff);
-        } else {
-            if old_data.unwrap().reputation != rep.reputation {
-                let diff: Vec<models::RepData> = vec![old_data.unwrap().clone(), rep.clone()];
-                changed.push(diff);
-            }
-
-            let index = last_rep_data
-                .as_ref()
-                .unwrap()
-                .into_iter()
-                .position(|d| d.user_id == rep.user_id)
-                .unwrap();
-
-            last_rep_data.as_mut().unwrap().remove(index);
+    // Create a hashmap for quick lookup of last_rep_data
+    let mut last_rep_map: HashMap<(String, Option<String>), models::RepData> = HashMap::new();
+    if let Some(ref last_rep_data_vec) = last_rep_data {
+        for data in last_rep_data_vec {
+            last_rep_map.insert(
+                (data.user_id.clone(), data.team_handle.clone()),
+                data.clone(),
+            );
         }
     }
 
-    let last_rep_data_unwrapped = last_rep_data.unwrap();
-    if last_rep_data_unwrapped.len() > 0 {
-        // User was removed
-        for rep in last_rep_data_unwrapped {
+    // Process current rep_data
+    for rep in &rep_data {
+        let key = (rep.user_id.clone(), rep.team_handle.clone());
+        if let Some(old_data) = last_rep_map.remove(&key) {
+            if old_data.reputation != rep.reputation {
+                changed.push(vec![old_data.clone(), rep.clone()]);
+            }
+        } else {
+            // User was added
             let empty = models::RepData {
                 reputation: -1,
                 rank: -1,
                 user_name: "".into(),
+                team_handle: None,
                 user_profile_image_url: "".into(),
                 user_id: "".into(),
             };
+            changed.push(vec![empty, rep.clone()]);
+        }
 
-            let diff: Vec<models::RepData> = vec![rep, empty];
-            changed.push(diff);
+        drop(key);
+    }
+
+    // Process remaining last_rep_data, these users were removed
+    if let Some(_) = last_rep_data {
+        for remaining in last_rep_map.values() {
+            let empty = models::RepData {
+                reputation: -1,
+                rank: -1,
+                user_name: "".into(),
+                team_handle: None,
+                user_profile_image_url: "".into(),
+                user_id: "".into(),
+            };
+            changed.push(vec![remaining.clone(), empty]);
         }
     }
 
@@ -126,9 +152,9 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     if changed.len() > 0 {
         let mut queue_item = models::RepDataQueueItem {
             id: None,
-            team_handle: config.team_handle.clone(),
             diff: changed.clone(),
             created_at: chrono::Utc::now(),
+            include_team_handle: !one_program,
         };
 
         queue_item.create_id();
@@ -142,7 +168,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
 
     save_vec_to_set(
         models::redis_keys::REPUTATION_QUEUE_LAST_DATA.to_string(),
-        rep_data_cloned,
+        rep_data,
         true,
         &mut redis_conn,
     )?;
@@ -164,8 +190,8 @@ fn set_last_run_time_now(conn: &mut redis::Connection) {
 }
 
 #[cfg_attr(rustfmt, rustfmt_skip)]
-fn get_reputation_data(handle: &str, client: &HackerOneClient, previous_data: Option<Vec<models::RepData>>, next_cursor: Option<String>) -> Result<Vec<models::RepData>, Box<dyn std::error::Error>> {
-    debug!("get reputation data, cursor: {}", next_cursor.as_ref().unwrap_or(&String::from("")));
+fn get_reputation_data(handle: &str, client: &HackerOneClient, get_full_leaderboard: bool, previous_data: Option<Vec<models::RepData>>, next_cursor: Option<String>) -> Result<Vec<models::RepData>, Box<dyn std::error::Error>> {
+    debug!("get reputation data {}, cursor: {}", handle, next_cursor.as_ref().unwrap_or(&String::from("")));
     let variables = hackerone::team_year_thank_query::Variables {
         selected_handle: handle.to_string(),
         year: None,
@@ -185,8 +211,23 @@ fn get_reputation_data(handle: &str, client: &HackerOneClient, previous_data: Op
     }
     
     let data = response.json::<graphql_client::Response<<hackerone::TeamYearThankQuery as GraphQLQuery>::ResponseData>>()?;
-    let page_info = &data.data.as_ref().unwrap().selected_team.as_ref().unwrap().participants.as_ref().unwrap().page_info; // rustfmt::skip
-    let researchers = data.data.as_ref().unwrap().selected_team.as_ref().unwrap().participants.as_ref().unwrap().edges.as_ref().unwrap();
+    trace!("{} {:?}", handle, data);
+    if let Some(errors) = data.errors {
+        if errors.len() > 0 {
+            return Err(errors.get(0).unwrap().message.clone().into());
+        }
+    }
+
+    let team_handle = data.data.as_ref().unwrap().selected_team.as_ref().unwrap().handle.clone();
+    let participants = &data.data.as_ref().unwrap().selected_team.as_ref().unwrap().participants;
+    if participants.is_none() {
+        warn!("{} returned no participants", handle);
+        return Ok(vec![])
+    }
+
+    let participants = participants.as_ref().unwrap();
+    let page_info = &participants.page_info; // rustfmt::skip
+    let researchers = participants.edges.as_ref().unwrap();
 
     for researcher in researchers {
         let user = researcher.as_ref().unwrap().node.as_ref().unwrap();
@@ -199,17 +240,20 @@ fn get_reputation_data(handle: &str, client: &HackerOneClient, previous_data: Op
             user_name: user.username.clone(),
             user_id: user.database_id.clone(),
             user_profile_image_url: user.profile_picture.clone(),
+            team_handle: Some(team_handle.clone()),
         };
 
         result.push(data);
     }
 
-    if page_info.has_next_page {
+    if page_info.has_next_page && get_full_leaderboard {
         let end_cursor = page_info.end_cursor.as_ref().unwrap();
-        let next_page_reputation_data = get_reputation_data(handle, client, Some(result), Some(end_cursor.clone()))?;
+        let next_page_reputation_data = get_reputation_data(handle, client, true, Some(result), Some(end_cursor.clone()))?;
         return Ok(next_page_reputation_data);
     }
 
+    debug!("got {} researchers in {}", result.len(), handle);
+    debug!("{:?}", result);
     Ok(result)
 }
 

@@ -9,13 +9,14 @@ pub struct RepData {
     pub user_name: String,
     pub user_profile_image_url: String,
     pub user_id: String,
+    pub team_handle: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct RepDataQueueItem {
     pub id: Option<String>,
-    pub team_handle: String,
     pub diff: Vec<Vec<RepData>>,
+    pub include_team_handle: bool,
 
     #[serde(with = "my_date_format")]
     pub created_at: DateTime<Utc>,
@@ -50,7 +51,7 @@ pub struct ReportData {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ReportsDataQueueItem {
     pub id: Option<String>,
-    pub team_handle: String,
+    pub team_handle: Option<String>,
     pub diff: Vec<Vec<ReportData>>,
 
     #[serde(with = "my_date_format")]
@@ -80,6 +81,8 @@ pub mod redis_keys {
     pub const REPORTS_QUEUE_PUBSUB: &str = "reports_poll_queue";
     pub const REPORTS_POLL_LAST_RUN_TIME: &str = "reports_poll_last_run_time";
     pub const REPORTS_POLL_LAST_DATA: &str = "reports_poll_last_data";
+
+    pub const PROGRAMS: &str = "programs";
 }
 
 mod my_date_format {

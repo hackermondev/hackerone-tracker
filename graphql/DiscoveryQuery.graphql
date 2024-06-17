@@ -1,0 +1,20 @@
+query DiscoveryQuery($query: OpportunitiesQuery!, $filter: QueryInput!, $from: Int, $size: Int, $sort: [SortInput!], $post_filters: OpportunitiesFilterInput) {
+  opportunities_search(
+    query: $query
+    filter: $filter
+    from: $from
+    size: $size
+    sort: $sort
+    post_filters: $post_filters
+  ) {
+    nodes {
+      ... on OpportunityDocument {
+        handle
+        __typename
+      }
+      __typename
+    }
+    total_count
+    __typename
+  }
+}

@@ -28,7 +28,7 @@ struct Arguments {
     redis: String,
 
     #[arg(short = 'H', long = "handle")]
-    hackerone_handle: String,
+    hackerone_handle: Option<String>,
 
     #[arg(default_value = "false", long)]
     disable_reputation_polling: bool,
@@ -40,7 +40,7 @@ fn main() {
     pretty_env_logger::init();
     let args = Arguments::parse();
     info!("hello world");
-    debug!("hackerone team handle: {}", args.hackerone_handle);
+    debug!("hackerone team handle: {:?}", args.hackerone_handle);
     debug!("{:#?}", args);
 
     let session_token = args.hackerone_session_token.clone().unwrap_or("".into());
@@ -54,26 +54,36 @@ fn main() {
     }
 
     let redis = redis::open(args.redis.as_ref()).unwrap();
+    let is_tracking_all_programs = args.hackerone_handle.is_none();
     let config = PollConfiguration {
         hackerone: client,
-        team_handle: args.hackerone_handle.clone(),
+        team_handle: args.hackerone_handle,
         redis_client: redis,
     };
 
+    if is_tracking_all_programs {
+        if let Err(err) = polls::programs::run_poll(&config) {
+            error!("programs: {}", err);
+        }
 
-    // We don't check the result on the first call 
-    // since there's no error handling here
+        polls::programs::start_poll_event_loop(&config);
+    }
 
     if !args.disable_reputation_polling {
-        let _ = polls::reputation::run_poll(&config);
+        if let Err(err) = polls::reputation::run_poll(&config) {
+            error!("reputation: {}", err);
+        }
+
         polls::reputation::start_poll_event_loop(&config);
     }
 
     if !args.disable_hackactivity_polling {
-        let _ = polls::reports::run_poll(&config);
+        if let Err(err) = polls::reports::run_poll(&config) {
+            error!("reports: {}", err);
+        }
+
         polls::reports::start_poll_event_loop(&config);
     }
-
 
     // keep main thread alive
     loop {
@@ -85,26 +95,35 @@ fn ensure_args(client: &HackerOneClient, args: &Arguments) -> bool {
     let now = chrono::Utc::now().date_naive();
 
     // Verify HackerOne handle
-    let variables = hackerone::team_year_thank_query::Variables {
-        selected_handle: args.hackerone_handle.clone(),
-        year: Some(now.year().into()),
-        cursor: "".into(),
-    };
+    if let Some(hackerone_handle) = &args.hackerone_handle {
+        let variables = hackerone::team_year_thank_query::Variables {
+            selected_handle: hackerone_handle.clone(),
+            year: Some(now.year().into()),
+            cursor: "".into(),
+        };
 
-    let query = hackerone::TeamYearThankQuery::build_query(variables);
-    let response = client
-        .http
-        .post("https://hackerone.com/graphql")
-        .json(&query)
-        .send()
-        .unwrap();
+        let query = hackerone::TeamYearThankQuery::build_query(variables);
+        let response = client
+            .http
+            .post("https://hackerone.com/graphql")
+            .json(&query)
+            .send()
+            .unwrap();
 
-    let data = response.json::<graphql_client::Response<<hackerone::TeamYearThankQuery as GraphQLQuery>::ResponseData>>().unwrap();
-    let can_fetch_team = data
-        .data
-        .expect("Response data not found")
-        .selected_team
-        .is_some();
+        let data =
+            response
+                .json::<graphql_client::Response<
+                    <hackerone::TeamYearThankQuery as GraphQLQuery>::ResponseData,
+                >>()
+                .unwrap();
+        let can_fetch_team = data
+            .data
+            .expect("Response data not found")
+            .selected_team
+            .is_some();
 
-    return can_fetch_team;
+        return can_fetch_team;
+    }
+
+    true
 }

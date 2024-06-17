@@ -1,0 +1,55 @@
+query CompleteHacktivitySearchQuery($queryString: String!, $from: Int, $size: Int, $sort: SortInput!) {
+  search(
+    index: CompleteHacktivityReportIndexService
+    query_string: $queryString
+    from: $from
+    size: $size
+    sort: $sort
+  ) {
+    __typename
+    total_count
+    nodes {
+      __typename
+      ... on CompleteHacktivityReportDocument {
+        _id
+        reporter {
+          id
+          name
+          username
+          __typename
+        }
+        cve_ids
+        cwe
+        severity_rating
+        public
+        report {
+          id
+          title
+          substate
+          url
+          disclosed_at
+          report_generated_content {
+            hacktivity_summary
+            __typename
+          }
+          __typename
+        }
+        votes
+        team {
+          handle
+          name
+          medium_profile_picture: profile_picture(size: medium)
+          url
+          currency
+        }
+        total_awarded_amount
+        latest_disclosable_action
+        latest_disclosable_activity_at
+        submitted_at
+        disclosed
+        has_collaboration
+        __typename
+      }
+    }
+  }
+}
