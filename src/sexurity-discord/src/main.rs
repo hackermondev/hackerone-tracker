@@ -38,11 +38,26 @@ fn main() {
         debug!("sending message with embed length {}", message.embeds.len());
         trace!("sending embed: {:#?}", message.embeds);
         let client = reqwest::Client::new();
-        client
-            .post(args.discord_webhook_url.clone())
-            .json(&message)
-            .send()
-            .unwrap();
+
+        let mut tries = 0;
+        loop {
+            if tries >= 5 {
+                error!("webhook failed (5 tries)");
+                break;
+            }
+
+            let client_post_result = client
+                .post(args.discord_webhook_url.clone())
+                .json(&message)
+                .send();
+
+            tries += 1;
+            if client_post_result.is_ok() {
+                break
+            }
+
+            error!("webhook failed {}", client_post_result.err().unwrap());
+        }
     };
 
     let redis = redis::open(&args.redis).unwrap();

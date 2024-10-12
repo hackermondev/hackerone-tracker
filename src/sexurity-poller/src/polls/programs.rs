@@ -73,8 +73,8 @@ fn get_programs(
 
     let data = response.json::<graphql_client::Response<<hackerone::DiscoveryQuery as GraphQLQuery>::ResponseData>>()?;
     if let Some(errors) = data.errors {
-        if errors.len() > 0 {
-            return Err(errors.get(0).unwrap().message.clone().into());
+        if !errors.is_empty() {
+            return Err(errors.first().unwrap().message.clone().into());
         }
     }
 
@@ -95,18 +95,14 @@ fn get_programs(
         }
 
         let program = item.as_ref().unwrap();
-        match program {
-            DiscoveryQueryOpportunitiesSearchNodes::OpportunityDocument(program) => {
-                program_names.push(program.handle.clone());
-            }
-
-            _ => {}
+        if let DiscoveryQueryOpportunitiesSearchNodes::OpportunityDocument(program) = program {
+            program_names.push(program.handle.clone());
         };
     }
 
     trace!("{:?}", programs);
     if programs.len() == 100 {
-        let mut other_programs = get_programs(&client, Some(after + programs.len()))?;
+        let mut other_programs = get_programs(client, Some(after + programs.len()))?;
         program_names.append(&mut other_programs);
     }
 

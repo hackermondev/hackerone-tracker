@@ -7,7 +7,6 @@ mod polls;
 use std::thread;
 use std::time::Duration;
 
-use chrono;
 use chrono::Datelike;
 use clap::Parser;
 

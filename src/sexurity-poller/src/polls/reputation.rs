@@ -80,7 +80,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     );
     debug!(
         "reputation poll event: last_rep_data len: {}, current rep_data len: {}",
-        last_rep_data.clone().unwrap_or(vec![]).len(),
+        last_rep_data.clone().unwrap_or_default().len(),
         rep_data.len()
     );
 
@@ -134,7 +134,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     }
 
     // Process remaining last_rep_data, these users were removed
-    if let Some(_) = last_rep_data {
+    if last_rep_data.is_some() {
         for remaining in last_rep_map.values() {
             let empty = models::RepData {
                 reputation: -1,
@@ -149,11 +149,11 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     }
 
     debug!("reputation poll event: changed len: {}", changed.len());
-    if changed.len() > 0 {
+    if !changed.is_empty() {
         let mut queue_item = models::RepDataQueueItem {
             id: None,
             diff: changed.clone(),
-            created_at: chrono::Utc::now(),
+            created_at: chrono::Utc::now().naive_utc(),
             include_team_handle: !one_program,
         };
 
@@ -189,7 +189,7 @@ fn set_last_run_time_now(conn: &mut redis::Connection) {
         .unwrap();
 }
 
-#[cfg_attr(rustfmt, rustfmt_skip)]
+#[rustfmt::skip]
 fn get_reputation_data(handle: &str, client: &HackerOneClient, get_full_leaderboard: bool, previous_data: Option<Vec<models::RepData>>, next_cursor: Option<String>) -> Result<Vec<models::RepData>, Box<dyn std::error::Error>> {
     debug!("get reputation data {}, cursor: {}", handle, next_cursor.as_ref().unwrap_or(&String::from("")));
     let variables = hackerone::team_year_thank_query::Variables {
@@ -213,8 +213,8 @@ fn get_reputation_data(handle: &str, client: &HackerOneClient, get_full_leaderbo
     let data = response.json::<graphql_client::Response<<hackerone::TeamYearThankQuery as GraphQLQuery>::ResponseData>>()?;
     trace!("{} {:?}", handle, data);
     if let Some(errors) = data.errors {
-        if errors.len() > 0 {
-            return Err(errors.get(0).unwrap().message.clone().into());
+        if !errors.is_empty() {
+            return Err(errors.first().unwrap().message.clone().into());
         }
     }
 
@@ -262,10 +262,10 @@ fn get_old_reputation_data(conn: &mut redis::Connection) -> Option<Vec<models::R
         String::from(models::redis_keys::REPUTATION_QUEUE_LAST_DATA),
         conn,
     )
-    .unwrap_or(vec![]);
+    .unwrap_or_default();
     let mut data: Vec<models::RepData> = vec![];
 
-    if last_rep_data.len() == 0 {
+    if last_rep_data.is_empty() {
         return None;
     }
 

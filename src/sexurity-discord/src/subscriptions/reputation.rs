@@ -18,7 +18,7 @@ pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data:
         .unwrap();
 
     debug!("reputation: backlog {:#?}", backlog_raw);
-    if backlog_raw.len() > 0 {
+    if !backlog_raw.is_empty() {
         info!(
             "reputation: consuming backlog with {} items",
             backlog_raw.len()
@@ -43,7 +43,7 @@ pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data:
             if embed.is_some() {
                 let mut embed_unwrapped = embed.unwrap();
                 embed_unwrapped.timestamp =
-                    Some(Timestamp::from_micros(item.created_at.timestamp_micros()).unwrap());
+                    Some(Timestamp::from_micros(item.created_at.and_utc().timestamp_micros()).unwrap());
 
                 on_message_data(vec![embed_unwrapped]);
             }
@@ -182,15 +182,15 @@ fn build_embed_data(
             }
 
             let breakdown = breakdown.to_string();
-            if breakdown.len() > 0 {
-                if footer.len() > 0 {
+            if !breakdown.is_empty() {
+                if !footer.is_empty() {
                     footer += " • "
                 };
 
                 footer += &breakdown;
             }
 
-            if footer.len() > 0 {
+            if !footer.is_empty() {
                 embed_builder = embed_builder.footer(EmbedFooterBuilder::new(footer));
             }
         }
@@ -228,15 +228,15 @@ fn build_embed_data(
             }
 
             let breakdown = breakdown.to_string();
-            if breakdown.len() > 0 {
-                if footer.len() > 0 {
+            if !breakdown.is_empty() {
+                if !footer.is_empty() {
                     footer += "| "
                 };
 
                 footer += &breakdown;
             }
 
-            if footer.len() > 0 {
+            if !footer.is_empty() {
                 embed_builder = embed_builder.footer(EmbedFooterBuilder::new(footer));
             }
         }

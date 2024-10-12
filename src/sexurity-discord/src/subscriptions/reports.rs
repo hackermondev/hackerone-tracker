@@ -47,7 +47,7 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
     let new = &diff[1];
 
     // tracks disclosed reports
-    if new.disclosed == true {
+    if new.disclosed {
         // report closed (undisclosed)
         let mut user_field = format!(
             "[**``{}``**]({})",
@@ -59,19 +59,13 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
             user_field = format!("{} (+ unknown collaborator)", user_field);
         }
 
-        let title = format!(
-            "{}",
-            new.title.clone().unwrap_or(String::from("(unknown title)"))
-        );
+        let title = new.title.clone().unwrap_or(String::from("(unknown title)")).to_string();
         let summary = new.summary.clone();
         let url = new
             .url
             .clone()
             .unwrap_or(String::from("https://hackerone.com/???"));
-        let severity = format!(
-            "{}",
-            new.severity.clone().unwrap_or(String::from("unknown"))
-        );
+        let severity = new.severity.clone().unwrap_or(String::from("unknown")).to_string();
         let bounty = if new.awarded_amount < 0.0 {
             String::from("unknown")
         } else {

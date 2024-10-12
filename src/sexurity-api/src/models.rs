@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc};
+use chrono::NaiveDateTime;
 use nanoid::nanoid;
 use serde::{Deserialize, Serialize};
 
@@ -19,7 +19,7 @@ pub struct RepDataQueueItem {
     pub include_team_handle: bool,
 
     #[serde(with = "my_date_format")]
-    pub created_at: DateTime<Utc>,
+    pub created_at: NaiveDateTime,
 }
 
 impl RepDataQueueItem {
@@ -55,7 +55,7 @@ pub struct ReportsDataQueueItem {
     pub diff: Vec<Vec<ReportData>>,
 
     #[serde(with = "my_date_format")]
-    pub created_at: DateTime<Utc>,
+    pub created_at: NaiveDateTime,
 }
 
 impl ReportsDataQueueItem {
@@ -86,10 +86,10 @@ pub mod redis_keys {
 }
 
 mod my_date_format {
-    use chrono::{DateTime, TimeZone, Utc};
+    use chrono::NaiveDateTime;
     use serde::{self, Deserialize, Deserializer, Serializer};
 
-    const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
+    const FORMAT: &str = "%Y-%m-%d %H:%M:%S";
 
     // The signature of a serialize_with function must follow the pattern:
     //
@@ -98,7 +98,7 @@ mod my_date_format {
     //        S: Serializer
     //
     // although it may also be generic over the input types T.
-    pub fn serialize<S>(date: &DateTime<Utc>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(date: &NaiveDateTime, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -113,12 +113,12 @@ mod my_date_format {
     //        D: Deserializer<'de>
     //
     // although it may also be generic over the output types T.
-    pub fn deserialize<'de, D>(deserializer: D) -> Result<DateTime<Utc>, D::Error>
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<NaiveDateTime, D::Error>
     where
         D: Deserializer<'de>,
     {
         let s = String::deserialize(deserializer)?;
-        Utc.datetime_from_str(&s, FORMAT)
+        NaiveDateTime::parse_from_str(&s, FORMAT)
             .map_err(serde::de::Error::custom)
     }
 }

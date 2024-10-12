@@ -82,16 +82,6 @@ pub struct TeamYearThankQuery;
 #[derive(GraphQLQuery, Debug)]
 #[graphql(
     schema_path = "../../graphql/schema.graphql",
-    query_path = "../../graphql/TeamHacktivityPageQuery.graphql",
-    variables_derives = "Default, PartialEq",
-    response_derives = "Debug, PartialEq",
-    skip_serializing_none
-)]
-pub struct TeamHacktivityPageQuery;
-
-#[derive(GraphQLQuery, Debug)]
-#[graphql(
-    schema_path = "../../graphql/schema.graphql",
     query_path = "../../graphql/CompleteHacktivitySearchQuery.graphql",
     variables_derives = "Default, PartialEq",
     response_derives = "Debug, PartialEq",
@@ -119,17 +109,12 @@ pub struct TeamNameHacktivityQuery;
 )]
 pub struct DiscoveryQuery;
 
-impl Default for team_hacktivity_page_query::OrderDirection {
-    fn default() -> Self {
-        team_hacktivity_page_query::OrderDirection::DESC
-    }
-}
 
-impl Default for team_hacktivity_page_query::HacktivityOrderFieldEnum {
-    fn default() -> Self {
-        team_hacktivity_page_query::HacktivityOrderFieldEnum::popular
-    }
-}
+// impl Default for discovery_query::OrderDirection {
+//     fn default() -> Self {
+//         discovery_query::OrderDirection::popular
+//     }
+// }
 
 // Tests
 #[cfg(test)]

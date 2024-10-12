@@ -55,7 +55,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
     );
     debug!(
         "reports poll event: last_report_data len: {}, current report_data len: {}",
-        last_report_data.clone().unwrap_or(vec![]).len(),
+        last_report_data.clone().unwrap_or_default().len(),
         report_data.len()
     );
 
@@ -79,7 +79,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
         let old_data = last_report_data
             .as_ref()
             .unwrap()
-            .into_iter()
+            .iter()
             .find(|p| p.id.as_ref().unwrap_or(&"".into()) == &report_id);
 
         trace!("{:#?}", report);
@@ -88,21 +88,19 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
             let empty = models::ReportData::default();
             let diff: Vec<models::ReportData> = vec![empty, report];
             changed.push(diff);
-        } else {
-            if old_data.unwrap().disclosed == false && report.disclosed == true {
-                let diff: Vec<models::ReportData> = vec![old_data.unwrap().clone(), report.clone()];
-                changed.push(diff);
-            }
+        } else if !old_data.unwrap().disclosed && report.disclosed {
+            let diff: Vec<models::ReportData> = vec![old_data.unwrap().clone(), report.clone()];
+            changed.push(diff);
         }
     }
 
     debug!("reports poll event: changed len: {}", changed.len());
-    if changed.len() > 0 {
+    if !changed.is_empty() {
         let mut queue_item = models::ReportsDataQueueItem {
             id: None,
             team_handle: config.team_handle.clone(),
             diff: changed.clone(),
-            created_at: chrono::Utc::now(),
+            created_at: chrono::Utc::now().naive_utc(),
         };
 
         queue_item.create_id();
@@ -115,7 +113,7 @@ pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Er
 
     if last_report_data.is_some() {
         let last_report_data = last_report_data.unwrap();
-        if last_report_data.len() > 0 && report_data_cloned.len() < 1 {
+        if !last_report_data.is_empty() && report_data_cloned.is_empty() {
             return Ok(());
         }
     }
@@ -143,7 +141,7 @@ fn set_last_run_time_now(conn: &mut redis::Connection) {
         .unwrap();
 }
 
-#[cfg_attr(rustfmt, rustfmt_skip)]
+#[rustfmt::skip]
 fn hackerone_get_team_name(handle: &str, client: &HackerOneClient) -> Result<String, Box<dyn std::error::Error>> {
     let variables = hackerone::team_name_hacktivity_query::Variables {
         handle: handle.to_string(),
@@ -154,8 +152,8 @@ fn hackerone_get_team_name(handle: &str, client: &HackerOneClient) -> Result<Str
 
     let data = response.json::<graphql_client::Response<<hackerone::TeamNameHacktivityQuery as GraphQLQuery>::ResponseData>>()?;
     if let Some(errors) = data.errors {
-        if errors.len() > 0 {
-            return Err(errors.get(0).unwrap().message.clone().into());
+        if !errors.is_empty() {
+            return Err(errors.first().unwrap().message.clone().into());
         }
     }
 
@@ -163,7 +161,7 @@ fn hackerone_get_team_name(handle: &str, client: &HackerOneClient) -> Result<Str
     Ok(team.name)
 }
 
-#[cfg_attr(rustfmt, rustfmt_skip)]
+#[rustfmt::skip]
 fn hackerone_get_reports_data(team_name: Option<String>, client: &HackerOneClient) -> Result<Vec<models::ReportData>, Box<dyn std::error::Error>> {
     let mut query_string = String::from("disclosed:true");
     if let Some(team_name) = team_name {
@@ -186,8 +184,8 @@ fn hackerone_get_reports_data(team_name: Option<String>, client: &HackerOneClien
     let mut result: Vec<models::ReportData> = vec![];
     let data = response.json::<graphql_client::Response<<hackerone::CompleteHacktivitySearchQuery as GraphQLQuery>::ResponseData>>()?;
     if let Some(errors) = data.errors {
-        if errors.len() > 0 {
-            return Err(errors.get(0).unwrap().message.clone().into());
+        if !errors.is_empty() {
+            return Err(errors.first().unwrap().message.clone().into());
         }
     }
     
@@ -201,47 +199,43 @@ fn hackerone_get_reports_data(team_name: Option<String>, client: &HackerOneClien
         let mut report = ReportData::default();    
         trace!("{:#?}", report);
 
-        match item {
-            hackerone::complete_hacktivity_search_query::CompleteHacktivitySearchQuerySearchNodes::CompleteHacktivityReportDocument(_hackerone_report) => {
-                let team = _hackerone_report.team.as_ref().unwrap();
-                let hackerone_report = _hackerone_report.report;
-                let disclosed = _hackerone_report.disclosed.unwrap_or(false);
+        if let hackerone::complete_hacktivity_search_query::CompleteHacktivitySearchQuerySearchNodes::HacktivityDocument(_hackerone_report) = item {
+            let team = _hackerone_report.team.as_ref().unwrap();
+            let hackerone_report = _hackerone_report.report;
+            let disclosed = _hackerone_report.disclosed.unwrap_or(false);
 
-                if !disclosed || hackerone_report.is_none() {
-                    continue
-                }
+            if !disclosed || hackerone_report.is_none() {
+                continue
+            }
 
-                let hackerone_report = hackerone_report.unwrap();
-                report.id = Some(hackerone_report.id.clone());
-                report.title = hackerone_report.title.clone();
-                report.currency = team.currency.clone().unwrap_or(String::from("(unknown currency)"));
-                report.awarded_amount = _hackerone_report.total_awarded_amount.unwrap_or(-1) as f64;
-                report.disclosed = true;
-                report.url = Some(format!("https://hackerone.com/reports/{}", _hackerone_report.id));
-                report.collaboration = _hackerone_report.has_collaboration.unwrap_or(false);
-                report.summary = if hackerone_report.report_generated_content.is_some() {
-                    let summary = hackerone_report.report_generated_content.as_ref().unwrap().hacktivity_summary.clone();
-                    Some(summary.unwrap_or(String::from("This report does not have a summary")))
-                } else {
-                    None
-                };
+            let hackerone_report = hackerone_report.unwrap();
+            report.id = Some(hackerone_report.id.clone());
+            report.title = hackerone_report.title.clone();
+            report.currency = team.currency.clone().unwrap_or(String::from("(unknown currency)"));
+            report.awarded_amount = _hackerone_report.total_awarded_amount.unwrap_or(-1) as f64;
+            report.disclosed = true;
+            report.url = Some(format!("https://hackerone.com/reports/{}", _hackerone_report.id));
+            report.collaboration = _hackerone_report.has_collaboration.unwrap_or(false);
+            report.summary = if hackerone_report.report_generated_content.is_some() {
+                let summary = hackerone_report.report_generated_content.as_ref().unwrap().hacktivity_summary.clone();
+                Some(summary.unwrap_or(String::from("This report does not have a summary")))
+            } else {
+                None
+            };
 
-                report.severity = Some(if _hackerone_report.severity_rating.is_none() {
-                    String::from("unknown")
-                } else {
-                    _hackerone_report.severity_rating.unwrap().to_lowercase()
-                });
+            report.severity = Some(if _hackerone_report.severity_rating.is_none() {
+                String::from("unknown")
+            } else {
+                _hackerone_report.severity_rating.unwrap().to_lowercase()
+            });
 
-                if _hackerone_report.reporter.is_some() {
-                    report.user_name = _hackerone_report.reporter.as_ref().unwrap().username.clone();
-                    report.user_id = _hackerone_report.reporter.unwrap().id;
-                } else {
-                    report.user_name = "(unknown)".into();
-                    report.user_id = "1".into();
-                }
-            },
-
-            _ => {}
+            if _hackerone_report.reporter.is_some() {
+                report.user_name = _hackerone_report.reporter.as_ref().unwrap().username.clone();
+                report.user_id = _hackerone_report.reporter.unwrap().id;
+            } else {
+                report.user_name = "(unknown)".into();
+                report.user_id = "1".into();
+            }
         };
 
         result.push(report);
@@ -255,7 +249,7 @@ fn get_old_reports_data(conn: &mut redis::Connection) -> Option<Vec<models::Repo
         String::from(models::redis_keys::REPORTS_POLL_LAST_DATA),
         conn,
     )
-    .unwrap_or(vec![]);
+    .unwrap_or_default();
     let mut data: Vec<models::ReportData> = vec![];
 
     for d in last_reports_data {

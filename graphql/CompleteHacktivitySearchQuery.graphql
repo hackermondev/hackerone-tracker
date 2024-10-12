@@ -1,6 +1,6 @@
 query CompleteHacktivitySearchQuery($queryString: String!, $from: Int, $size: Int, $sort: SortInput!) {
   search(
-    index: CompleteHacktivityReportIndexService
+    index: CompleteHacktivityReportIndex
     query_string: $queryString
     from: $from
     size: $size
@@ -10,7 +10,7 @@ query CompleteHacktivitySearchQuery($queryString: String!, $from: Int, $size: In
     total_count
     nodes {
       __typename
-      ... on CompleteHacktivityReportDocument {
+      ... on HacktivityDocument {
         _id
         reporter {
           id

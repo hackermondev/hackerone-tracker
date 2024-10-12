@@ -2,6 +2,7 @@ services:
   db:
     image: redis:alpine
     hostname: redis
+    restart: always
     volumes:
       - db_data:/data
     expose:
