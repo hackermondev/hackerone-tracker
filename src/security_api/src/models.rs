@@ -69,6 +69,7 @@ impl ReportsDataQueueItem {
 pub mod embed_colors {
     pub const NEGATIVE: u32 = 16711680;
     pub const POSTIVE: u32 = 5222492;
+    pub const MAJOR: u32 = 16567356;
     pub const TRANSPARENT: u32 = 2829617;
 }
 

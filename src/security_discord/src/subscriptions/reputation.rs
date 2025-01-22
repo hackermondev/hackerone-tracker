@@ -1,6 +1,6 @@
-use sexurity_api::models;
-use sexurity_api::redis::redis::cmd;
-use sexurity_api::redis::redis::Connection;
+use security_api::models;
+use security_api::redis::redis::cmd;
+use security_api::redis::redis::Connection;
 use std::thread;
 use std::thread::JoinHandle;
 use twilight_model::channel::message::embed::Embed;
@@ -131,11 +131,15 @@ fn build_embed_data(
             text = format!("[**``{}``**]({}) was added to [**``{}``**]({}) with **{} reputation** (rank: >100)", new.user_name, format!("https://hackerone.com/{}", new.user_name), handle, format!("https://hackerone.com/{}", handle), new.reputation);
         }
 
-        let embed = EmbedBuilder::new()
+        let mut embed = EmbedBuilder::new()
             .description(text)
-            .color(models::embed_colors::POSTIVE)
-            .build();
-        return Some(embed);
+            .color(models::embed_colors::POSTIVE);
+        
+        if new.rank >= 50 {
+            embed = embed.color(models::embed_colors::MAJOR);
+        }
+
+        return Some(embed.build());
     } else if new.reputation == -1 {
         // user removed from leaderboard
         let text = format!(
@@ -174,6 +178,10 @@ fn build_embed_data(
         let mut embed_builder = EmbedBuilder::new()
             .description(text)
             .color(models::embed_colors::POSTIVE);
+
+        if change >= 50 {
+            embed_builder = embed_builder.color(models::embed_colors::MAJOR);
+        }
 
         {
             let mut footer = String::from("");

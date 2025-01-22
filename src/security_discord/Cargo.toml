@@ -1,5 +1,5 @@
 [package]
-name = "sexurity-discord"
+name = "security_discord"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,10 +8,10 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.0", features = ["derive", "env"] }
 reqwest = { version = "0.11.18", features = ["blocking", "json"] }
-sexurity-api = { path = "../sexurity-api" }
-serde = { version = "1.0.163", features = ["derive"] }
-serde_json = "1.0.96"
+security_api = { path = "../security_api" }
+serde.workspace = true
+serde_json.workspace = true
 twilight-util = { version = "0.15.2", features = ["builder"] }
 twilight-model = "0.15.2"
-log = "0.4.17"
-pretty_env_logger = "0.5.0"
+log.workspace = true
+pretty_env_logger.workspace = true

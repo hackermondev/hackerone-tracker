@@ -12,8 +12,8 @@ use clap::Parser;
 
 // use std::{env, ffi::OsString, str::FromStr};
 use graphql_client::GraphQLQuery;
-use sexurity_api::hackerone::{self as hackerone, HackerOneClient};
-use sexurity_api::redis;
+use security_api::hackerone::{self as hackerone, HackerOneClient};
+use security_api::redis;
 
 use crate::polls::PollConfiguration;
 

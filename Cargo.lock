@@ -1137,6 +1137,50 @@ dependencies = [
 ]
 
 [[package]]
+name = "security_api"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "graphql_client",
+ "nanoid",
+ "redis",
+ "regex",
+ "reqwest",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "security_discord"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "log",
+ "pretty_env_logger",
+ "reqwest",
+ "security_api",
+ "serde",
+ "serde_json",
+ "twilight-model",
+ "twilight-util",
+]
+
+[[package]]
+name = "security_poller"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "clap",
+ "cronjob",
+ "graphql_client",
+ "log",
+ "pretty_env_logger",
+ "security_api",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "serde"
 version = "1.0.210"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1199,50 +1243,6 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
-]
-
-[[package]]
-name = "sexurity-api"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "graphql_client",
- "nanoid",
- "redis",
- "regex",
- "reqwest",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "sexurity-discord"
-version = "0.1.0"
-dependencies = [
- "clap",
- "log",
- "pretty_env_logger",
- "reqwest",
- "serde",
- "serde_json",
- "sexurity-api",
- "twilight-model",
- "twilight-util",
-]
-
-[[package]]
-name = "sexurity-poller"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "clap",
- "cronjob",
- "graphql_client",
- "log",
- "pretty_env_logger",
- "serde",
- "serde_json",
- "sexurity-api",
 ]
 
 [[package]]

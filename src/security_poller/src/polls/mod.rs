@@ -1,5 +1,5 @@
-use sexurity_api::hackerone::HackerOneClient;
-use sexurity_api::redis::redis::Client;
+use security_api::hackerone::HackerOneClient;
+use security_api::redis::redis::Client;
 pub mod programs;
 pub mod reports;
 pub mod reputation;

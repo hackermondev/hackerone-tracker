@@ -1,4 +1,4 @@
-run = "bash run_replit.sh"
+run = "bash scripts/run_replit.sh"
 hidden = ["target", "dump.rdb", ".git"]
 entrypoint = "README.md"
 

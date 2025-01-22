@@ -1,6 +1,6 @@
 use cronjob::CronJob;
 use graphql_client::GraphQLQuery;
-use sexurity_api::{
+use security_api::{
     hackerone::{
         self,
         discovery_query::{DiscoveryQueryOpportunitiesSearchNodes, OpportunitiesQuery, SortInput},

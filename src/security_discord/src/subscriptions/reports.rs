@@ -1,5 +1,5 @@
-use sexurity_api::models;
-use sexurity_api::redis::redis::Connection;
+use security_api::models;
+use security_api::redis::redis::Connection;
 use std::thread::{self, JoinHandle};
 use twilight_model::channel::message::embed::Embed;
 use twilight_util::builder::embed::EmbedBuilder;

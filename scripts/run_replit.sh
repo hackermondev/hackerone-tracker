@@ -22,5 +22,5 @@ fi
 
 sed -i -e 's/redis:6379/localhost:6379/g' config.yaml # Replace redis://redis:6379 to redis://localhost:6379 in config file
 echo "Starting sexurity..."
-RUST_LOG=info APP_NAME=./target/release/sexurity-poller CONFIG_NAME=poller bash yaml_to_cli.sh config.yaml &
-RUST_LOG=info APP_NAME=./target/release/sexurity-discord CONFIG_NAME=discord bash yaml_to_cli.sh config.yaml
+RUST_LOG=info APP_NAME=./target/release/sexurity-poller CONFIG_NAME=poller bash scripts/yaml_to_cli.sh config.yaml &
+RUST_LOG=info APP_NAME=./target/release/sexurity-discord CONFIG_NAME=discord bash scripts/yaml_to_cli.sh config.yaml

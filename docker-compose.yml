@@ -8,10 +8,10 @@ services:
     expose:
       - "6379"
 
-  sexurity-poller:
+  poller:
     depends_on:
       - db
-    image: sexurity
+    image: hackerone-tracker
     links:
       - db
     build:
@@ -20,17 +20,18 @@ services:
     volumes:
       - type: bind
         source: config.yaml
-        target: /etc/sexurity/config.yaml
+        target: /etc/security/config.yaml
     environment:
-      - APP_NAME=sexurity-poller
+      - APP_NAME=poller
       - CONFIG_NAME=poller
     restart: always
-    command: [ "bash", "/usr/local/bin/yaml_to_cli.sh", "/etc/sexurity/config.yaml" ]
+    command:
+      ["bash", "/usr/local/bin/yaml_to_cli.sh", "/etc/security/config.yaml"]
 
-  sexurity-discord:
+  security_discord:
     depends_on:
       - db
-    image: sexurity
+    image: hackerone-tracker
     links:
       - db
     build:
@@ -39,15 +40,15 @@ services:
     volumes:
       - type: bind
         source: config.yaml
-        target: /etc/sexurity/config.yaml
+        target: /etc/security/config.yaml
 
     environment:
-      - APP_NAME=sexurity-discord
+      - APP_NAME=discord
       - CONFIG_NAME=discord
 
     restart: always
-    command: [ "bash", "/usr/local/bin/yaml_to_cli.sh", "/etc/sexurity/config.yaml" ]
+    command:
+      ["bash", "/usr/local/bin/yaml_to_cli.sh", "/etc/security/config.yaml"]
 
 volumes:
   db_data:
-

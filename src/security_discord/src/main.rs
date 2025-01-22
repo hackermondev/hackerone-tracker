@@ -7,7 +7,7 @@ mod subscriptions;
 use clap::Parser;
 use reqwest::blocking as reqwest;
 use serde::Serialize;
-use sexurity_api::redis;
+use security_api::redis;
 use twilight_model::channel::message::embed::Embed;
 
 #[derive(Default, Debug, Parser)]

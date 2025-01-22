@@ -3,10 +3,10 @@ extern crate cronjob;
 use chrono;
 use cronjob::CronJob;
 use graphql_client::GraphQLQuery;
-use sexurity_api::hackerone::{self as hackerone, HackerOneClient};
-use sexurity_api::models::{self as models, ReportData};
-use sexurity_api::redis::redis::Commands;
-use sexurity_api::redis::{load_set_to_vec, redis, redis::cmd, save_vec_to_set};
+use security_api::hackerone::{self as hackerone, HackerOneClient};
+use security_api::models::{self as models, ReportData};
+use security_api::redis::redis::Commands;
+use security_api::redis::{load_set_to_vec, redis, redis::cmd, save_vec_to_set};
 
 pub fn start_poll_event_loop(config: &PollConfiguration) {
     let poll_config = config.clone();
