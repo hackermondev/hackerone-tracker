@@ -1,8 +1,6 @@
 use graphql_client::GraphQLQuery;
 use regex::Regex;
-use reqwest::blocking::{Client, ClientBuilder};
-use reqwest::header;
-use std::error::Error;
+use reqwest::{header, Client, ClientBuilder};
 use std::time::Duration;
 
 #[derive(Clone)]
@@ -29,6 +27,7 @@ impl HackerOneClient {
             .user_agent("HackerOneTracker (+github.com/hackermondev/hackerone-tracker)")
             .default_headers(headers)
             .connect_timeout(Duration::from_secs(5))
+            .http2_prior_knowledge()
             .build()
             .unwrap();
 
@@ -49,17 +48,19 @@ fn extract_csrf_token(html: &str) -> Option<String> {
     None
 }
 
-pub fn get_hackerone_csrf_token(session_token: &str) -> Result<String, Box<dyn Error>> {
+pub async fn fetch_csrf_token(session_token: &str) -> Result<String, anyhow::Error> {
     let client = Client::new();
     let http_response = client
         .get("https://hackerone.com/bugs")
         .header("cookie", format!("__Host-session={};", session_token))
-        .send()?
-        .text()?;
+        .send().await?;
+
+    let http_response = http_response.error_for_status()?;
+    let http_response = http_response.text().await?;
 
     let token = extract_csrf_token(&http_response);
     if token.is_none() {
-        return Err("Could not extract token from page".into());
+        return Err(anyhow::Error::msg("unable to find CSRF token in page"));
     }
 
     Ok(token.unwrap())
@@ -67,7 +68,6 @@ pub fn get_hackerone_csrf_token(session_token: &str) -> Result<String, Box<dyn E
 
 // GraphQL types
 type DateTime = String;
-type DateInput = String;
 type URI = String;
 
 #[derive(GraphQLQuery, Debug)]
@@ -110,13 +110,6 @@ pub struct TeamNameHacktivityQuery;
 pub struct DiscoveryQuery;
 
 
-// impl Default for discovery_query::OrderDirection {
-//     fn default() -> Self {
-//         discovery_query::OrderDirection::popular
-//     }
-// }
-
-// Tests
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -124,14 +117,14 @@ mod tests {
     #[test]
     fn can_extract_csrf_token() {
         let csrf_token = "hello_world";
-        let fake_page = format!(
+        let mock_page = format!(
             r#"
             <meta name="csrf-param" content="authenticity_token" />
             <meta name="csrf-token" content="{csrf_token}" />
         "#
         );
 
-        let extracted_token = extract_csrf_token(&fake_page);
+        let extracted_token = extract_csrf_token(&mock_page);
         assert_eq!(extracted_token.unwrap(), csrf_token);
     }
 }

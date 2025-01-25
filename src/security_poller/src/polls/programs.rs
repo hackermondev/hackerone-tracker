@@ -1,4 +1,3 @@
-use cronjob::CronJob;
 use graphql_client::GraphQLQuery;
 use security_api::{
     hackerone::{
@@ -7,49 +6,33 @@ use security_api::{
         HackerOneClient,
     },
     models,
-    redis::save_vec_to_set,
+    redis::{self, save_vec_to_set},
 };
 
 use super::PollConfiguration;
 
-pub fn start_poll_event_loop(config: &PollConfiguration) {
-    let poll_config = config.clone();
-    let mut cron = CronJob::new("program_poll", move |_name: &str| {
-        let run = run_poll(&poll_config);
-        if run.is_err() {
-            error!("error while running program poll {:#?}", run.err().unwrap());
-        }
-    });
+pub async fn run_poll(config: &PollConfiguration) -> Result<(), anyhow::Error> {
+    debug!("running poll");
 
-    // Every 24 hours
-    cron.hours("*/24");
-    cron.seconds("0");
-    CronJob::start_job_threaded(cron);
-    info!("programs: started poll event loop");
-}
-
-pub fn run_poll(config: &PollConfiguration) -> Result<(), Box<dyn std::error::Error>> {
-    debug!("program poll event: running poll");
-    let mut redis_conn = config.redis_client.get_connection()?;
-    let programs = get_programs(&config.hackerone, None)?;
+    let mut kv = redis::get_connection().get().await?;
+    let programs = get_all_hackerone_programs(&config.hackerone, None).await?;
 
     info!("got {} programs", programs.len());
     trace!("{:#?}", programs);
 
     save_vec_to_set(
-        models::redis_keys::PROGRAMS.to_string(),
+        models::redis_keys::PROGRAMS,
         programs,
         false,
-        &mut redis_conn,
-    )?;
-
+        &mut kv,
+    ).await?;
     Ok(())
 }
 
-fn get_programs(
+async fn get_all_hackerone_programs(
     client: &HackerOneClient,
     after: Option<usize>,
-) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+) -> Result<Vec<String>, anyhow::Error> {
     let after = after.unwrap_or(0);
     let variables = hackerone::discovery_query::Variables {
         size: Some(100),
@@ -69,12 +52,12 @@ fn get_programs(
         .http
         .post("https://hackerone.com/graphql")
         .json(&query)
-        .send()?;
+        .send().await?;
 
-    let data = response.json::<graphql_client::Response<<hackerone::DiscoveryQuery as GraphQLQuery>::ResponseData>>()?;
+    let data = response.json::<graphql_client::Response<<hackerone::DiscoveryQuery as GraphQLQuery>::ResponseData>>().await?;
     if let Some(errors) = data.errors {
         if !errors.is_empty() {
-            return Err(errors.first().unwrap().message.clone().into());
+            return Err(anyhow::Error::msg(errors.first().unwrap().message.clone()));
         }
     }
 
@@ -89,6 +72,7 @@ fn get_programs(
         .nodes
         .as_ref()
         .unwrap();
+
     for item in programs {
         if item.is_none() {
             continue;
@@ -102,7 +86,7 @@ fn get_programs(
 
     trace!("{:?}", programs);
     if programs.len() == 100 {
-        let mut other_programs = get_programs(client, Some(after + programs.len()))?;
+        let mut other_programs = Box::pin(get_all_hackerone_programs(client, Some(after + programs.len()))).await?;
         program_names.append(&mut other_programs);
     }
 

@@ -1,41 +1,43 @@
+use futures_util::StreamExt;
 use security_api::models;
-use security_api::redis::redis::Connection;
-use std::thread::{self, JoinHandle};
+use security_api::redis;
 use twilight_model::channel::message::embed::Embed;
 use twilight_util::builder::embed::EmbedBuilder;
 use twilight_util::builder::embed::EmbedFieldBuilder;
 
-pub fn start_reports_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Send + 'static>(
-    mut conn: Connection,
-    on_message_data: E,
-) -> JoinHandle<()> {
-    info!("reports: starting subscription");
-    thread::spawn(move || {
-        let mut pubsub = conn.as_pubsub();
-        pubsub
-            .subscribe(models::redis_keys::REPORTS_QUEUE_PUBSUB)
-            .unwrap();
+use crate::webhook;
 
-        loop {
-            let msg = pubsub.get_message().unwrap();
-            let payload: String = msg.get_payload().unwrap();
+pub async fn reports_subscription() -> Result<(), anyhow::Error> {
+    info!("starting subscription");
 
-            let decoded: models::ReportsDataQueueItem = serde_json::from_str(&payload).unwrap();
-            debug!("reports: recieved message {:#?}", decoded);
-            info!(
-                "reports: new queue items (id = {}, items = {})",
-                decoded.id.clone().unwrap(),
-                decoded.diff.len()
-            );
+    let kv_config = redis::get_config();
+    let kv_config = kv_config.url.unwrap();
+    let redis = redis::redis::Client::open(kv_config)?;
+    let mut pubsub = redis.get_async_pubsub().await?;
+    pubsub
+        .subscribe(models::redis_keys::REPORTS_QUEUE_PUBSUB)
+        .await?;
 
-            for diff in decoded.diff {
-                let embed = build_embed_data(diff);
-                if embed.is_some() {
-                    on_message_data(vec![embed.unwrap()]);
-                }
+    let mut stream = pubsub.into_on_message();
+    while let Some(message) = stream.next().await {
+        let payload: String = message.get_payload().unwrap();
+        let decoded: models::ReportsDataQueueItem = serde_json::from_str(&payload).unwrap();
+        debug!("reports: recieved message {:#?}", decoded);
+        info!(
+            "reports: new queue items (id = {}, items = {})",
+            decoded.id.clone().unwrap(),
+            decoded.diff.len()
+        );
+
+        for diff in decoded.diff {
+            let embed = build_embed_data(diff);
+            if let Some(embed) = embed {
+                webhook::deliver_embeds(vec![embed]).await?;
             }
         }
-    })
+    }
+
+    Ok(())
 }
 
 fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
@@ -59,15 +61,23 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
             user_field = format!("{} (+ unknown collaborator)", user_field);
         }
 
-        let title = new.title.clone().unwrap_or(String::from("(unknown title)")).to_string();
+        let title = new
+            .title
+            .clone()
+            .unwrap_or(String::from("(unknown title)"))
+            .to_string();
         let summary = new.summary.clone();
         let url = new
             .url
             .clone()
             .unwrap_or(String::from("https://hackerone.com/???"));
-        let severity = new.severity.clone().unwrap_or(String::from("unknown")).to_string();
+        let severity = new
+            .severity
+            .clone()
+            .unwrap_or(String::from("unknown"))
+            .to_string();
         let bounty = if new.awarded_amount < 0.0 {
-            String::from("unknown")
+            String::from("hidden")
         } else {
             format!("{} {}", new.awarded_amount, new.currency)
         };
@@ -97,44 +107,6 @@ fn build_embed_data(diff: Vec<models::ReportData>) -> Option<Embed> {
         let embed = embed.build();
         return Some(embed);
     }
-
-    // else if old.id.is_none() {
-    //     // new report
-    //     let mut user_field = format!(
-    //         "[**``{}``**]({})",
-    //         new.user_name,
-    //         format!("https://hackerone.com/{}", new.user_name)
-    //     );
-
-    //     if new.collaboration {
-    //         user_field = format!("{} (+ unknown collaborator)", user_field);
-    //     }
-
-    //     let embed = EmbedBuilder::new()
-    //         .color(models::embed_colors::TRANSPARENT)
-    //         .title(format!("#{} - Report Closed", new.id.as_ref().unwrap()))
-    //         .url(
-    //             new.url
-    //                 .as_ref()
-    //                 .unwrap_or(&"https://hackerone.com/???".to_string()),
-    //         )
-    //         .field(EmbedFieldBuilder::new("Reporter", user_field).build())
-    //         .field(
-    //             EmbedFieldBuilder::new(
-    //                 "Bounty Award",
-    //                 if new.awarded_amount < 0.0 {
-    //                     String::from("???")
-    //                 } else {
-    //                     format!("{} {}", new.awarded_amount, new.currency)
-    //                 },
-    //             )
-    //             .build(),
-    //         )
-    //         .footer(EmbedFooterBuilder::new("This report is currently private").build())
-    //         .build();
-
-    //     return Some(embed);
-    // }
 
     None
 }

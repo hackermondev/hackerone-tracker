@@ -7,5 +7,5 @@ poller:
   handle: "" # HackerOne team handle
   session_token: "" # HackerOne session token (the "__Host-session" cookie), this is optional if you're using a public team
   
-  ### disable_reputation_polling: "true"
-  ### disable_hackactivity_polling: "true"
+  ### reputation_polling: "true"
+  ### hackactivity_polling: "true"

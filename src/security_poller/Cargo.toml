@@ -15,3 +15,5 @@ chrono = "0.4.24"
 cronjob = "0.4.17"
 log.workspace = true
 pretty_env_logger.workspace = true
+tokio.workspace = true
+anyhow.workspace = true

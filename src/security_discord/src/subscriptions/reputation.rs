@@ -1,21 +1,21 @@
+use futures_util::StreamExt;
 use security_api::models;
-use security_api::redis::redis::cmd;
-use security_api::redis::redis::Connection;
-use std::thread;
-use std::thread::JoinHandle;
+use security_api::redis::{self, redis::AsyncCommands};
+
 use twilight_model::channel::message::embed::Embed;
 use twilight_model::util::Timestamp;
 use twilight_util::builder::embed::{EmbedBuilder, EmbedFooterBuilder};
 
 use crate::breakdown::calculate_rep_breakdown;
-static MAX_BACKLOG: usize = 100;
-pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data: E) {
-    let backlog_raw = cmd("ZRANGE")
-        .arg(models::redis_keys::REPUTATION_QUEUE_BACKLOG)
-        .arg(0)
-        .arg(MAX_BACKLOG)
-        .query::<Vec<String>>(&mut conn)
-        .unwrap();
+use crate::webhook;
+
+static MAX_BACKLOG: isize = 1000;
+
+pub async fn consume_backlog() -> Result<(), anyhow::Error> {
+    let mut kv = redis::get_connection().get().await?;
+    let backlog_raw: Vec<String> = kv
+        .zrange(models::redis_keys::REPUTATION_QUEUE_BACKLOG, 0, MAX_BACKLOG)
+        .await?;
 
     debug!("reputation: backlog {:#?}", backlog_raw);
     if !backlog_raw.is_empty() {
@@ -32,7 +32,6 @@ pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data:
     }
 
     for mut item in backlog {
-        // try to sort by rep
         item.diff.sort_by_key(|k| k[1].rank);
         for diff in item.diff {
             let handle = diff[0]
@@ -42,65 +41,62 @@ pub fn consume_backlog<E: Fn(Vec<Embed>)>(mut conn: Connection, on_message_data:
             let embed = build_embed_data(diff, &handle, item.include_team_handle).clone();
             if embed.is_some() {
                 let mut embed_unwrapped = embed.unwrap();
-                embed_unwrapped.timestamp =
-                    Some(Timestamp::from_micros(item.created_at.and_utc().timestamp_micros()).unwrap());
+                embed_unwrapped.timestamp = Some(
+                    Timestamp::from_micros(item.created_at.and_utc().timestamp_micros()).unwrap(),
+                );
 
-                on_message_data(vec![embed_unwrapped]);
+                webhook::deliver_embeds(vec![embed_unwrapped]).await?;
             }
         }
     }
 
-    cmd("DEL")
-        .arg(models::redis_keys::REPUTATION_QUEUE_BACKLOG)
-        .query::<i32>(&mut conn)
-        .unwrap();
+    kv.del::<_, ()>(models::redis_keys::REPUTATION_QUEUE_BACKLOG)
+        .await?;
+    Ok(())
 }
 
-pub fn start_reputation_subscription<E: Fn(Vec<Embed>) + Sync + std::marker::Send + 'static>(
-    mut conn: Connection,
-    mut conn2: Connection,
-    on_message_data: E,
-) -> JoinHandle<()> {
-    info!("reputation: starting subscription");
-    thread::spawn(move || {
-        let mut pubsub = conn.as_pubsub();
-        pubsub
-            .subscribe(models::redis_keys::REPUTATION_QUEUE_PUBSUB)
-            .unwrap();
+pub async fn reputation_subscription() -> Result<(), anyhow::Error> {
+    info!("starting subscription");
 
-        // let test_embed = EmbedBuilder::new().description("hey").build();
-        // on_message_data(vec![test_embed]);
-        loop {
-            let msg = pubsub.get_message().unwrap();
-            let payload: String = msg.get_payload().unwrap();
+    let kv_config = redis::get_config();
+    let kv_config = kv_config.url.unwrap();
+    let redis = redis::redis::Client::open(kv_config)?;
+    let mut pubsub = redis.get_async_pubsub().await?;
+    pubsub
+        .subscribe(models::redis_keys::REPUTATION_QUEUE_PUBSUB)
+        .await?;
 
-            let mut decoded: models::RepDataQueueItem = serde_json::from_str(&payload).unwrap();
-            debug!("reputation: recieved message {:#?}", decoded);
-            info!(
-                "reputation: new queue items (id = {}, items = {})",
-                decoded.id.clone().unwrap(),
-                decoded.diff.len()
-            );
+    let mut kv = redis::get_connection().get().await?;
+    let mut stream = pubsub.into_on_message();
 
-            // try to sort by rep
-            decoded.diff.sort_by_key(|k| k[1].rank);
-            for diff in decoded.diff {
-                let handle = diff[0]
-                    .team_handle
-                    .clone()
-                    .unwrap_or_else(|| diff[1].team_handle.clone().unwrap());
-                let embed = build_embed_data(diff, &handle, decoded.include_team_handle);
-                if embed.is_some() {
-                    on_message_data(vec![embed.unwrap()]);
-                }
+    while let Some(message) = stream.next().await {
+        let payload: String = message.get_payload().unwrap();
+        let mut decoded: models::RepDataQueueItem = serde_json::from_str(&payload).unwrap();
+        debug!("reputation: recieved message {:#?}", decoded);
+        info!(
+            "reputation: new queue items (id = {}, items = {})",
+            decoded.id.clone().unwrap(),
+            decoded.diff.len()
+        );
+
+        // try to sort by rep
+        decoded.diff.sort_by_key(|k| k[1].rank);
+        for diff in decoded.diff {
+            let handle = diff[0]
+                .team_handle
+                .clone()
+                .unwrap_or_else(|| diff[1].team_handle.clone().unwrap());
+            let embed = build_embed_data(diff, &handle, decoded.include_team_handle);
+            if let Some(embed) = embed {
+                webhook::deliver_embeds(vec![embed]).await?;
             }
-
-            cmd("DEL")
-                .arg(models::redis_keys::REPUTATION_QUEUE_BACKLOG)
-                .query::<i32>(&mut conn2)
-                .unwrap();
         }
-    })
+
+        kv.del::<_, ()>(models::redis_keys::REPUTATION_QUEUE_BACKLOG)
+            .await?;
+    }
+
+    Ok(())
 }
 
 fn build_embed_data(
@@ -134,7 +130,7 @@ fn build_embed_data(
         let mut embed = EmbedBuilder::new()
             .description(text)
             .color(models::embed_colors::POSTIVE);
-        
+
         if new.rank >= 50 {
             embed = embed.color(models::embed_colors::MAJOR);
         }

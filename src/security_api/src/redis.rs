@@ -1,39 +1,48 @@
-pub use redis;
+use std::sync::LazyLock;
 
-pub fn open(url: &str) -> Result<redis::Client, Box<dyn std::error::Error>> {
-    let client = redis::Client::open(url)?;
-    Ok(client)
+pub use deadpool_redis::redis;
+use deadpool_redis::{self as deadpool, redis::AsyncCommands, Connection};
+
+static GLOBAL_REDIS_POOL: LazyLock<deadpool::Pool> = LazyLock::new(|| {
+    let config = get_config();
+    config.create_pool(Some(deadpool::Runtime::Tokio1)).unwrap()
+});
+
+pub fn get_connection() -> deadpool::Pool {
+    GLOBAL_REDIS_POOL.clone()
 }
 
-pub fn save_vec_to_set<'a, V: serde::Deserialize<'a> + serde::Serialize>(
-    name: String,
+pub fn get_config() -> deadpool::Config {
+    let url = std::env::var("REDIS_URL");
+    let url = url.expect("Redis connection URI required");
+    deadpool::Config::from_url(url)
+}
+
+pub async fn save_vec_to_set<'a, V: serde::Deserialize<'a> + serde::Serialize>(
+    name: &str,
     data: Vec<V>,
     overwrite: bool,
-    mut conn: &mut redis::Connection,
-) -> Result<(), Box<dyn std::error::Error>> {
+    redis: &mut Connection,
+) -> Result<(), anyhow::Error> {
     if overwrite {
-        redis::cmd("DEL").arg(&name).query(&mut conn)?;
+        redis.del::<_, ()>(&name).await?;
     }
 
     for i in data {
         let value_name = serde_json::to_string(&i)?;
-        redis::cmd("SADD")
-            .arg(&name)
-            .arg(value_name)
-            .query(&mut conn)?;
+        redis.sadd::<_, _, ()>(&name, value_name).await?;
     }
 
     Ok(())
 }
 
-pub fn load_set_to_vec(
-    name: String,
-    mut conn: &mut redis::Connection,
-) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-    let set_values: Vec<String> = redis::cmd("SMEMBERS").arg(&name).query(&mut conn)?;
-
+pub async fn load_set_to_vec(
+    name: &str,
+    redis: &mut Connection,
+) -> Result<Vec<String>, anyhow::Error> {
+    let set_members = redis.smembers::<_, Vec<String>>(&name).await?;
     let mut result = Vec::new();
-    for mut value in set_values {
+    for mut value in set_members {
         if value.starts_with('"') {
             value = value[1..value.len() - 1].to_string();
         }

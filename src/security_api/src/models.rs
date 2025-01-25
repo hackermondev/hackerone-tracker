@@ -2,7 +2,7 @@ use chrono::NaiveDateTime;
 use nanoid::nanoid;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Default, Debug, Deserialize, Serialize, Clone)]
 pub struct RepData {
     pub reputation: i64,
     pub rank: i64,
@@ -12,7 +12,7 @@ pub struct RepData {
     pub team_handle: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Deserialize, Serialize)]
 pub struct RepDataQueueItem {
     pub id: Option<String>,
     pub diff: Vec<Vec<RepData>>,
@@ -24,7 +24,6 @@ pub struct RepDataQueueItem {
 
 impl RepDataQueueItem {
     pub fn create_id(&mut self) {
-        // TODO: get rid of nanoid, write a unique id func
         let id = nanoid!();
         self.id = Some(id);
     }
@@ -60,7 +59,6 @@ pub struct ReportsDataQueueItem {
 
 impl ReportsDataQueueItem {
     pub fn create_id(&mut self) {
-        // TODO: get rid of nanoid, write a unique id func
         let id = nanoid!();
         self.id = Some(id);
     }

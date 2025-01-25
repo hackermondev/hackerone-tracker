@@ -4,11 +4,12 @@ extern crate log;
 
 mod breakdown;
 mod subscriptions;
+mod webhook;
+
+use std::env;
+
 use clap::Parser;
-use reqwest::blocking as reqwest;
-use serde::Serialize;
-use security_api::redis;
-use twilight_model::channel::message::embed::Embed;
+use tokio::sync::mpsc;
 
 #[derive(Default, Debug, Parser)]
 #[clap(author = "hackermon", version, about)]
@@ -20,93 +21,53 @@ struct Arguments {
     discord_webhook_url: String,
 }
 
-#[derive(Serialize)]
-struct DiscordMessage {
-    embeds: Vec<Embed>,
-}
-
-fn main() {
+#[tokio::main]
+async fn main() {
     pretty_env_logger::init();
-    info!("hello world");
+
     let args = Arguments::parse();
-    ensure_args_and_return_webhook(&args);
     debug!("{:#?}", args);
 
-    let on_message_data = move |embeds: Vec<Embed>| {
-        let message = DiscordMessage { embeds };
+    webhook::set_webhook_url(&args.discord_webhook_url)
+        .await
+        .expect("invalid webhook");
+    env::set_var("REDIS_URL", &args.redis);
+    subscriptions::reputation::consume_backlog()
+        .await
+        .expect("failed to consume reputation backlog");
 
-        debug!("sending message with embed length {}", message.embeds.len());
-        trace!("sending embed: {:#?}", message.embeds);
-        let client = reqwest::Client::new();
+    let mut tasks = vec![];
 
-        let mut tries = 0;
-        loop {
-            if tries >= 5 {
-                error!("webhook failed (5 tries)");
-                break;
-            }
+    {
+        let reputation_task = tokio::task::spawn(async move {
+            subscriptions::reputation::reputation_subscription()
+                .await
+                .expect("reputation subscription failed");
+        });
 
-            let client_post_result = client
-                .post(args.discord_webhook_url.clone())
-                .json(&message)
-                .send();
-
-            tries += 1;
-            if client_post_result.is_ok() {
-                break
-            }
-
-            error!("webhook failed {}", client_post_result.err().unwrap());
-        }
-    };
-
-    let redis = redis::open(&args.redis).unwrap();
-    subscriptions::reputation::consume_backlog(
-        redis.get_connection().unwrap(),
-        on_message_data.clone(),
-    );
-
-    // Subscriptions
-    subscriptions::reputation::start_reputation_subscription(
-        redis.get_connection().unwrap(),
-        redis.get_connection().unwrap(),
-        on_message_data.clone(),
-    );
-
-    let reports_thread = subscriptions::reports::start_reports_subscription(
-        redis.get_connection().unwrap(),
-        on_message_data.clone(),
-    );
-
-    reports_thread.join().unwrap(); // Keep main program alive forever
-}
-
-fn ensure_args_and_return_webhook(args: &Arguments) {
-    let webhook = extract_webhook_info(&args.discord_webhook_url);
-    if webhook.is_none() {
-        panic!("unable to parse webhook. ensure webhook url is format: https://discord.com/api/webhooks/:id/:token")
+        tasks.push(reputation_task);
     }
 
-    let (webhook_id, webhook_token) = webhook.unwrap();
-    let webhook_req = reqwest::get(format!(
-        "https://discord.com/api/webhooks/{}/{}",
-        webhook_id, webhook_token
-    ))
-    .unwrap();
-    if !webhook_req.status().is_success() {
-        panic!("invalid webhook");
+    {
+        let reports_task = tokio::task::spawn(async move {
+            subscriptions::reports::reports_subscription()
+                .await
+                .expect("reports subscription failed");
+        });
+
+        tasks.push(reports_task);
     }
-}
 
-fn extract_webhook_info(url: &str) -> Option<(u64, &str)> {
-    let path_parts: Vec<&str> = url.trim_start_matches("https://").split('/').collect();
-
-    if path_parts.len() >= 4 && path_parts[1] == "api" && path_parts[2] == "webhooks" {
-        let webhook_id = path_parts[3].parse::<u64>().ok()?;
-        let token = path_parts[4];
-
-        Some((webhook_id, token))
-    } else {
-        None
+    // Wait for any task to abort
+    let (abort_sender, mut abort_receiver) = mpsc::channel(1);
+    for task in tasks {
+        let sender = abort_sender.clone();
+        tokio::spawn(async move {
+            let result = task.await;
+            error!("task aborted {result:?}");
+            let _ = sender.send(()).await;
+        });
     }
+
+    let _ = abort_receiver.recv().await;
 }
