@@ -58,12 +58,13 @@ fn build_embed_data(
     let users = if users.len() == 1 {
         &users[0]
     } else if users.len() <= 5 {
-        let four_users = &users[..3].join(", ");
-        let last_users = &users[4];
-        &format!("{four_users} and {last_users}")
+        let oxford_cutoff = users.len() - 1;
+        let last = &users[oxford_cutoff];
+        let oxford_cutoff = &users[..oxford_cutoff].join(", ");
+        &format!("{oxford_cutoff} and {last}")
     } else {
-        let five_users = &users[..3].join(", ");
-        let remaining_count = users[3..].len();
+        let five_users = &users[..5].join(", ");
+        let remaining_count = users[5..].len();
         let plural = remaining_count > 1;
 
         if plural {
