@@ -12,8 +12,7 @@ pub async fn run_poll(config: &PollConfiguration) -> Result<(), anyhow::Error> {
     debug!("running poll");
 
     let mut kv = redis::get_connection().get().await?;
-    let last_run_time: Option<String> = kv.get(models::redis_keys::REPUTATION_QUEUE_LAST_RUN_TIME).await?;
-    let previous_reputation_save = get_old_reputation_data().await?;
+    let previous_reputation_save = get_saved_reputation_data().await?;
 
     let mut programs = vec![];
     if let Some(team_handle) = &config.team_handle {
@@ -37,14 +36,13 @@ pub async fn run_poll(config: &PollConfiguration) -> Result<(), anyhow::Error> {
 
 
     // First Run
-    if last_run_time.is_none() || previous_reputation_save.is_none() {
+    if previous_reputation_save.is_none() {
         redis::save_vec_to_set(
             models::redis_keys::REPUTATION_QUEUE_LAST_DATA,
             leaderboard,
             true,
             &mut kv,
         ).await?;
-        set_last_run_time_now().await?;
         return Ok(());
     }
 
@@ -109,7 +107,7 @@ pub async fn run_poll(config: &PollConfiguration) -> Result<(), anyhow::Error> {
         };
 
         queue_item.create_id();
-        let queue_item_encoded = serde_json::to_string(&queue_item).unwrap();
+        let queue_item_encoded = serde_json::to_string(&queue_item)?;
         kv.publish::<&str, std::string::String, i32>(
             models::redis_keys::REPUTATION_QUEUE_PUBSUB,
             queue_item_encoded,
@@ -123,18 +121,8 @@ pub async fn run_poll(config: &PollConfiguration) -> Result<(), anyhow::Error> {
         true,
         &mut kv,
     ).await?;
-    set_last_run_time_now().await?;
 
-    info!("reputation: ran poll, {} changes", changed.len());
-    Ok(())
-}
-
-async fn set_last_run_time_now() -> Result<(), anyhow::Error> {
-    let mut kv = redis::get_connection().get().await?;
-    let now = chrono::Utc::now();
-    let ms = now.timestamp_millis();
-
-    kv.set::<_, _, ()>(models::redis_keys::REPUTATION_QUEUE_LAST_RUN_TIME, ms).await?;
+    info!("ran poll, {} changes", changed.len());
     Ok(())
 }
 
@@ -205,7 +193,7 @@ async fn hackerone_get_leaderboard(handle: &str, client: &HackerOneClient, get_f
     Ok(result)
 }
 
-async fn get_old_reputation_data() -> Result<Option<Vec<models::RepData>>, anyhow::Error> {
+pub async fn get_saved_reputation_data() -> Result<Option<Vec<models::RepData>>, anyhow::Error> {
     let mut kv = redis::get_connection().get().await?;
     let last_rep_data = redis::load_set_to_vec(
         models::redis_keys::REPUTATION_QUEUE_LAST_DATA,
@@ -218,7 +206,7 @@ async fn get_old_reputation_data() -> Result<Option<Vec<models::RepData>>, anyho
     }
 
     for d in last_rep_data {
-        let deserialized: models::RepData = serde_json::from_str::<models::RepData>(&d).unwrap();
+        let deserialized: models::RepData = serde_json::from_str::<models::RepData>(&d)?;
         data.push(deserialized);
     }
 
@@ -227,7 +215,7 @@ async fn get_old_reputation_data() -> Result<Option<Vec<models::RepData>>, anyho
 
 async fn add_queue_item_to_backlog(item: &models::RepDataQueueItem) -> Result<(), anyhow::Error> {
     let mut kv = redis::get_connection().get().await?;
-    let serialized = serde_json::to_string(item).unwrap();
+    let serialized = serde_json::to_string(item)?;
     let now = chrono::Utc::now().timestamp_millis();
 
     kv.zadd::<_, _, _, ()>(models::redis_keys::REPUTATION_QUEUE_BACKLOG, serialized, now).await?;

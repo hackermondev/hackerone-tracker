@@ -87,7 +87,7 @@ pub async fn run_poll(config: &PollConfiguration) -> Result<(), anyhow::Error> {
     ).await?;
     set_last_run_time_now().await?;
 
-    info!("reports: ran poll, {} changes", changed.len());
+    info!("ran poll, {} changes", changed.len());
     Ok(())
 }
 

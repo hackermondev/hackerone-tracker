@@ -64,24 +64,52 @@ impl ReportsDataQueueItem {
     }
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct UserThanksData {
+    pub user_id: String,
+    pub user_name: String,
+    pub team_handle: String,
+    pub resolved_report_count: i64,
+    pub invalid_report_count: i64,
+    pub total_report_count: i64,
+    pub reputation: i64,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct UserInvalidReportChange {
+    pub user_id: String,
+    pub user_name: String,
+    pub invalid_reports: i64,
+    pub team_handle: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct InvalidReportsQueueItem {
+    pub changes: Vec<UserInvalidReportChange>,
+    pub team_handle: String,
+}
+
 pub mod embed_colors {
     pub const NEGATIVE: u32 = 16711680;
     pub const POSTIVE: u32 = 5222492;
     pub const MAJOR: u32 = 16567356;
+    pub const INFORMAL: u32 = 8882052;
     pub const TRANSPARENT: u32 = 2829617;
 }
 
 pub mod redis_keys {
     pub const REPUTATION_QUEUE_BACKLOG: &str = "reputation_queue";
     pub const REPUTATION_QUEUE_PUBSUB: &str = "reputation_poll_queue";
-    pub const REPUTATION_QUEUE_LAST_RUN_TIME: &str = "reputation_poll_last_run_time";
     pub const REPUTATION_QUEUE_LAST_DATA: &str = "reputation_poll_last_data";
 
     pub const REPORTS_QUEUE_PUBSUB: &str = "reports_poll_queue";
     pub const REPORTS_POLL_LAST_RUN_TIME: &str = "reports_poll_last_run_time";
     pub const REPORTS_POLL_LAST_DATA: &str = "reports_poll_last_data";
-
+    
     pub const PROGRAMS: &str = "programs";
+
+    pub const USER_INFORMATIVE_REPORTS_QUEUE_PUBSUB: &str = "user_informative_reports_queue";
+    pub const USER_THANKS_DATA_POLL_LAST_DATA: &str = "user_program_thanks_data_poll_last_data";
 }
 
 mod my_date_format {

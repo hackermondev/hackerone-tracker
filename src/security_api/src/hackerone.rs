@@ -109,6 +109,15 @@ pub struct TeamNameHacktivityQuery;
 )]
 pub struct DiscoveryQuery;
 
+#[derive(GraphQLQuery, Debug)]
+#[graphql(
+    schema_path = "../../graphql/schema.graphql",
+    query_path = "../../graphql/UserProfileThanks.graphql",
+    variables_derives = "Default, PartialEq",
+    response_derives = "Debug, PartialEq",
+    skip_serializing_none
+)]
+pub struct UserProfileThanks;
 
 #[cfg(test)]
 mod tests {

@@ -58,6 +58,16 @@ async fn main() {
         tasks.push(reports_task);
     }
 
+    {
+        let informative_reports_task = tokio::task::spawn(async move {
+            subscriptions::informative_reports::informative_reports_subscription()
+                .await
+                .expect("leaderboard reports subscription failed");
+        });
+
+        tasks.push(informative_reports_task);
+    }
+
     // Wait for any task to abort
     let (abort_sender, mut abort_receiver) = mpsc::channel(1);
     for task in tasks {

@@ -21,7 +21,7 @@ use crate::polls::PollConfiguration;
 struct Arguments {
     #[arg(short = 'T', long = "session_token", env = "SESSION_TOKEN")]
     hackerone_session_token: Option<String>,
-
+    
     #[arg(short = 'R', long = "redis", env = "REDIS_URL")]
     redis: String,
 
@@ -33,6 +33,9 @@ struct Arguments {
 
     #[arg(default_value = "true", long)]
     hackactivity_polling: bool,
+
+    #[arg(default_value = "true", long)]
+    leaderboard_invalid_reports_polling: bool,
 }
 
 #[tokio::main]
@@ -86,6 +89,7 @@ async fn main() {
             loop {
                 if let Err(err) = polls::reputation::run_poll(&config).await {
                     error!("reputation: {}", err);
+                    break;
                 }
 
                 tokio::time::sleep(interval).await;
@@ -102,6 +106,7 @@ async fn main() {
             loop {
                 if let Err(err) = polls::reports::run_poll(&config).await {
                     error!("reports: {}", err);
+                    break;
                 }
         
                 tokio::time::sleep(interval).await;
@@ -109,6 +114,23 @@ async fn main() {
         });
 
         tasks.push(reports_tracking_task);
+    }
+
+    if args.leaderboard_invalid_reports_polling {
+        let config = config.clone();
+        let informative_reports_task = tokio::spawn(async move {
+            let interval = Duration::from_secs(60 * 30); // 30 minutes
+            loop {
+                if let Err(err) = polls::informative_reports::run_poll(&config).await {
+                    error!("informative reports: {:#?}", err);
+                    break;
+                }
+        
+                tokio::time::sleep(interval).await;
+            }
+        });
+
+        tasks.push(informative_reports_task);
     }
 
     // Wait for any task to abort

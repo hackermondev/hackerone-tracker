@@ -1,0 +1,28 @@
+query UserProfileThanks($username: String!, $pageSize: Int!) {
+  user(username: $username) {
+    id
+    username
+    thanks_items(first: $pageSize) {
+      total_count
+      edges {
+        node {
+          ...ThanksItem
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
+fragment ThanksItem on ThanksItem {
+  rank
+  report_count
+  total_report_count
+  reputation
+  team {
+    handle
+  }
+}
